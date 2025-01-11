@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Depends
 from app.appctx import IGetResponseBase, response
 from app.presentation import request
+from fastapi.security import HTTPBasicCredentials
 from app import (
                 mistral, 
                 chain, 
                 retriever_chroma,
                 redis
             )
-from app.ucase import session_middleware
+from app.ucase import session_middleware, BasicAuth
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from pkg.history import MessageHistory
 
@@ -15,7 +16,9 @@ from pkg.history import MessageHistory
 router = APIRouter()
 
 @router.post("/chat") 
-async def send_chat(payload: request.RequesChat, x_session: str = Depends(session_middleware)) -> IGetResponseBase:
+async def send_chat(payload: request.RequesChat, 
+                    x_session: str = Depends(session_middleware),
+                    credentials: HTTPBasicCredentials = Depends(BasicAuth().security)) -> IGetResponseBase:
     # history = MessageHistory(client=alchemy, session=x_session).sql()
     conn = redis.str_conn()
     history = MessageHistory(session=x_session).redis(conn)

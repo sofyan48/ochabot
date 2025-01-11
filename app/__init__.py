@@ -3,6 +3,8 @@ from contextlib import asynccontextmanager
 from fastapi import (
     FastAPI
 )
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+
 from bootstrap import (
     # database,
     redis,
