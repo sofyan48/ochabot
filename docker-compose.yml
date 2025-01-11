@@ -30,6 +30,12 @@ services:
       - ALLOW_RESET=TRUE
     networks:
       - code-network
+  app:
+    build: .
+    ports:
+      - 8081:8081
+    networks:
+      - code-network
 networks:
   code-network:
     driver: bridge
