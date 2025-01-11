@@ -1,6 +1,6 @@
 # OCHABOT GPT SEARCH
 ## Description
-this project inspirate for langflow, and used based in my profile page: [iank.me](https://iank.me)
+this project inspirate for langflow, and used based in my profile page: [iank.me](https://iank.me).
 Based on mistral AI, langchain and chroma vector database, I'm still learning, and this is my first project in AI
 
 ## How To Run
