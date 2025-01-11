@@ -1,0 +1,27 @@
+{{- if .Values.hpa.enabled -}}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.deployment.name }}-hpa
+  namespace: {{ .Values.deployment.namespace }}
+spec:
+  minReplicas: {{ .Values.hpa.spec.minReplicas }}
+  maxReplicas: {{ .Values.hpa.spec.maxReplicas }}
+  metrics:
+  - resource:
+      name: memory
+      target:
+        averageUtilization: {{ .Values.hpa.spec.memory.averageUtilization }}
+        type: Utilization
+    type: Resource
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: {{ .Values.hpa.spec.cpu.averageUtilization }}
+        type: Utilization
+    type: Resource
+  scaleTargetRef:
+    apiVersion: argoproj.io/v1alpha1
+    kind: Rollout
+    name: {{ .Values.deployment.name }}
+{{- end }}

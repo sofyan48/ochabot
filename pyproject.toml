@@ -1,0 +1,61 @@
+[tool.poetry]
+name = "kaj-gpt-chat-srvc"
+version = "0.1.0"
+description = "Kiriminaja GPT Chat"
+authors = [ "Sofyan Saputra <sofyansaputra@kiriminaja.com>",]
+readme = "README.md"
+[[tool.poetry.packages]]
+include = "app"
+
+[tool.poetry.scripts]
+serve = "main:__main__"
+
+[tool.black]
+line-length = 88
+target-version = [ "py37", "py38", "py39", "py310", "py311",]
+exclude = "((.eggs | .git | .pytest_cache | build | dist))"
+
+[tool.ruff]
+line-length = 88
+exclude = [ ".git", "__pycache__", ".mypy_cache", ".pytest_cache",]
+select = [ "E", "W", "F", "C", "B",]
+ignore = [ "B904", "B006", "E501", "B008", "C901",]
+
+[tool.mypy]
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+exclude = [ "alembic", "__pycache__",]
+
+[tool.build-system]
+requires = [ "poetry-core",]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+httpx = "^0.26.0"
+python-dotenv = "^1.0.1"
+fastapi-pagination = "^0.12.14"
+python-json-logger = "^2.0.7"
+loguru = "^0.7.2"
+langchain-community = "^0.3.10"
+langchain = "^0.3.13"
+websockets = "^12.0"
+langchain-mistralai = "^0.2.4"
+uvicorn = "^0.34.0"
+aiosqlite = "^0.20.0"
+greenlet = "^3.1.1"
+langchain-chroma = "^0.1.4"
+pypdf = "^5.1.0"
+numpy = "<2.0"
+environs = "^14.0.0"
+psycopg2 = "^2.9.10"
+pymysql = "^1.1.1"
+aiomysql = "^0.2.0"
+sqlalchemy = "^2.0.37"
+langchain-redis = "^0.1.2"
+aioredis = "^2.0.1"
+python-multipart = "^0.0.20"
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = [ "F401",]

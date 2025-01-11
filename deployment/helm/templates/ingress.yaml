@@ -1,0 +1,79 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.deployment.namespace }}
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "{{ .Values.ingress.ssl_redirect }}"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "{{ .Values.ingress.force_ssl_redirect }}"
+spec:
+  ingressClassName:  {{ .Values.ingress.className }}
+  {{- if .Values.ingress.ssl }}
+  tls:
+  - hosts:
+    - {{ .Values.ingress.domain }} 
+    secretName: {{ .Values.tls.secretName }}
+  {{- end }}
+  rules:
+  - host: {{ .Values.ingress.domain }}
+    http:
+      paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service:
+              name: {{ .Values.deployment.name }}
+              port:
+                number: {{ .Values.service.port }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.deployment.name }}-green
+  namespace: {{ .Values.deployment.namespace }}
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- if .Values.ingress.ssl }}
+  tls:
+  - hosts:
+    - {{ .Values.ingress.domain }} 
+    secretName: {{ .Values.tls.secretName }}
+  {{- end }}
+  rules:
+  - host: {{ .Values.ingress.greenDomain }} 
+    http:
+      paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service:
+              name: {{ .Values.deployment.name }}-green
+              port:
+                number: {{ .Values.service.port }}
+---
+{{- if .Values.deployment.isInternal }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.deployment.name }}-intl
+  namespace: {{ .Values.deployment.namespace }}
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "500m"
+    nginx.ingress.kubernetes.io/client-body-buffer-size: "500m"
+spec:
+  ingressClassName: "alb-internal"
+  rules:
+    - host: {{ .Values.ingress.internalDomain }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: {{ .Values.deployment.name }}
+                port:
+                  number: {{ .Values.service.port }}
+{{- end }}

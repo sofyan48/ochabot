@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: redis
+    hostname: redis
+    ports:
+      - 6479:6379
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '2m'
+        max-file: '5'
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+    networks:
+      - code-network
+  chromadb:
+    image: ghcr.io/chroma-core/chroma:0.5.0
+    container_name: chromadb
+    ports:
+      - "8000:8000"  # Expose the Chroma service on port 6333
+    volumes:
+      - ./chroma:/chroma/chroma/  # Persist data to a volume
+    environment:
+      - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_SERVER_PORT=6333
+      - ALLOW_RESET=TRUE
+    networks:
+      - code-network
+networks:
+  code-network:
+    driver: bridge

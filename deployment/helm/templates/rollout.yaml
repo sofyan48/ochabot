@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.deployment.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      serviceAccountName: {{.Values.deployment.serviceAccount}}
+  strategy:
+    blueGreen:
+      activeService: {{ .Values.deployment.name }}
+      previewService: {{ .Values.deployment.name }}-green
+      autoPromotionEnabled: {{ .Values.deployment.autoPromote }}
+      scaleDownDelaySeconds: {{ .Values.deployment.delayPromote }}
