@@ -4,7 +4,7 @@ from app import retriever_chroma, UPLOAD_MODEL_DIR
 from pkg.retriever import loader
 from fastapi.security import HTTPBasicCredentials
 from app.ucase import BasicAuth
-import os
+import os, random
 
 router = APIRouter()
 
@@ -17,7 +17,7 @@ async def build_retriever_chroma(collection: str = Form(...),
     if not os.path.exists(UPLOAD_MODEL_DIR):
         os.makedirs(UPLOAD_MODEL_DIR)
     
-    file_path = os.path.join(UPLOAD_MODEL_DIR, file.filename)
+    file_path = os.path.join(UPLOAD_MODEL_DIR, random.choice(word_list) for _ in range(count)+file.filename)
     with open(file_path, "wb") as f:
         f.write(await file.read())
     data = None
