@@ -1,15 +1,18 @@
-from fastapi import APIRouter, Form, File, UploadFile
+from fastapi import APIRouter, Form, File, UploadFile, Depends
 from app.appctx import IGetResponseBase, response
 from app import retriever_chroma, UPLOAD_MODEL_DIR
 from pkg.retriever import loader
+from fastapi.security import HTTPBasicCredentials
+from app.ucase import BasicAuth
 import os
 
 router = APIRouter()
 
 @router.post("/retriever/chroma")
-async def build_retriever_chroma(collection: str = Form(...),  # Form field for description
-    load: str = Form(...),    # Form field for category
-    file: UploadFile = File(...)  # File upload field
+async def build_retriever_chroma(collection: str = Form(...),
+    load: str = Form(...),
+    file: UploadFile = File(...),
+    credentials: HTTPBasicCredentials = Depends(BasicAuth().security)
 ) -> IGetResponseBase:
     if not os.path.exists(UPLOAD_MODEL_DIR):
         os.makedirs(UPLOAD_MODEL_DIR)

@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends
 from app.appctx import IGetResponseBase, response
 from app.presentation import request
-from fastapi.security import HTTPBasicCredentials
 from app import (
                 mistral, 
                 chain, 
                 retriever_chroma,
                 redis
             )
+from fastapi.security import HTTPBasicCredentials
 from app.ucase import session_middleware, BasicAuth
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from pkg.history import MessageHistory
@@ -53,7 +53,7 @@ async def send_chat(payload: request.RequesChat,
     )
 
 @router.delete("/chat")
-async def clear_chat(x_session: str = Depends(session_middleware)) -> IGetResponseBase:
+async def clear_chat(x_session: str = Depends(session_middleware), credentials: HTTPBasicCredentials = Depends(BasicAuth().security)) -> IGetResponseBase:
     # history = MessageHistory(client=alchemy, session=x_session).sql()
     history = MessageHistory(session=x_session).redis(redis.str_conn())
     await history.aclear()

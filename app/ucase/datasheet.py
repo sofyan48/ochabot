@@ -1,14 +1,16 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from app.appctx import IGetResponseBase, response
 from app.presentation import request
 from app import APP_ROOT
 from pkg import utils
 import csv
+from fastapi.security import HTTPBasicCredentials
+from app.ucase import session_middleware, BasicAuth
 
 
 router = APIRouter()
 @router.post("/datasheet")
-async def add_datasheet(payload: request.RequestDatasheet) -> IGetResponseBase:
+async def add_datasheet(payload: request.RequestDatasheet, credentials: HTTPBasicCredentials = Depends(BasicAuth().security)) -> IGetResponseBase:
     csvPath = APP_ROOT+"/knowledge/data.csv"
     try:
         csvLastData = await utils.read_last_row_from_csv(csvPath)
