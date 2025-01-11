@@ -18,7 +18,7 @@ class MistralChainModel():
         self.template = template
         self.path_sqlite_history = path_sqlite
         
-    def promptTemplates(self, input_variable=["answer", "question", "history"]) -> PromptTemplate:
+    def promptTemplates(self, input_variable=["answer", "question", "history", "context"]) -> PromptTemplate:
         return PromptTemplate(
             input_variables=input_variable,
             template=self.template,
