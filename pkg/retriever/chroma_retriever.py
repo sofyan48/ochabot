@@ -11,7 +11,7 @@ import os
 identifier = "unique_identifier"
 
 class Retriever():
-    def __init__(self, host="", port=8000, embedding_model="sentence-transformers/all-mpnet-base-v2", apikey="") -> None:
+    def __init__(self, host="", port=8000, apikey="") -> None:
         self.embeddings = HuggingfaceInference(apikey=apikey).embeddings()
         try: 
             chroma_settings = Settings(

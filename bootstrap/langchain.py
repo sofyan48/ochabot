@@ -17,7 +17,6 @@ def register_chroma_retriever():
         client = chroma_retriever.Retriever(
   host=os.getenv("CHROMA_HOST", "localhost"),
   port=int(os.getenv("CHROMA_PORT", 8000)),
-  embedding_model=os.getenv("HUGGING_FACE_EMBEDDING","sentence-transformers/all-mpnet-base-v2"),
   apikey=os.getenv("HUGGING_FACE_APIKEY", "HUGGING_FACE_APIKEY")
             )
     except Exception as e:
