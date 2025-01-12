@@ -2,12 +2,15 @@ from pkg import (
     mistral
 )
 
-from pkg.retriever import chroma_retriever, embeding
+from pkg.retriever import chroma_retriever
+from pkg.embedding.huggingface import HuggingfaceInference
 from pkg import chain
 import os
 
 def get_embedings():
-    return embeding.embeddings()
+    return HuggingfaceInference(
+        apikey=os.getenv("HUGGING_FACE_APIKEY","HUGGING_FACE_APIKEY")
+    )
 
 def register_chroma_retriever():
     try:

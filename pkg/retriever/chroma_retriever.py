@@ -3,7 +3,7 @@ from langchain_chroma import Chroma
 from chromadb import HttpClient
 from chromadb.config import Settings
 from pkg.logger.logging import logger
-from pkg.retriever import embeding 
+from pkg.embedding.huggingface import HuggingfaceInference
 import os
 
 
@@ -12,7 +12,7 @@ identifier = "unique_identifier"
 
 class Retriever():
     def __init__(self, host="", port=8000, embedding_model="sentence-transformers/all-mpnet-base-v2", apikey="") -> None:
-        self.embeddings = embeding.embeddings(apikey=apikey)
+        self.embeddings = HuggingfaceInference(apikey=apikey)
         try: 
             chroma_settings = Settings(
                 chroma_api_impl = "chromadb.api.segment.SegmentAPI",
