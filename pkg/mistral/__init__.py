@@ -20,9 +20,9 @@ class MistralLLM():
             cache=True,
             model_name=self.model,
             mistral_api_key=self.apikey,
-            temperature=0.7,
-            top_k=10,
-            top_p=0.8,
+            temperature=0.6,
+            top_k=8,
+            top_p=0.7,
             tfs_z=2.0,
         )
          
