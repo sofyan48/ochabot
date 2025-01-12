@@ -15,6 +15,8 @@ services:
       interval: 10s
     networks:
       - code-network
+    ports:
+      - 6479:6379
   chromadb:
     image: ghcr.io/chroma-core/chroma:0.5.0
     container_name: chromadb
@@ -22,8 +24,24 @@ services:
       - ./chroma:/chroma/chroma/  # Persist data to a volume
     environment:
       - CHROMA_SERVER_HOST=0.0.0.0
-      - CHROMA_SERVER_PORT=6333
+      - CHROMA_SERVER_PORT=8000
       - ALLOW_RESET=TRUE
+    networks:
+      - code-network
+    ports:
+      - 8000:8000
+  mysql:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: iank
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: mydb
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mydb:/var/lib/mysql
     networks:
       - code-network
   app:
@@ -33,6 +51,8 @@ services:
     networks:
       - code-network
     restart: always
+    volumes:
+      - ./:/app/
 networks:
   code-network:
     driver: bridge

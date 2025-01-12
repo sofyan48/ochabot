@@ -5,7 +5,7 @@ from app import APP_ROOT
 from pkg import utils
 import csv
 from fastapi.security import HTTPBasicCredentials
-from app.ucase import session_middleware, BasicAuth
+from app.ucase import BasicAuth
 
 
 router = APIRouter()

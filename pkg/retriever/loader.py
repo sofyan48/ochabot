@@ -2,8 +2,11 @@ from langchain_community.document_loaders import (
         CSVLoader, 
         WebBaseLoader, 
         PyPDFLoader,
-        JSONLoader
+        JSONLoader,
+        SQLDatabaseLoader
     )
+
+from langchain_community.utilities import SQLDatabase
 
 def csv_loader(csv_path: str):
     loader = CSVLoader(file_path=csv_path, encoding="utf-8")
@@ -25,4 +28,3 @@ def json_loader(json_path: str):
         file_path=json_path
     )
     return loader.load()
-

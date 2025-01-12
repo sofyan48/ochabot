@@ -4,9 +4,9 @@ from pypika import (
     Table,
     functions as fn,
 )
+from pypika import MySQLQuery, PostgreSQLQuery
 from pypika.terms import *
 from datetime import datetime
-
 
 class Builder(object):
     def __init__(self, client_write, client_read) -> None:
@@ -21,14 +21,15 @@ class Builder(object):
     def read_client(self):
         return self.database_read
     
-    def set_table(self, table):
-        self.table = Table(table)
-
-    def table(self):
-        return self.table
+    def set_tables(self, tables):
+        return Table(tables)
     
-    def query(self):
-        return Query().from_(self.table)
+    def query(self, table, driver='mysql'):
+        if (driver=="postgree"):
+            return PostgreSQLQuery().from_(table=table)
+        elif(driver=="mysql"):
+            return MySQLQuery().from_(table=table)
+        return Query().from_(table)
 
     def upsert(self, data):
         try:

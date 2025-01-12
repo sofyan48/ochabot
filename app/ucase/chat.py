@@ -5,13 +5,14 @@ from app import (
                 mistral, 
                 chain, 
                 retriever_chroma,
-                redis
+                redis,
+                alchemy
             )
 from fastapi.security import HTTPBasicCredentials
 from app.ucase import session_middleware, BasicAuth
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from pkg.history import MessageHistory
-
+from langchain_core.messages import BaseMessage
 
 router = APIRouter()
 
@@ -34,6 +35,7 @@ async def send_chat(payload: request.RequesChat,
         fecthK=100,
         collection=payload.collection
     )
+    
     qa_retrieval = chain.retrievalWithMistral("", mistral, retriever=retriever)
     chain_with_history = RunnableWithMessageHistory(qa_retrieval,
         lambda session_id: MessageHistory(session=session_id).redis(conn),
@@ -43,6 +45,8 @@ async def send_chat(payload: request.RequesChat,
     )
     config = {"configurable": {"session_id": f'{x_session}'}}
     resultAI = await chain_with_history.ainvoke({"input": payload.chat, "history": history_msg}, config=config)
+    collect_history = MessageHistory(session=x_session, client=alchemy).sql()
+    await collect_history.aadd_message(BaseMessage(type="human",content=payload.chat, result_metadata=resultAI['answer']))
     return response(
         data={
             "result": resultAI['answer'],

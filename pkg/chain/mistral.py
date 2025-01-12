@@ -4,6 +4,7 @@ from langchain.chains import create_retrieval_chain
 from langchain_core.prompts import PromptTemplate
 from langchain_mistralai.chat_models import ChatMistralAI
 
+
 class MistralChainModel():
     def __init__(self, template, path_sqlite="sqlite:///history.db") -> None:
         if template == "":

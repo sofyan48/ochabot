@@ -4,9 +4,11 @@ from fastapi import (
     FastAPI
 )
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
-
+from bootstrap.database import (
+    register_mysql,
+    register_alchemy_async
+)
 from bootstrap import (
-    # database,
     redis,
     langchain,
     logging
@@ -22,9 +24,8 @@ UPLOAD_MODEL_DIR = APP_ROOT+"/knowledge/model"
 app = FastAPI()
 
 ###### bootstaping ######
-# db = database.register_postgree()
-# db = database.register_mysql(app=app)
-# alchemy = database.register_alchemy_async()
+mysql = register_mysql(app)
+alchemy = register_alchemy_async()
 retriever_chroma = langchain.register_chroma_retriever()
 mistral = langchain.register_mistral().run(redis_url=redis.str_conn(), embedings=langchain.get_embedings())
 chain = langchain.register_chain_mistral()

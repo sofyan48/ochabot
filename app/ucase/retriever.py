@@ -1,10 +1,11 @@
+import os
 from fastapi import APIRouter, Form, File, UploadFile, Depends
 from app.appctx import IGetResponseBase, response
 from app import retriever_chroma, UPLOAD_MODEL_DIR
 from pkg.retriever import loader
 from fastapi.security import HTTPBasicCredentials
 from app.ucase import BasicAuth
-import os, random
+
 
 router = APIRouter()
 
@@ -38,4 +39,10 @@ async def build_retriever_chroma(collection: str = Form(...),
             "collection": collection,
             "file": file_path
         }
+    )
+
+@router.post("/retriever/sql")
+async def build_retriever_sql() -> IGetResponseBase:
+    return response(
+        message="oke",
     )
