@@ -10,7 +10,7 @@ import os
 def get_embedings():
     return HuggingfaceInference(
         apikey=os.getenv("HUGGING_FACE_APIKEY","HUGGING_FACE_APIKEY")
-    )
+    ).embeddings()
 
 def register_chroma_retriever():
     try:

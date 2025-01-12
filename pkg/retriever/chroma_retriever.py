@@ -12,7 +12,7 @@ identifier = "unique_identifier"
 
 class Retriever():
     def __init__(self, host="", port=8000, embedding_model="sentence-transformers/all-mpnet-base-v2", apikey="") -> None:
-        self.embeddings = HuggingfaceInference(apikey=apikey)
+        self.embeddings = HuggingfaceInference(apikey=apikey).embeddings()
         try: 
             chroma_settings = Settings(
                 chroma_api_impl = "chromadb.api.segment.SegmentAPI",
