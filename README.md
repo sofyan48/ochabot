@@ -24,3 +24,8 @@ please setup APP_ENVIRONTMENT to local if you setup on development mode
 ```
 python main.py serve
 ```
+
+## Swagger
+```
+http://localhost:8081/docs
+```
