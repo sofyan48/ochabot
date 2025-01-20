@@ -30,9 +30,12 @@ class AlChemy(object):
     
     def async_engine(self, driver="postgre", debug=False):
         conn_str = self.connection_setup(driver=driver)
-        conn = create_async_engine(url=conn_str, 
-                            isolation_level="AUTOCOMMIT", echo=debug)
-        conn.sync_engine
+        conn = create_async_engine(
+            url=conn_str, 
+            isolation_level="AUTOCOMMIT", 
+            echo=debug,
+            pool_pre_ping=True
+        )
         return conn
     
     def engine(self, driver="postgre", debug=False):

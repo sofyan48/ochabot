@@ -1,5 +1,7 @@
 import logging
 import json
+from pkg import utils
+
 
 class JsonFormatter(logging.Formatter):
     def format(self, record):
@@ -11,7 +13,11 @@ class JsonFormatter(logging.Formatter):
             "module": record.module,
             "function": record.funcName,
             "line": record.lineno,
+            "event": utils.json_serializable(record.args),
         }
+        # Menambahkan 'extra' jika ada
+        if record.__dict__.get('extra'):
+            log_record.update(record.__dict__['extra'])
         if record.exc_info:
             log_record["exception"] = self.formatException(record.exc_info)
         return json.dumps(log_record)

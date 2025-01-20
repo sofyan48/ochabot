@@ -1,7 +1,7 @@
 from fastapi import Header, HTTPException
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import secrets, os
-from fastapi import Depends, HTTPException, status
+from fastapi import HTTPException, status
 
 async def session_middleware(x_session: str = Header(None)):
     if x_session is None:

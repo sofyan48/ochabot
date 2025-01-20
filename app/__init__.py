@@ -3,18 +3,17 @@ from contextlib import asynccontextmanager
 from fastapi import (
     FastAPI
 )
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from bootstrap.database import (
-    register_mysql,
     register_alchemy_async
 )
 from bootstrap import (
     redis,
-    langchain,
-    logging
+    logging,
+     openai, 
+     mistral, 
+     chroma,
+     groq
 )
-
-from app.core import settings
 from starlette.middleware.cors import CORSMiddleware
 
 APP_ROOT = os.path.join(os.path.dirname(__file__), '..')
@@ -24,12 +23,21 @@ UPLOAD_MODEL_DIR = APP_ROOT+"/knowledge/model"
 app = FastAPI()
 
 ###### bootstaping ######
-mysql = register_mysql(app)
+# database
 alchemy = register_alchemy_async()
-retriever_chroma = langchain.register_chroma_retriever()
-mistral = langchain.register_mistral().run(redis_url=redis.str_conn(), embedings=langchain.get_embedings())
-chain = langchain.register_chain_mistral()
+
+# chroma
+chromadb = chroma.register_chroma_retriever()
+
+# llm
+llm_openai = openai.register_openai()
+openai_direct = openai.register_openai_direct_tracking_function()
+llm_mistral = mistral.register_mistral()
+llm_qroq = groq.register_groq()
+
+# logger
 logger = logging.setup_logger()
+
 
 # Set all CORS origins enabled
 app.add_middleware(
@@ -43,6 +51,8 @@ app.add_middleware(
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     os.environ.clear()
+
+
 
 # Setup health
 @app.get("/in/health")

@@ -1,11 +1,10 @@
-from pydantic import BaseModel, constr
-from typing import Any, Dict
+from pydantic import BaseModel, Field
+from typing import Optional
 
 
 class RequesChat(BaseModel):
-    chat: constr(min_length=1)
-    collection: constr(min_length=1)
+    chat: str = Field(..., min_length=1)
+    collection: str = Field(..., min_length=1)
+    llm: Optional[str] = None
 
-class RequestDatasheet(BaseModel):
-    question: constr(min_length=5)
-    answer: constr(min_length=5)
+

@@ -3,7 +3,7 @@ from langchain_community.document_loaders import (
         WebBaseLoader, 
         PyPDFLoader,
         JSONLoader,
-        SQLDatabaseLoader
+        TextLoader
     )
 
 from langchain_community.utilities import SQLDatabase
@@ -28,3 +28,10 @@ def json_loader(json_path: str):
         file_path=json_path
     )
     return loader.load()
+
+def text_loader(path: str):
+    loader = TextLoader(
+        file_path=path,
+        autodetect_encoding=True
+    )
+    return loader
