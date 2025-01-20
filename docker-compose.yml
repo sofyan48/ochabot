@@ -5,6 +5,8 @@ services:
     image: redis/redis-stack-server:latest
     container_name: redis
     hostname: redis
+    environment:
+      REDIS_ARGS: "--requirepass password"
     logging:
       driver: 'json-file'
       options:
