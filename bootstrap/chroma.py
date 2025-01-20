@@ -10,7 +10,7 @@ def register_chroma_retriever():
                 topK=int(os.getenv("RETRIEVER_TOPK")),
                 fetchK=int(os.getenv("RETRIEVER_FETCHK")),
                 host=os.getenv("CHROMA_HOST", "localhost"),
-                port=int(os.getenv("CHROMA_PORT", 8000)),\
+                port=int(os.getenv("CHROMA_PORT", 8000)),
                 # embbedding=MistralInference(
                 #     apikey=os.getenv("MISTRAL_API_KEY")
                 # ).embeddings() 
