@@ -4,7 +4,7 @@ from app.appctx import IGetResponseBase, response
 from pkg.retriever import loader as loader_model
 from fastapi.security import HTTPBasicCredentials
 from app.ucase import BasicAuth
-from app.ucase import router, auth, logger, chromadb, UPLOAD_MODEL_DIR
+from app.ucase.retriever import router, auth, logger, chromadb, UPLOAD_MODEL_DIR
 
 @router.post("/retriever/chroma")
 async def build_retriever_chroma(collection: str = Form(...),
