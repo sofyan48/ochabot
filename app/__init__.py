@@ -20,7 +20,11 @@ APP_ROOT = os.path.join(os.path.dirname(__file__), '..')
 UPLOAD_MODEL_DIR = APP_ROOT+"/knowledge/model"
 
 # Core Application Instance
-app = FastAPI()
+app = FastAPI(
+    title="Ochabot API",
+    description="This is the API documentation for Ochabot API",
+    version=os.getenv("APP_VERSION", "1.0.0"),
+)
 
 ###### bootstaping ######
 # database

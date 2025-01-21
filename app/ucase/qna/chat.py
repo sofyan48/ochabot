@@ -6,7 +6,7 @@ from app.ucase import session_middleware, BasicAuth
 from pkg.history import MessageHistory
 from app.ucase.qna import router, auth, redis, logger, AIWrapperLLM
 
-@router.post("/chat", tags=["chat"]) 
+@router.post("/chat", tags=["chat"], operation_id="send_chat") 
 async def send_chat(payload: request.RequesChat, 
                     x_session: str = Depends(session_middleware),
                     credentials: HTTPBasicCredentials = Depends(BasicAuth().security)) -> IGetResponseBase:

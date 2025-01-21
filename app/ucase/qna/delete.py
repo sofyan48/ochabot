@@ -5,7 +5,7 @@ from app.ucase import session_middleware, BasicAuth
 from pkg.history import MessageHistory
 from app.ucase.qna import router, auth, redis, logger, AIWrapperLLM
 
-@router.delete("/chat",tags=["chat"]) 
+@router.delete("/chat",tags=["chat"], operation_id="delete_session") 
 async def delete_chat_session(x_session: str = Depends(session_middleware),
                     credentials: HTTPBasicCredentials = Depends(BasicAuth().security)) -> IGetResponseBase:
     auth.authenticate(credentials=credentials)
