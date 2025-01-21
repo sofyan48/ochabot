@@ -1,6 +1,5 @@
 from fastapi import Depends, HTTPException, status
 from app.appctx import IGetResponseBase, response
-from app.presentation import request
 from fastapi.security import HTTPBasicCredentials
 from app.ucase import session_middleware, BasicAuth
 from pkg.history import MessageHistory
