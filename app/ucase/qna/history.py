@@ -11,7 +11,7 @@ async def chat_histories(x_session: str = Depends(session_middleware),
                     credentials: HTTPBasicCredentials = Depends(BasicAuth().security)) -> IGetResponseBase:
     auth.authenticate(credentials=credentials)
     try:
-        history = MessageHistory().redis(redis.str_conn())
+        history = MessageHistory(session=x_session).redis(redis.str_conn())
         data_history = await history.aget_messages()
     except Exception as e:
         return HTTPException(
