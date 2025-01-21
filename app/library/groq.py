@@ -6,9 +6,10 @@ from pkg.history import RedisChatMessageHistory
 from langchain_core.prompts import PromptTemplate
 
 class GroqAILibrary(object):
-    def __init__(self, chroma: Retriever, llm: GroqLLM, redis: redis):
+    def __init__(self, chroma: Retriever, llm: GroqLLM, model: str, redis: redis):
         self.chroma = chroma
         self.groq = llm
+        self.model = model
         self.redis = redis
         self.chain = Chain()
     
@@ -27,16 +28,17 @@ class GroqAILibrary(object):
             raise e
 
     
-    def get_llm(self):
+    def get_llm(self, model):
         try:
             return self.groq.run(
-                redis_url=self.redis.str_conn()
+                redis_url=self.redis.str_conn(),
+                model=model
             )
         except Exception as e:
             raise e
 
     def retrieval(self, promp_tpl: PromptTemplate, retriever: VectorStoreRetriever) -> Runnable:
-        llm = self.get_llm()
+        llm = self.get_llm(self.model)
         try:
             return self.groq.retrieval(
                 prompt_template=promp_tpl,

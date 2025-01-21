@@ -10,14 +10,14 @@ from langchain.chains.retrieval import Runnable, create_retrieval_chain
 
 class GroqLLM():
     def __init__(self, model:str, apikey:str, template:str) -> None:
-        self.template = """Your name is Cinbot as an AI assistant for iank.
-                Jawab pertanyaan ini menggunakana bahasa indonesia                                 
-                Jawab dengan bahasa indonesia yang baik dan benar.
-                If you don't know, don't go out of context just answer 'I don't know.
-                Histroy: {history}
-                Context: {context}
-                Question: {input}
-                Helpfull answer:"""
+        self.template = """Your name is Cinbot Groq.
+        Answer in Bahasa Indonesia.
+        If you don't know, don't go out of context just answer 'I don't know.
+        Histroy: {history}
+        Context: {context}
+        Question: {input}
+        Helpfull answer:
+        """
         if template != "":
             self.template = template
         if model == "":
@@ -25,12 +25,16 @@ class GroqLLM():
         self.model = model
         self.apikey = apikey
 
-    def run(self, redis_url) -> ChatGroq:
+    def run(self, redis_url="", model=None) -> ChatGroq:
         cache = False
         if redis_url != "":
             redis_cache = RedisCache(redis_url=redis_url, ttl=14400)
             set_llm_cache(redis_cache)
             cache = False
+
+        if model is not None:
+            self.model = model
+
         return ChatGroq(
             cache=cache,
             model_name=self.model,
@@ -46,9 +50,9 @@ class GroqLLM():
         )
     
     def retrieval(self, prompt_template: PromptTemplate, model: ChatGroq, retriever: VectorStoreRetriever):
-        prompt = prompt_template
+        prompt = self.promptTemplates()
         if prompt_template != "":
-           prompt = self.promptTemplates(self.template)
+           prompt = prompt_template
         document_chain = create_stuff_documents_chain(model, prompt)
         retrieval_chain = create_retrieval_chain(retriever, document_chain)
         return retrieval_chain

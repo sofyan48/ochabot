@@ -19,8 +19,7 @@ async def send_chat(payload: request.RequesChat,
      # validate model name
     if payload.llm is None:
         payload.llm = "mistral"
-
-    llm = AIWrapperLLM().initiate(payload.llm)
+    llm = AIWrapperLLM().initiate(payload.llm, model=payload.model)
     retriever = llm.retriever(
         top_k=3,
         fetch_k=10,
@@ -48,7 +47,7 @@ async def send_chat(payload: request.RequesChat,
             )
     logger.info("AI Result", {
         "payload": payload.model_dump(),
-        "history": resultAI['history'],
+        "content": resultAI['answer'],
     })
     return response(
         message="Successfully",

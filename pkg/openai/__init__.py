@@ -11,26 +11,27 @@ class OpenAILLM(object):
         if model == "":
             model = "gpt-4o-mini"
         
-        self.template = template
+        self.template = """Your name is Cinbot OpenAI.
+        If you don't know, don't go out of context just answer 'I don't know.
+        Histroy: {history}
+        Context: {context}
+        Question: {input}
+        Helpfull answer:
+        """
         if template != "":
-            self.template = """Your name is cinbot as an AI assistant for iank.
-                Jawab pertanyaan ini menggunakana bahasa indonesia                                 
-                Jawab dengan bahasa indonesia yang baik dan benar.
-                If you don't know, don't go out of context just answer 'I don't know.
-                Histroy: {history}
-                Context: {context}
-                Question: {input}
-                Helpfull answer:"""
-            
+            self.template = template
         self.model = model
         self.apikey = apikey
 
-    def run(self, redis_url=""):
+    def run(self, redis_url="", model=None):
         cache = False
         if redis_url != "":
             redis_cache = RedisCache(redis_url=redis_url, ttl=14400)
             set_llm_cache(redis_cache)
             cache = False
+
+        if model is not None:
+            self.model = model
 
         return ChatOpenAI(
             cache=cache,

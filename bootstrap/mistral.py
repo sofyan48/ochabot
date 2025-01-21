@@ -2,9 +2,8 @@ from pkg.mistral import MistralLLM
 import os
 
 def register_mistral():
-    template = """Your name is Cinbot as an AI assistant for iank.
-    Jawab pertanyaan ini menggunakana bahasa indonesia                                 
-    Jawab dengan bahasa indonesia yang baik dan benar.
+    template = """Your name is Cinbot Mistral.
+    Answer in Bahasa Indonesia
     If you don't know, don't go out of context just answer 'I don't know.
     Histroy: {history}
     Context: {context}

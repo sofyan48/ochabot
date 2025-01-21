@@ -11,12 +11,12 @@ def register_chroma_retriever():
                 fetchK=int(os.getenv("RETRIEVER_FETCHK")),
                 host=os.getenv("CHROMA_HOST", "localhost"),
                 port=int(os.getenv("CHROMA_PORT", 8000)),
-                # embbedding=MistralInference(
-                #     apikey=os.getenv("MISTRAL_API_KEY")
-                # ).embeddings() 
-                embbedding=HuggingfaceInference(
-                    apikey=os.getenv("HUGGING_FACE_APIKEY")
-                ).embeddings()
+                embbedding=MistralInference(
+                    apikey=os.getenv("MISTRAL_API_KEY")
+                ).embeddings() 
+                # embbedding=HuggingfaceInference(
+                #     apikey=os.getenv("HUGGING_FACE_APIKEY")
+                # ).embeddings()
             )
     except Exception as e:
         raise e

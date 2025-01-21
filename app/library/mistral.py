@@ -6,10 +6,11 @@ from pkg.history import RedisChatMessageHistory
 from langchain_core.prompts import PromptTemplate
 
 class MistralAILibrary(object):
-    def __init__(self, chroma: Retriever, llm: MistralLLM, redis: redis):
+    def __init__(self, chroma: Retriever, llm: MistralLLM, model: str, redis: redis):
         self.chroma = chroma
         self.mistral = llm
         self.redis = redis
+        self.model = model
         self.chain = Chain()
     
     def retriever(self, top_k, fetch_k, collection) -> VectorStoreRetriever:
@@ -27,16 +28,17 @@ class MistralAILibrary(object):
             raise e
 
     
-    def get_llm(self):
+    def get_llm(self, model):
         try:
             return self.mistral.run(
-                redis_url=self.redis.str_conn()
+                redis_url=self.redis.str_conn(),
+                model=model
             )
         except Exception as e:
             raise e
 
     def retrieval(self, promp_tpl: PromptTemplate, retriever: VectorStoreRetriever) -> Runnable:
-        llm = self.get_llm()
+        llm = self.get_llm(self.model)
         try:
             return self.mistral.retrieval(
                 prompt_template=promp_tpl,

@@ -2,9 +2,8 @@ from pkg.openai import OpenAILLM
 import os
 
 def register_openai() -> OpenAILLM:
-    template = """Your name is Cinbot as an AI assistant for iank.
-    Jawab pertanyaan ini menggunakana bahasa indonesia                                 
-    Jawab dengan bahasa indonesia yang baik dan benar.
+    template = """Your name is Cinbot OpenAI.
+    Answer in Bahasa Indonesia.
     If you don't know, don't go out of context just answer 'I don't know.
     Histroy: {history}
     Context: {context}
