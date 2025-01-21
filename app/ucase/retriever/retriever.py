@@ -6,7 +6,7 @@ from fastapi.security import HTTPBasicCredentials
 from app.ucase import BasicAuth
 from app.ucase.retriever import router, auth, logger, chromadb, UPLOAD_MODEL_DIR
 
-@router.post("/retriever/chroma")
+@router.post("/retriever/chroma", tags=["retriever"])
 async def build_retriever_chroma(collection: str = Form(...),
     loader: str = Form(...),
     chunk: int = Form(...),
