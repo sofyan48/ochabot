@@ -4,9 +4,15 @@ this project inspirate for langflow, and used based in my profile page: [iank.me
 Based on mistral AI, OpenAI, Groq, langchain and chroma vector database, I'm still learning, and this is my first project in AI
 
 ## Platform Support
+
+### AI Platform
 - OpenAI
 - MistralAI
 - Groq
+
+### Embedding
+- Huggingface
+- Mistral
 
 ## How To Run
 Running via poetry and activate virtualenvironment
