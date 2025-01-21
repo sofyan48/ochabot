@@ -13,6 +13,7 @@ Based on mistral AI, OpenAI, Groq, langchain and chroma vector database, I'm sti
 ### Embedding
 - Huggingface
 - Mistral
+- Nvidia
 
 ## How To Run
 Running via poetry and activate virtualenvironment
