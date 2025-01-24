@@ -25,3 +25,16 @@ from app.ucase.prompt import (
 routerV1.include_router(prompt_insert.router)
 routerV1.include_router(prompt_list.router)
 routerV1.include_router(prompt_delete.router)
+
+from app.ucase.setup import(
+    llm_setup,
+    retrieval_setup,
+    delete_setup,
+    list_setup,
+    get_setup
+)
+routerV1.include_router(llm_setup.router)
+routerV1.include_router(retrieval_setup.router)
+routerV1.include_router(delete_setup.router)
+routerV1.include_router(list_setup.router)
+routerV1.include_router(get_setup.router)
