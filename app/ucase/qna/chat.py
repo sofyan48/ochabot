@@ -4,7 +4,14 @@ from app.presentation import request
 from fastapi.security import HTTPBasicCredentials
 from app.ucase import session_middleware, BasicAuth
 from pkg.history import MessageHistory
-from app.ucase.qna import router, auth, redis, logger, AIWrapperLLM
+from app.ucase.qna import (
+    router, 
+    auth, 
+    redis, 
+    logger, 
+    AIWrapperLLM,
+    prompt_repo
+)
 
 @router.post("/chat", tags=["chat"], operation_id="send_chat") 
 async def send_chat(payload: request.RequesChat, 
@@ -20,12 +27,19 @@ async def send_chat(payload: request.RequesChat,
     if payload.llm is None:
         payload.llm = "mistral"
     llm = AIWrapperLLM().initiate(payload.llm, model=payload.model)
+    
     retriever = llm.retriever(
         top_k=3,
         fetch_k=10,
         collection=payload.collection
     )
-    qa_retrieval = llm.retrieval("", retriever=retriever)
+    prompt = ""
+    try: 
+        prompt = prompt_repo.get_prompt()
+    except Exception:
+        prompt = ""
+
+    qa_retrieval = llm.retrieval(prompt, retriever=retriever)
     chain_with_history = llm.chain_with_history(
         qa_retrieval,
         history=history,

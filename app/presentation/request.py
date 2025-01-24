@@ -9,3 +9,6 @@ class RequesChat(BaseModel):
     model: Optional[str] = None
 
 
+class RequestPrompt(BaseModel):
+    prompt: str = Field(..., min_length=1)
+

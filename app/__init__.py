@@ -19,11 +19,17 @@ from starlette.middleware.cors import CORSMiddleware
 APP_ROOT = os.path.join(os.path.dirname(__file__), '..')
 UPLOAD_MODEL_DIR = APP_ROOT+"/knowledge/model"
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await redis.register_redis()
+    yield
+
 # Core Application Instance
 app = FastAPI(
     title="Ochabot API",
     description="This is the API documentation for Ochabot API",
     version=os.getenv("APP_VERSION", "1.0.0"),
+    lifespan=lifespan
 )
 
 ###### bootstaping ######
@@ -32,6 +38,9 @@ alchemy = register_alchemy_async()
 
 # chroma
 chromadb = chroma.register_chroma_retriever()
+
+# redis
+# redis_conn = redis.register_redis()
 
 # llm
 llm_openai = openai.register_openai()
@@ -51,12 +60,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    os.environ.clear()
-
-
 
 # Setup health
 @app.get("/in/health")
