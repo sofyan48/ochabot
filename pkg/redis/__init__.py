@@ -26,9 +26,7 @@ class Redis:
 
     @classmethod
     async def get(cls, key: str):
-        
         value = await cls.redis_client.get(key)
-        value = value.decode('utf-8')
         return value
     
     @classmethod

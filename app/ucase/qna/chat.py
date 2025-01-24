@@ -33,10 +33,9 @@ async def send_chat(payload: request.RequesChat,
         fetch_k=10,
         collection=payload.collection
     )
-    prompt = ""
-    try: 
-        prompt = prompt_repo.get_prompt()
-    except Exception:
+    
+    prompt = await prompt_repo.get_prompt()
+    if prompt is None:
         prompt = ""
 
     qa_retrieval = llm.retrieval(prompt, retriever=retriever)
@@ -69,5 +68,3 @@ async def send_chat(payload: request.RequesChat,
             "result": resultAI['answer'],
         },
     )
-
-

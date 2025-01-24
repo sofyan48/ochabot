@@ -11,8 +11,14 @@ async def insert_prompt(payload: request.RequestPrompt,
                     ) -> IGetResponseBase:
     auth.authenticate(credentials)
     try:
+        template = """
+        Histroy: {history}
+        Context: {context}
+        Question: {input}
+        Helpfull answer:
+        """
+        payload.prompt = payload.prompt+template
         await repoPrompt.save_prompt(prompt=payload.prompt)
-        pass
     except Exception as e:
         logger.error("Error saving prompt", {
             "error": str(e),
