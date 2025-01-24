@@ -15,3 +15,7 @@ routerV1.include_router(retriever.router)
 
 from app.ucase.llm import llm
 routerV1.include_router(llm.router)
+
+
+from app.ucase.prompt import prompt_insert
+routerV1.include_router(prompt_insert.router)
