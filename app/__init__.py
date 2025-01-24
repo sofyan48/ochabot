@@ -23,7 +23,6 @@ UPLOAD_MODEL_DIR = APP_ROOT+"/knowledge/model"
 async def lifespan(app: FastAPI):
     await redis.register_redis()
     yield
-    await app.state.redis.close()  # Tutup koneksi Redis saat aplikasi selesai
 
 # Core Application Instance
 app = FastAPI(
@@ -41,7 +40,7 @@ alchemy = register_alchemy_async()
 chromadb = chroma.register_chroma_retriever()
 
 # redis
-redis_conn = redis.register_redis()
+# redis_conn = redis.register_redis()
 
 # llm
 llm_openai = openai.register_openai()

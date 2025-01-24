@@ -10,10 +10,11 @@ class Redis:
         try:
         # Connect to Redis server
             cls.redis_client = redis.Redis(
-                host=host, port=port, username=username, password=password
+                host=host, 
+                port=port, 
+                password=password,
+                # decode_responses=True
             )
-            print(host, port, username, password)
-            await cls.redis_client.ping()
         except redis.RedisError as e:
             logger.error("Error connecting to Redis", {"error": str(e)})
             raise e

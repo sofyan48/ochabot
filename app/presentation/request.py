@@ -10,5 +10,5 @@ class RequesChat(BaseModel):
 
 
 class RequestPrompt(BaseModel):
-    prompt: str = Field(..., min_length=20)
+    prompt: str = Field(..., min_length=1)
 

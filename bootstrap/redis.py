@@ -13,7 +13,7 @@ def str_conn():
 async def register_redis() -> redis.Redis:
     return await redis.Redis.connect(
         os.getenv("REDIS_HOST"), 
-        os.getenv("REDIS_PORT"), 
+        int(os.getenv("REDIS_PORT")), 
         os.getenv("REDIS_DB"), 
         os.getenv("REDIS_PASSWORD")
     )
