@@ -50,3 +50,18 @@ docker compose up --build
 ```
 http://localhost:8081/docs
 ```
+
+## Socket
+url:
+```
+localhost:8081/ex/v1/chat/ws/{client_id}
+```
+payload:
+```
+{
+    "chat": "hello",
+    "collection": "minka_prod_v1",
+    "llm": "openai", // optional
+    "model": "gpt-4o-mini" // optional
+}
+```
