@@ -6,7 +6,8 @@ from app import (
                 llm_mistral,
                 llm_qroq,
                 chromadb,
-                redis
+                redis,
+                logger
             )
 
 class AIWrapperLLM(object):
@@ -19,6 +20,7 @@ class AIWrapperLLM(object):
             self.llm = self.mistral(model=model)
         
         self.model = model
+        self.llm_name = llm
 
     def mistral(self, model=None):
         if model is None:
@@ -51,6 +53,11 @@ class AIWrapperLLM(object):
         )
     
     def initiate(self, llm: str = "mistral", model=None) -> (OpenAILibrary | MistralAILibrary | GroqAILibrary):
+        if model is None:
+            logger.info("Using default setup model", {
+                "model": self.model,
+                "llm": self.llm_name
+            })
         if llm == "mistral":
             return self.mistral(model=model)
         if llm == "openai":
@@ -59,5 +66,6 @@ class AIWrapperLLM(object):
             return  self.groq(model=model)
         else:
             return self.llm
+            
         
         

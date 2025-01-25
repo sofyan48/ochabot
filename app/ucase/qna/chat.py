@@ -26,7 +26,11 @@ async def send_chat(payload: request.RequesChat,
     history_msg = await history.aget_messages()
      # validate model name
     if payload.llm is None:
-        payload.llm = "mistral"
+        payload.llm = await setup_repo.get(setup_repo.list_key()['llm']['llm'])
+    
+    if payload.model is None:
+        payload.model = setup_repo.get(setup_repo.list_key()['llm']['model'])
+    
     llm = AIWrapperLLM().initiate(payload.llm, model=payload.model)
     
     #  setup 
