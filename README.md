@@ -1,10 +1,9 @@
 # OCHABOT GPT SEARCH
 ## Description
-this project inspirate for langflow, and used based in my profile page: [iank.me](https://iank.me).
+this project used on my profile page: [iank.me](https://iank.me).
 Based on mistral AI, OpenAI, Groq, langchain and chroma vector database, I'm still learning, and this is my first project in AI
 
 ## Platform Support
-
 ### AI Platform
 - OpenAI
 - MistralAI
@@ -14,6 +13,11 @@ Based on mistral AI, OpenAI, Groq, langchain and chroma vector database, I'm sti
 - Huggingface
 - Mistral
 - Nvidia
+
+## Requirements
+### Databse
+- Redis
+- Postgree
 
 ## How To Run
 Running via poetry and activate virtualenvironment
