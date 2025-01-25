@@ -34,7 +34,6 @@ async def send_chat(payload: request.RequesChat,
     llm = llm_platform.initiate(payload.llm, model=payload.model)
     
     #  setup 
-
     top_k = await setup_repo.get(setup_repo.list_key()['retriever']['top_k'])
     if top_k is None:
         top_k = 3
