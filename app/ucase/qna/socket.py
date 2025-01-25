@@ -31,6 +31,8 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
             # validate model name
             if payload['llm'] is None:
                 payload['llm'] = await setup_repo.get(setup_repo.list_key()['llm']['llm'])
+                if payload.llm is None:
+                    payload.llm = "openai"
             
             if payload['model'] is None:
                 payload['model'] = setup_repo.get(setup_repo.list_key()['llm']['model'])

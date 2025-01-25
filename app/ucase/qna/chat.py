@@ -27,6 +27,8 @@ async def send_chat(payload: request.RequesChat,
      # validate model name
     if payload.llm is None:
         payload.llm = await setup_repo.get(setup_repo.list_key()['llm']['llm'])
+        if payload.llm is None:
+            payload.llm = "openai"
     
     if payload.model is None:
         payload.model = setup_repo.get(setup_repo.list_key()['llm']['model'])
