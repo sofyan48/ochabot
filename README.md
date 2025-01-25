@@ -40,6 +40,10 @@ please setup APP_ENVIRONTMENT to local if you setup on development mode
 ```
 python main.py serve
 ```
+with docker
+```
+docker compose up --build
+```
 
 ## Swagger
 ```
