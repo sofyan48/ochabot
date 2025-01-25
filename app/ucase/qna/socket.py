@@ -30,12 +30,17 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
             history_msg = await history.aget_messages()
             # validate model name
             if payload['llm'] is None:
-                payload['llm'] = await setup_repo.get(setup_repo.list_key()['llm']['llm'])
-                if payload.llm is None:
-                    payload.llm = "openai"
+                try:
+                    payload['llm'] = await setup_repo.get(setup_repo.list_key()['llm']['llm'])
+                except Exception:
+                    payload['llm'] = "mistral"
+                    
             
             if payload['model'] is None:
-                payload['model'] = setup_repo.get(setup_repo.list_key()['llm']['model'])
+                try:
+                    payload['model'] = setup_repo.get(setup_repo.list_key()['llm']['model'])
+                except Exception:
+                    payload['model'] = ""
             
             llm = llm_platform.initiate(payload['llm'], model=payload['model'])
 

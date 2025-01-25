@@ -26,22 +26,29 @@ async def send_chat(payload: request.RequesChat,
     history_msg = await history.aget_messages()
      # validate model name
     if payload.llm is None:
-        payload.llm = await setup_repo.get(setup_repo.list_key()['llm']['llm'])
-        if payload.llm is None:
-            payload.llm = "openai"
+        try:
+            payload.llm = await setup_repo.get(setup_repo.list_key()['llm']['llm'])
+        except Exception:
+            payload.llm = "mistral"
     
     if payload.model is None:
-        payload.model = setup_repo.get(setup_repo.list_key()['llm']['model'])
+        try:
+            payload.model = await setup_repo.get(setup_repo.list_key()['llm']['model'])
+        except Exception:
+            payload.model = None
+    payload.model = None
     
     llm = llm_platform.initiate(payload.llm, model=payload.model)
     
     #  setup 
-    top_k = await setup_repo.get(setup_repo.list_key()['retriever']['top_k'])
-    if top_k is None:
+    try: 
+        top_k = await setup_repo.get(setup_repo.list_key()['retriever']['top_k'])
+    except:
         top_k = 3
 
-    fetch_k = await setup_repo.get(setup_repo.list_key()['retriever']['fetch_k'])
-    if fetch_k is None:
+    try:
+        fetch_k = await setup_repo.get(setup_repo.list_key()['retriever']['fetch_k'])
+    except Exception:
         fetch_k = 10
     
     collection = payload.collection
@@ -53,18 +60,19 @@ async def send_chat(payload: request.RequesChat,
                 detail="Please setup retriever collection or set from payload"
             )
     
-
     retriever = llm.retriever(
         top_k=top_k,
         fetch_k=fetch_k,
         collection=collection
     )
     
-    prompt = await prompt_repo.get_prompt()
-    if prompt is None:
+    try:
+        prompt = await prompt_repo.get_prompt()
+    except:
         prompt = ""
 
     qa_retrieval = llm.retrieval(prompt, retriever=retriever)
+    
     chain_with_history = llm.chain_with_history(
         qa_retrieval,
         history=history,

@@ -53,6 +53,7 @@ class AIWrapperLLM(object):
         )
     
     def initiate(self, llm: str = "mistral", model=None) -> (OpenAILibrary | MistralAILibrary | GroqAILibrary):
+        print(llm, model)
         if model is None:
             logger.info("Using default setup model", {
                 "model": self.model,

@@ -11,7 +11,10 @@ class Prompt(object):
 
     async def get_prompt(self):
         try:
-            return await self.redis.get(self.key)
+            prompt = await self.redis.get(self.key)
+            if prompt is None:
+                prompt = ""
+            return prompt
         except Exception as e:
             logger.error("Error getting prompt", {
                 "error": str(e),
