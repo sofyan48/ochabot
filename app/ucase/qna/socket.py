@@ -1,6 +1,6 @@
 from fastapi import WebSocket, WebSocketDisconnect
 from pkg.history import MessageHistory
-from pkg import utils
+from typing import Dict
 from app.ucase.qna import (
     auth, 
     redis, 
@@ -13,17 +13,18 @@ from app.ucase.qna import (
 )
 import json
 
-@router.websocket("/chat/ws")
-async def websocket_endpoint(websocket: WebSocket):
+connected_clients: Dict[str, WebSocket] = {}  
+
+@router.websocket("/chat/ws/{client_id}")
+async def websocket_endpoint(websocket: WebSocket, client_id: str):
     await ws_manager.connect(websocket)
-
+    connected_clients[client_id] = websocket  
     conn = redis.str_conn()
-
     try:
         while True:
             data = await websocket.receive_text()
             payload = json.loads(data)
-            x_session = websocket.headers.get("x-session")  
+            x_session = client_id+":"+websocket.headers.get("x-session")  
             conn = redis.str_conn()
             history = MessageHistory(session=x_session).redis(conn)
             history_msg = await history.aget_messages()
@@ -85,12 +86,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 "content": resultAI['answer'],
             })
 
-            response = {
-                "message": "Chat Successfuly",
-                "data": resultAI['answer']
-            }
-
-            await ws_manager.broadcast(json.dumps(response))
+            await connected_clients[client_id].send_text(resultAI['answer'])
     except WebSocketDisconnect:
         ws_manager.disconnect(websocket)
-        await ws_manager.broadcast("A user disconnected")
+        await connected_clients[client_id].send_text("A user disconnected")
