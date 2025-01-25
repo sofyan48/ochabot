@@ -44,15 +44,15 @@ services:
       - ./mydb:/var/lib/postgresql/data  
     networks:  
       - code-network  
-  # app:
-  #   build: .
-  #   ports:
-  #     - 8081:8081
-  #   networks:
-  #     - code-network
-  #   restart: always
-  #   volumes:
-  #     - ./:/app/
+  app:
+    build: .
+    ports:
+      - 8081:8081
+    networks:
+      - code-network
+    restart: always
+    volumes:
+      - ./:/app/
 networks:
   code-network:
     driver: bridge
