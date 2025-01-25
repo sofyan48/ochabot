@@ -4,7 +4,7 @@ from typing import Optional
 
 class RequesChat(BaseModel):
     chat: str = Field(..., min_length=1)
-    collection: str = Field(..., min_length=1)
+    collection: Optional[str] = None
     llm: Optional[str] = None
     model: Optional[str] = None
 

@@ -10,7 +10,8 @@ from app.ucase.qna import (
     redis, 
     logger, 
     AIWrapperLLM,
-    prompt_repo
+    prompt_repo,
+    setup_repo
 )
 
 @router.post("/chat", tags=["chat"], operation_id="send_chat") 
@@ -28,10 +29,30 @@ async def send_chat(payload: request.RequesChat,
         payload.llm = "mistral"
     llm = AIWrapperLLM().initiate(payload.llm, model=payload.model)
     
+    #  setup 
+
+    top_k = await setup_repo.get(setup_repo.list_key()['retriever']['top_k'])
+    if top_k is None:
+        top_k = 3
+
+    fetch_k = await setup_repo.get(setup_repo.list_key()['retriever']['fetch_k'])
+    if fetch_k is None:
+        fetch_k = 10
+    
+    collection = payload.collection
+    if collection is None:
+        collection = await setup_repo.get(setup_repo.list_key()['retriever']['collection'])
+        if collection is None:
+            return HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Please setup retriever collection or set from payload"
+            )
+    
+
     retriever = llm.retriever(
-        top_k=3,
-        fetch_k=10,
-        collection=payload.collection
+        top_k=top_k,
+        fetch_k=fetch_k,
+        collection=collection
     )
     
     prompt = await prompt_repo.get_prompt()

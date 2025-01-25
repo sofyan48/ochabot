@@ -5,6 +5,20 @@ class SetupConfig(object):
         self.redis = redis
         self.key = "config:"
 
+    def list_key(self):
+        return {
+            "retriver": {
+                "top_k": "config:retriever:top_k",
+                "fetch_k": "config:retriever:fetch_k",
+                "collection": "config:retriever:collection",
+                "vector_db": "config:retriever:vector_db",
+            },
+            "llm": {
+                "platform": "config:llm:platform",
+                "model": "config:llm:model",
+            }
+        }
+
     async def platform(self, value):
         key = self.key+"llm:platform"
         return await self.redis.set(key, value)   
@@ -28,20 +42,6 @@ class SetupConfig(object):
     async def vector_db(self, value):
         key = self.key+"retriever:vector_db"
         return await self.redis.set(key, value)
-    
-    async def list_key(self):
-        return {
-            "retriver": {
-                "top_k": "retriever:top_k",
-                "fetch_k": "retriever:fetch_k",
-                "collection": "retriever:collection",
-                "vector_db": "retriever:vector_db",
-            },
-            "llm": {
-                "platform": "llm:platform",
-                "model": "llm:model",
-            }
-        }
     
     async def get(self, key):
         key = self.key+":"+key
