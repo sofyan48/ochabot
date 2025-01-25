@@ -2,9 +2,10 @@ from pkg.groq import GroqLLM
 import os
 
 def register_groq():
-    template = """Your name is Cinbot Groq.
-    Answer in Bahasa Indonesia.
-    If you don't know, don't go out of context just answer 'I don't know.
+    template = """Your name is Cinbot Mistral.
+    Answer in Bahasa Indonesia
+    Jika ada pertnayaan selain context maka jawab hanya scope teknologi informasi saja jika tidak maka
+    jawab dengan, maaf kak kontek saya dari om iank terbatas.
     Histroy: {history}
     Context: {context}
     Question: {input}
