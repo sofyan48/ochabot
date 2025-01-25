@@ -27,7 +27,7 @@ def register_alchemy():
     )
     return AlChemy(cfgWrite=config).get_engine(
         config=config,
-        driver="postgre", 
+        driver=os.getenv("DB_DRIVER", "postgres"), 
         debug=False, 
         async_=False
     )

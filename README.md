@@ -16,8 +16,9 @@ Based on mistral AI, OpenAI, Groq, langchain and chroma vector database, I'm sti
 
 ## Requirements
 ### Databse
-- Redis
-- Postgree
+- Redis (LLM Cache and setup)
+- Postgree (History)
+- ChromaDB (Vector Database)
 
 ## How To Run
 Running via poetry and activate virtualenvironment

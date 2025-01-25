@@ -32,20 +32,18 @@ services:
       - code-network
     ports:
       - 8000:8000
-  mysql:
-    image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_USER: iank
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: mydb
-    ports:
-      - 3306:3306
-    volumes:
-      - ./mydb:/var/lib/mysql
-    networks:
-      - code-network
+  postgres:  
+    image: postgres:13  
+    environment:  
+      POSTGRES_PASSWORD: password  
+      POSTGRES_USER: iank  
+      POSTGRES_DB: mydb  
+    ports:  
+      - 5432:5432  
+    volumes:  
+      - ./mydb:/var/lib/postgresql/data  
+    networks:  
+      - code-network  
   # app:
   #   build: .
   #   ports:

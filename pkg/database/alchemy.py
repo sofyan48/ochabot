@@ -33,7 +33,7 @@ class AlChemy(object):
             )  
         return connection_str  
       
-    def async_engine(self, driver="postgre", debug=False):  
+    def async_engine(self, driver="postgree", debug=False):  
         conn_str = self.connection_setup(driver=driver)  
         if self._async_engine is None:  
             self._async_engine = create_async_engine(  
@@ -62,7 +62,7 @@ class AlChemy(object):
         return cls._instance  
   
     @classmethod  
-    def get_engine(cls, config: DatabaseConfig, driver="postgre", debug=False, async_=False):  
+    def get_engine(cls, config: DatabaseConfig, driver="postgres", debug=False, async_=False):  
         instance = cls.get_instance(config)  
         if async_:  
             return instance.async_engine(driver=driver, debug=debug)  
