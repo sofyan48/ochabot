@@ -1,24 +1,22 @@
-from pymongo import MongoClient
-from urllib.parse import quote_plus
-import os
-
-class MongoDB:
-    def __init__(self, host='localhost', port=27017, username='admin', password="", database="mydb"):
-        self.host = host
-        self.port = port
-        self.database = database
-        self.username = username
-        self.mongo_url = f"mongodb://{quote_plus(username)}:{quote_plus(password)}@{host}:{port}"
-        try:
-            self.client = MongoClient(self.mongo_url)
-            self.db = self.client[database]
-        except Exception as e:
-            raise e
-
-    def get_url(self):
-        return self.mongo_url
-    def knowledge_history_collection(self):
-        return self.db[os.environ.get("KNOWLEDGE_BASE_MONGO_COLLECTION")]
-    
-    def set_collection(self, collection):
-        return self.db[collection]
+from motor.motor_asyncio import AsyncIOMotorClient 
+  
+class MongoDB:  
+    _instance = None  
+    _client = None  
+    _database = None  
+  
+    def __new__(cls, uri: str, database_name: str):  
+        if cls._instance is None:  
+            cls._instance = super(MongoDB, cls).__new__(cls)  
+            cls._instance._client = AsyncIOMotorClient(uri)  
+            cls._instance._database = cls._instance._client[database_name]  
+        return cls._instance  
+  
+    def get_collection(self, collection_name: str):  
+        return self._database[collection_name]  
+  
+    @classmethod  
+    def get_instance(cls, uri: str, database_name: str):  
+        if cls._instance is None:  
+            cls._instance = cls(uri, database_name)  
+        return cls._instance  

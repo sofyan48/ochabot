@@ -50,7 +50,8 @@ class AlChemy(object):
             self._sync_engine = create_engine(  
                 url=conn_str,   
                 isolation_level="AUTOCOMMIT",   
-                echo=debug  
+                echo=debug,
+                pool_pre_ping=True
             )  
         return self._sync_engine  
   
@@ -61,8 +62,8 @@ class AlChemy(object):
         return cls._instance  
   
     @classmethod  
-    def get_engine(cls, cfgWrite: DatabaseConfig, driver="postgre", debug=False, async_=False):  
-        instance = cls.get_instance(cfgWrite)  
+    def get_engine(cls, config: DatabaseConfig, driver="postgre", debug=False, async_=False):  
+        instance = cls.get_instance(config)  
         if async_:  
             return instance.async_engine(driver=driver, debug=debug)  
         else:  

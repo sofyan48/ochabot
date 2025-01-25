@@ -22,6 +22,7 @@ UPLOAD_MODEL_DIR = APP_ROOT+"/knowledge/model"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await redis.register_redis()
+    register_alchemy_async()
     yield
 
 # Core Application Instance
@@ -33,9 +34,6 @@ app = FastAPI(
 )
 
 ###### bootstaping ######
-# database
-alchemy = register_alchemy_async()
-
 # chroma
 chromadb = chroma.register_chroma_retriever()
 

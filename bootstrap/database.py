@@ -1,9 +1,8 @@
 from pkg.database import DatabaseConfig
 import os
-    
+from pkg.database.alchemy import AlChemy 
 
 def register_alchemy_async():
-    from pkg.database.alchemy import AlChemy
     config = DatabaseConfig(
         dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),
@@ -19,7 +18,6 @@ def register_alchemy_async():
     )
 
 def register_alchemy():
-    from pkg.database.alchemy import AlChemy
     config = DatabaseConfig(
         dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),
