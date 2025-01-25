@@ -1,7 +1,8 @@
 import os 
 from contextlib import asynccontextmanager
 from fastapi import (
-    FastAPI
+    FastAPI,
+    WebSocket
 )
 from bootstrap.database import (
     register_alchemy_async
@@ -58,6 +59,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Setup health
 @app.get("/in/health")

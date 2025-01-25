@@ -9,6 +9,9 @@ routerV1.include_router(chat.router)
 routerV1.include_router(delete.router)
 routerV1.include_router(history.router)
 
+from app.ucase.qna import socket
+routerV1.include_router(socket.router)
+
 
 from app.ucase.retriever import retriever
 routerV1.include_router(retriever.router)

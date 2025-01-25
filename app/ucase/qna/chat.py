@@ -9,7 +9,7 @@ from app.ucase.qna import (
     auth, 
     redis, 
     logger, 
-    AIWrapperLLM,
+    llm_platform,
     prompt_repo,
     setup_repo
 )
@@ -31,7 +31,7 @@ async def send_chat(payload: request.RequesChat,
     if payload.model is None:
         payload.model = setup_repo.get(setup_repo.list_key()['llm']['model'])
     
-    llm = AIWrapperLLM().initiate(payload.llm, model=payload.model)
+    llm = llm_platform.initiate(payload.llm, model=payload.model)
     
     #  setup 
 

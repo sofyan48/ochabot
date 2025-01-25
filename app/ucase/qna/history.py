@@ -3,7 +3,7 @@ from app.appctx import IGetResponseBase, response
 from fastapi.security import HTTPBasicCredentials
 from app.ucase import session_middleware, BasicAuth
 from pkg.history import MessageHistory
-from app.ucase.qna import router, auth, redis, logger, AIWrapperLLM
+from app.ucase.qna import router, auth, redis
 
 @router.get("/chat", tags=["chat"], operation_id="chat_histories") 
 async def chat_histories(x_session: str = Depends(session_middleware),
