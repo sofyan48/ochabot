@@ -1,8 +1,10 @@
 from pkg.database import DatabaseConfig
+from sqlalchemy.ext.asyncio import AsyncEngine
 import os
-from pkg.database.alchemy import AlChemy 
+    
 
 def register_alchemy_async():
+    from pkg.database.alchemy import AlChemy
     config = DatabaseConfig(
         dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),
@@ -10,14 +12,10 @@ def register_alchemy_async():
         host=os.getenv("DB_HOST"),
         port=os.getenv("DB_PORT"),
     )
-    return AlChemy(cfgWrite=config).get_engine(
-        config=config,
-        driver="postgre", 
-        debug=False, 
-        async_=True
-    )
+    return AlChemy(cfgWrite=config).async_engine("postgre")
 
 def register_alchemy():
+    from pkg.database.alchemy import AlChemy
     config = DatabaseConfig(
         dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),
@@ -25,9 +23,4 @@ def register_alchemy():
         host=os.getenv("DB_HOST"),
         port=os.getenv("DB_PORT"),
     )
-    return AlChemy(cfgWrite=config).get_engine(
-        config=config,
-        driver=os.getenv("DB_DRIVER", "postgres"), 
-        debug=False, 
-        async_=False
-    )
+    return AlChemy(cfgWrite=config).engine("postgre")
