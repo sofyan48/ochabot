@@ -7,7 +7,6 @@ from pkg.history import MessageHistory
 from app.ucase.qna import (
     router, 
     auth, 
-    redis, 
     logger, 
     llm_platform,
     prompt_repo,
