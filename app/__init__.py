@@ -27,6 +27,7 @@ async def lifespan(app: FastAPI):
     mistral.register_mistral()
     openai.register_openai()
     groq.register_groq()
+    chroma.register_chroma_retriever()
     yield
 
 # Core Application Instance
@@ -37,15 +38,7 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-###### bootstaping ######
-# chroma
-chromadb = chroma.register_chroma_retriever()
-
-# redis
-# redis_conn = redis.register_redis()
-
-# DB
-# database
+# Database
 alchemy = register_alchemy_async()
 
 # logger

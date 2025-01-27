@@ -2,12 +2,15 @@ from app.library.mistral import MistralAILibrary
 from app.library.openai import OpenAILibrary
 from app.library.groq import GroqAILibrary
 from app import (
-                chromadb,
                 redis,
                 logger
             )
 
-from app.library import mistral_llm, openai_llm, groq_llm
+from app.library import (
+    mistral_llm, 
+    openai_llm, 
+    groq_llm, chromadb
+)
 
 class AIWrapperLLM(object):
     def __init__(self, llm="mistral", model="open-mistral-nemo"):
