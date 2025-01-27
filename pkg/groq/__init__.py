@@ -30,7 +30,7 @@ class GroqLLM():
         if redis_url != "":
             redis_cache = RedisCache(redis_url=redis_url, ttl=14400)
             set_llm_cache(redis_cache)
-            cache = False
+            cache = True
 
         if model is not None:
             self.model = model

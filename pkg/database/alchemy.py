@@ -26,7 +26,6 @@ class AlChemy(object):
                 self.cfgWrite.get("port"),
                 self.cfgWrite.get("name")
             )
-        print("STR CONNECTION:> ",connection_str)
         return connection_str
     
     def async_engine(self, driver="postgre", debug=False):
