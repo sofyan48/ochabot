@@ -60,7 +60,7 @@ payload:
 ```
 {
     "chat": "hello",
-    "collection": "minka_prod_v1",
+    "collection": "ocha_v2",
     "llm": "openai", // optional
     "model": "gpt-4o-mini" // optional
 }

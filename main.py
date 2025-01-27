@@ -11,18 +11,20 @@ if __name__ == '__main__':
     except Exception as e:
         print("Error load env: ", e)
         exit(0)
-    from app import app
     parser = argparse.ArgumentParser()
     parser.add_argument("command", help="Perintah yang ingin Anda jalankan")
     args = parser.parse_args()
     if args.command == "serve":
         if utils.environment_transform() != "loc":
+            from config.multiprocessing import UvicornWorkerRecommender
+            worker = UvicornWorkerRecommender().recommend_workers()
             uvicorn.run(
-                app=app,
+                # app=app,
+                app="app:app",
                 host=os.getenv("APP_HOST", "0.0.0.0"),
                 port=int(os.getenv("APP_PORT", "8080")),
+                workers=worker,
                 reload=False,
-                workers=1,
                 log_config=logging_config
             )
         else:

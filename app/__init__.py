@@ -5,7 +5,8 @@ from fastapi import (
     WebSocket
 )
 from bootstrap.database import (
-    register_alchemy_async
+    register_alchemy_async,
+    register_alchemy
 )
 from bootstrap import (
     redis,
@@ -23,7 +24,6 @@ UPLOAD_MODEL_DIR = APP_ROOT+"/knowledge/model"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await redis.register_redis()
-    register_alchemy_async()
     yield
 
 # Core Application Instance
@@ -40,6 +40,10 @@ chromadb = chroma.register_chroma_retriever()
 
 # redis
 # redis_conn = redis.register_redis()
+
+# DB
+# database
+alchemy = register_alchemy_async()
 
 # llm
 llm_openai = openai.register_openai()

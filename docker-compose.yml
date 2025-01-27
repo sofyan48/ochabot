@@ -18,7 +18,7 @@ services:
     networks:
       - code-network
     ports:
-      - :6379
+      - 6479:6379
   chromadb:
     image: ghcr.io/chroma-core/chroma:0.5.0
     container_name: chromadb
@@ -31,7 +31,7 @@ services:
     networks:
       - code-network
     ports:
-      - :8000
+      - 8000:8000
   postgres:  
     image: postgres:13  
     environment:  
@@ -39,7 +39,7 @@ services:
       POSTGRES_USER: iank  
       POSTGRES_DB: mydb  
     ports:  
-      - :5432  
+      - 5432:5432  
     volumes:  
       - ./mydb:/var/lib/postgresql/data  
     networks:  

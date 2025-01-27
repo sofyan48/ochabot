@@ -7,11 +7,11 @@ from pkg.history import MessageHistory
 from app.ucase.qna import (
     router, 
     auth, 
-    redis, 
     logger, 
     llm_platform,
     prompt_repo,
-    setup_repo
+    setup_repo,
+    alchemy
 )
 
 @router.post("/chat", tags=["chat"], operation_id="send_chat") 
@@ -20,9 +20,7 @@ async def send_chat(payload: request.RequesChat,
                     credentials: HTTPBasicCredentials = Depends(BasicAuth().security)) -> IGetResponseBase:
     
     auth.authenticate(credentials=credentials)
-    conn = redis.str_conn()
-
-    history = MessageHistory(session=x_session).redis(conn)
+    history = MessageHistory(alchemy, x_session).sql()
     history_msg = await history.aget_messages()
      # validate model name
     if payload.llm is None:
