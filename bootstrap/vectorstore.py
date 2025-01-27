@@ -1,7 +1,6 @@
 
-from pkg.chromadb import ChromaDB
+from pkg.vectorstore.chromadb import ChromaDB
 from pkg.embedding.mistral import MistralInference
-from pkg.embedding.huggingface import HuggingfaceInference
 import os
 
 def register_chroma_retriever():

@@ -6,15 +6,14 @@ from fastapi import (
 )
 from bootstrap.database import (
     register_alchemy_async,
-    register_alchemy
 )
 from bootstrap import (
     redis,
     logging,
      openai, 
      mistral, 
-     chroma,
-     groq
+     groq,
+    vectorstore
 )
 from starlette.middleware.cors import CORSMiddleware
 
@@ -27,8 +26,10 @@ async def lifespan(app: FastAPI):
     mistral.register_mistral()
     openai.register_openai()
     groq.register_groq()
-    chroma.register_chroma_retriever()
+    vectorstore.register_chroma_retriever()
     yield
+    # clearing env after shutdown
+    os.environ.clear()
 
 # Core Application Instance
 app = FastAPI(
