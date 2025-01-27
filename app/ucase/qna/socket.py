@@ -18,7 +18,7 @@ connected_clients: Dict[str, WebSocket] = {}
 async def websocket_endpoint(websocket: WebSocket, client_id: str):
     await ws_manager.connect(websocket)
     connected_clients[client_id] = websocket  
-   
+    setup = await setup_repo.get_all_setup()
     try:
         while True:
             data = await websocket.receive_text()
@@ -29,14 +29,14 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
             # validate model name
             if payload['llm'] is None:
                 try:
-                    payload['llm'] = await setup_repo.get(setup_repo.list_key()['llm']['llm'])
+                    payload['llm'] = setup.get('config:llm:platform')
                 except Exception:
                     payload['llm'] = "mistral"
                     
             
             if payload['model'] is None:
                 try:
-                    payload['model'] = setup_repo.get(setup_repo.list_key()['llm']['model'])
+                    payload['model'] = setup.get('config:llm:model')
                 except Exception:
                     payload['model'] = ""
             
@@ -44,18 +44,18 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
 
             #  setup 
             try:
-                top_k = await setup_repo.get(setup_repo.list_key()['retriever']['top_k'])
+                top_k = int(setup.get('config:retriever:top_k'))
             except Exception:
                 top_k = 3
             
             try:
-                fetch_k = await setup_repo.get(setup_repo.list_key()['retriever']['fetch_k'])
+                fetch_k = int(setup.get('config:retriever:fetch_k'))
             except Exception:
                 fetch_k = 10
             
             collection = payload['collection']
             if collection is None:
-                collection = await setup_repo.get(setup_repo.list_key()['retriever']['collection'])
+                collection = setup.get('config:retriever:collection')
                 if collection is None:
                     await ws_manager.broadcast(f"Please setup collection or set from payload")
             

@@ -23,38 +23,35 @@ async def send_chat(payload: request.RequesChat,
     history = MessageHistory(alchemy, x_session).sql()
     history_msg = await history.aget_messages()
     setup = await setup_repo.get_all_setup()
-
-     # validate model name
+    # validate model name
     if payload.llm is None:
         try:
-            payload.llm = await setup_repo.get(setup_repo.list_key()['llm']['llm'])
+            payload.llm = setup.get('config:llm:platform')
         except Exception:
             payload.llm = "mistral"
     
     if payload.model is None:
         try:
-            payload.model = await setup_repo.get(setup_repo.list_key()['llm']['model'])
+            payload.model = setup.get('config:llm:model')
         except Exception:
             payload.model = None
     
     payload.model = None
    
     llm = llm_platform.initiate(payload.llm, model=payload.model)
-    
-    #  setup 
     try: 
-        top_k = await setup_repo.get(setup_repo.list_key()['retriever']['top_k'])
+        top_k = int(setup.get('config:retriever:top_k'))
     except:
         top_k = 3
 
     try:
-        fetch_k = await setup_repo.get(setup_repo.list_key()['retriever']['fetch_k'])
+        fetch_k = int(setup.get('config:retriever:fetch_k'))
     except Exception:
         fetch_k = 10
     
     collection = payload.collection
     if collection is None:
-        collection = await setup_repo.get(setup_repo.list_key()['retriever']['collection'])
+        collection = setup.get('config:retriever:collection')
         if collection is None:
             return HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,

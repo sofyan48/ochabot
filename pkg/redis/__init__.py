@@ -13,7 +13,7 @@ class Redis:
                 host=host, 
                 port=port, 
                 password=password,
-                # decode_responses=True
+                decode_responses=True
             )
         except redis.RedisError as e:
             logger.error("Error connecting to Redis", {"error": str(e)})
@@ -32,6 +32,11 @@ class Redis:
     @classmethod
     async def keys(cls, key: str):
         value = await cls.redis_client.keys(key)
+        return value
+    
+    @classmethod
+    async def getall(cls, key: str):
+        value = await cls.redis_client.hgetall(key)
         return value
     
     @classmethod
