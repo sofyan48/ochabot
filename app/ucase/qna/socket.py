@@ -8,7 +8,7 @@ from app.ucase.qna import (
     setup_repo,
     ws_manager,
     router,
-    alchemy
+    redis
 )
 import json
 
@@ -24,7 +24,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
             data = await websocket.receive_text()
             payload = json.loads(data)
             x_session = client_id+":"+websocket.headers.get("x-session")  
-            history = MessageHistory(client=alchemy,session=x_session).sql()
+            history = MessageHistory(session=x_session).redis(redis.str_conn())
             history_msg = await history.aget_messages()
             # validate model name
             if payload['llm'] is None:
