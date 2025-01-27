@@ -2,13 +2,12 @@ from app.library.mistral import MistralAILibrary
 from app.library.openai import OpenAILibrary
 from app.library.groq import GroqAILibrary
 from app import (
-                llm_openai, 
-                llm_mistral,
-                llm_qroq,
                 chromadb,
                 redis,
                 logger
             )
+
+from app.library import mistral_llm, openai_llm, groq_llm
 
 class AIWrapperLLM(object):
     def __init__(self, llm="mistral", model="open-mistral-nemo"):
@@ -27,17 +26,16 @@ class AIWrapperLLM(object):
             model = "open-mistral-nemo"
         return MistralAILibrary(
             chroma=chromadb,
-            llm=llm_mistral,
+            llm=mistral_llm,
             redis=redis,
             model=model
         )
     def openai(self, model=None):
-
         if model is None:
             model = "gpt-4o-mini"
         return OpenAILibrary(
             chroma=chromadb,
-            llm=llm_openai,
+            llm=openai_llm,
             redis=redis,
             model=model
         )
@@ -47,17 +45,14 @@ class AIWrapperLLM(object):
             model = "llama-3.3-70b-versatile"
         return GroqAILibrary(
             chroma=chromadb,
-            llm=llm_qroq,
+            llm=groq_llm,
             redis=redis,
             model=model
         )
     
     def initiate(self, llm: str = "mistral", model=None) -> (OpenAILibrary | MistralAILibrary | GroqAILibrary):
         if model is None:
-            logger.info("Using default setup model", {
-                "model": self.model,
-                "llm": self.llm_name
-            })
+            model = None
         if llm == "mistral":
             return self.mistral(model=model)
         if llm == "openai":

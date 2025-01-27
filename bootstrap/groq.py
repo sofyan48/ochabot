@@ -10,7 +10,7 @@ def register_groq():
     Question: {input}
     Helpfull answer:
     """
-    return GroqLLM(
+    return GroqLLM().configure(
         model=os.getenv("GROQ_BASE","llama-3.3-70b-versatile"),
         apikey=os.getenv("GROQ_APIKEY", "GROQ_APIKEY"),
         template= template

@@ -30,6 +30,11 @@ class Redis:
         return value
     
     @classmethod
+    async def keys(cls, key: str):
+        value = await cls.redis_client.keys(key)
+        return value
+    
+    @classmethod
     async def delete(cls, key: str):
         await cls.redis_client.delete(key)
 

@@ -3,7 +3,7 @@ from pkg.retriever.chroma_retriever import Retriever, VectorStoreRetriever
 from app import redis
 from pkg.chain import Chain, RunnableWithMessageHistory
 from pkg.history import RedisChatMessageHistory
-from langchain_core.prompts import PromptTemplate
+from pkg.chain.prompter import PromptTemplate
 
 class GroqAILibrary(object):
     def __init__(self, chroma: Retriever, llm: GroqLLM, model: str, redis: redis):

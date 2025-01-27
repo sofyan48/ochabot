@@ -52,6 +52,18 @@ class SetupConfig(object):
                 "error": str(e),
             })
             raise e
+        
+    async def get_all_setup(self):
+        key = self.key+"*"
+        try:
+            keys = await self.redis.keys(key)
+            key_value_pairs = {key: await self.redis.get(key) for key in keys}
+            return  key_value_pairs
+        except Exception as e:
+            logger.error("Error getting prompt", {
+                "error": str(e),
+            })
+            raise e
     
     async def delete(self, key):
         key = self.key+":"+key

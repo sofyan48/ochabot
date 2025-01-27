@@ -15,6 +15,7 @@ if __name__ == '__main__':
     parser.add_argument("command", help="Perintah yang ingin Anda jalankan")
     args = parser.parse_args()
     if args.command == "serve":
+        from app import app
         from config.multiprocessing import UvicornWorkerRecommender
         worker = UvicornWorkerRecommender().recommend_workers()
         if utils.environment_transform() != "loc":
@@ -32,7 +33,6 @@ if __name__ == '__main__':
                 host=os.getenv("APP_HOST", "0.0.0.0"),
                 port=int(os.getenv("APP_PORT", "8080")),
                 reload=True,
-                workers=worker/2
                 # log_config=logging_config
             )
         exit(0);
