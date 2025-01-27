@@ -32,7 +32,6 @@ class OpenAILLM(object):
 
         if model is not None:
             self.model = model
-        print("CACHE:> ",cache)
         return ChatOpenAI(
             cache=cache,
             model=self.model,
