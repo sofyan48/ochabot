@@ -4,13 +4,13 @@ from app.library.wrapper import AIWrapperLLM
 from app import (
                 redis,
                 logger,
-                chromadb,
                 UPLOAD_MODEL_DIR
             )
-
+from pkg.chromadb import ChromaDB
 from app.repositories import setup
 
 
 auth = BasicAuth()
 router = APIRouter()
 setup_repo = setup.SetupConfig()
+chromadb = ChromaDB()

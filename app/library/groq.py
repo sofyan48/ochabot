@@ -1,12 +1,12 @@
 from pkg.groq import GroqLLM, Runnable
-from pkg.retriever.chroma_retriever import Retriever, VectorStoreRetriever
+from pkg.chromadb import ChromaDB, VectorStoreRetriever
 from app import redis
 from pkg.chain import Chain, RunnableWithMessageHistory
 from pkg.history import RedisChatMessageHistory
 from pkg.chain.prompter import PromptTemplate
 
 class GroqAILibrary(object):
-    def __init__(self, chroma: Retriever, llm: GroqLLM, model: str, redis: redis):
+    def __init__(self, chroma: ChromaDB, llm: GroqLLM, model: str, redis: redis):
         self.chroma = chroma
         self.groq = llm
         self.model = model
@@ -21,7 +21,7 @@ class GroqAILibrary(object):
         try:
             return self.chroma.retriever(
                 topK=top_k,
-                fecthK=fetch_k,
+                fetchK=fetch_k,
                 collection=collection
             )
         except Exception as e:
