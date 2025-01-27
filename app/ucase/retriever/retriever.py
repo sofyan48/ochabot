@@ -40,14 +40,20 @@ async def build_retriever_chroma(collection: str = Form(...),
             message="Please select loader: text, pdf, csv",
             data=None
         )
-    chromadb.build(data=data, collection=collection, chunk=chunk, overlap=overlap)
+    
+    try:
+        chromadb.build(data=data, collection=collection, chunk=chunk, overlap=overlap)
+    except Exception as e:
+        logger.error("Error building chroma", {
+            "error", e
+        })
+
     logger.info("Chroma Building", {
         "loader": loader,
         "path": file_path, 
         "chunk": chunk,
         "overlap": overlap
     })
-    
     return response(
         message="Retriver build",
         data={

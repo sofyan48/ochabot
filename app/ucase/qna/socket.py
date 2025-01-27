@@ -83,7 +83,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
             try:
                 resultAI = await chain_with_history.ainvoke({"input": payload['chat'], "history": history_msg}, config=config)
             except Exception as e:
-                logger.error("Invok message error", {
+                logger.error("Invoke message error", {
                     "error": str(e)
                 })
             logger.info("AI Result", {
