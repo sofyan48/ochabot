@@ -10,7 +10,7 @@ def register_openai() -> OpenAILLM:
     Question: {input}
     Helpfull answer:
     """
-    return OpenAILLM(
+    return OpenAILLM().configure(
         model=os.getenv("OPENAI_MODEL","gpt-4o-mini"),
         apikey=os.getenv("OPENAI_APIKEY", "OPENAI_APIKEY"),
         template=template

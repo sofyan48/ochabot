@@ -22,6 +22,8 @@ async def send_chat(payload: request.RequesChat,
     auth.authenticate(credentials=credentials)
     history = MessageHistory(alchemy, x_session).sql()
     history_msg = await history.aget_messages()
+    setup = await setup_repo.get_all_setup()
+
      # validate model name
     if payload.llm is None:
         try:
@@ -34,8 +36,9 @@ async def send_chat(payload: request.RequesChat,
             payload.model = await setup_repo.get(setup_repo.list_key()['llm']['model'])
         except Exception:
             payload.model = None
-    payload.model = None
     
+    payload.model = None
+   
     llm = llm_platform.initiate(payload.llm, model=payload.model)
     
     #  setup 

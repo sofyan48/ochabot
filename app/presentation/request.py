@@ -17,10 +17,11 @@ class RequestLLMSetup(BaseModel):
     model: str = Field(..., min_length=1)
 
 class RequestRetrievalSetup(BaseModel):
-    top_k: str = Field(..., min_length=1)
-    fetch_k: str = Field(..., min_length=1)
-    collection: str = Field(..., min_length=1)
-    vector_db: str = Field(..., min_length=1)
+    top_k: int = Field(...)
+    fetch_k: int = Field(...)
+    overlap: int = Field(...)
+    collection: str = Field(...)
+    vector_db: str = Field(...)
 
 class RequestDeleteSetup(BaseModel):
     key: str = Field(..., min_length=1)

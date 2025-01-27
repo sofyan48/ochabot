@@ -8,5 +8,9 @@ from app import (
                 UPLOAD_MODEL_DIR
             )
 
+from app.repositories import setup
+
+
 auth = BasicAuth()
 router = APIRouter()
+setup_repo = setup.SetupConfig()

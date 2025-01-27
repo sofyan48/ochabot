@@ -1,10 +1,17 @@
 import os
 from fastapi import Form, File, UploadFile, Depends
+from typing import Optional
 from app.appctx import IGetResponseBase, response
 from pkg.retriever import loader as loader_model
 from fastapi.security import HTTPBasicCredentials
 from app.ucase import BasicAuth
-from app.ucase.retriever import router, auth, logger, chromadb, UPLOAD_MODEL_DIR
+from app.ucase.retriever import (
+    router, 
+    auth, 
+    logger, 
+    chromadb, 
+    UPLOAD_MODEL_DIR
+)
 
 @router.post("/retriever/chroma", tags=["retriever"], operation_id="build_retriever_chroma")
 async def build_retriever_chroma(collection: str = Form(...),
@@ -45,6 +52,6 @@ async def build_retriever_chroma(collection: str = Form(...),
         message="Retriver build",
         data={
             "collection": collection,
-            "file": file_path
+            "file": file_path,
         }
     )

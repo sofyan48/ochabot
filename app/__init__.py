@@ -24,6 +24,9 @@ UPLOAD_MODEL_DIR = APP_ROOT+"/knowledge/model"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await redis.register_redis()
+    mistral.register_mistral()
+    openai.register_openai()
+    groq.register_groq()
     yield
 
 # Core Application Instance
@@ -44,12 +47,6 @@ chromadb = chroma.register_chroma_retriever()
 # DB
 # database
 alchemy = register_alchemy_async()
-
-# llm
-llm_openai = openai.register_openai()
-openai_direct = openai.register_openai_direct_tracking_function()
-llm_mistral = mistral.register_mistral()
-llm_qroq = groq.register_groq()
 
 # logger
 logger = logging.setup_logger()

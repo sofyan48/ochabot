@@ -5,8 +5,8 @@ from app.appctx import IGetResponseBase, response
 from app.ucase.setup import router, auth, logger, setup_repo
 from app.ucase import BasicAuth
 
-@router.post("/setup/llm", tags=["setup"], operation_id="setup_llm_insert") 
-async def setup_llm_insert(payload: request.RequestRetrievalSetup,
+@router.post("/setup/retriever", tags=["setup"], operation_id="setup_retriever_insert") 
+async def setup_retriever_insert(payload: request.RequestRetrievalSetup,
                         credentials: HTTPBasicCredentials = Depends(BasicAuth().security),
                     ) -> IGetResponseBase:
     auth.authenticate(credentials)
