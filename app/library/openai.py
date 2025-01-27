@@ -1,5 +1,5 @@
 from pkg.openai import OpenAILLM, Runnable
-from pkg.chromadb import ChromaDB, VectorStoreRetriever
+from pkg.vectorstore.chromadb import ChromaDB, VectorStoreRetriever
 from app import redis
 from pkg.chain import Chain, RunnableWithMessageHistory
 from pkg.history import RedisChatMessageHistory, SQLChatMessageHistory
