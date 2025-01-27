@@ -18,6 +18,6 @@ async def chat_histories(x_session: str = Depends(session_middleware),
             detail="Internal failure",
         )
     return response(
-        message="Delete Session",
+        message="History Session",
         data=data_history,
     )
