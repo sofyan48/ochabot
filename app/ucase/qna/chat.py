@@ -51,7 +51,7 @@ async def send_chat(payload: request.RequesChat,
     
     collection = payload.collection
     if collection is None:
-        collection = await setup_repo.get(setup.get('config:retriever:collection'))
+        collection = setup.get('config:retriever:collection')
         if collection is None:
             return HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
