@@ -1,4 +1,4 @@
-import os, csv
+import os, csv, string, random
 from collections import deque
 from datetime import datetime
 from sqlalchemy.engine.row import Row
@@ -68,3 +68,24 @@ def json_serializable(obj):
     elif hasattr(obj, "__dict__"):
         return {key: json_serializable(value) for key, value in vars(obj).items()}  # Handle custom objects
     return obj  # Fallback for unsupported types
+
+def generate_random_string(length):  
+    """  
+    Generate a random string of specified length composed of letters and digits.  
+  
+    Parameters:  
+    length (int): The length of the random string to generate.  
+  
+    Returns:  
+    str: A random string containing uppercase letters, lowercase letters, and digits.  
+    """  
+    if length < 0:  
+        raise ValueError("Length must be a non-negative integer.")  
+      
+    # Define the character set: uppercase, lowercase, and digits  
+    characters = string.ascii_letters + string.digits  
+      
+    # Generate a random string  
+    random_string = ''.join(random.choice(characters) for _ in range(length))  
+      
+    return random_string 

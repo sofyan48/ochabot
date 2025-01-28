@@ -4,7 +4,7 @@ from app.presentation import request
 from fastapi.security import HTTPBasicCredentials
 from app.ucase import session_middleware, BasicAuth
 from pkg.history import MessageHistory
-from app.ucase.qna import (
+from app.ucase.chat import (
     router, 
     auth, 
     logger, 

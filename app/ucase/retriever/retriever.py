@@ -15,7 +15,6 @@ from app.ucase.retriever import (
 
 @router.post("/retriever/chroma", tags=["retriever"], operation_id="build_retriever_chroma")
 async def build_retriever_chroma(collection: str = Form(...),
-    loader: str = Form(...),
     chunk: int = Form(...),
     overlap: int = Form(...),
     file: UploadFile = File(...),
@@ -28,12 +27,14 @@ async def build_retriever_chroma(collection: str = Form(...),
     file_path = os.path.join(UPLOAD_MODEL_DIR, file.filename)
     with open(file_path, "wb") as f:
         f.write(await file.read())
+
+    file_extension = os.path.splitext(file.filename)[1] 
     data = None
-    if (loader == "pdf"):
+    if (file_extension == ".pdf"):
         data = loader_model.pdf_loader(file_path)
-    elif (loader == "csv"):
+    elif (file_extension == ".csv"):
         data = loader_model.csv_loader(file_path)
-    elif (loader== "text"):
+    elif (file_extension== ".text"):
         data = loader_model.text_loader(file_path)
     else:
         return response(
@@ -49,7 +50,6 @@ async def build_retriever_chroma(collection: str = Form(...),
         })
 
     logger.info("Chroma Building", {
-        "loader": loader,
         "path": file_path, 
         "chunk": chunk,
         "overlap": overlap

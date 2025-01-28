@@ -1,7 +1,7 @@
 from fastapi import WebSocket, WebSocketDisconnect
 from pkg.history import MessageHistory
 from typing import Dict
-from app.ucase.qna import (
+from app.ucase.chat import (
     logger, 
     llm_platform,
     prompt_repo,

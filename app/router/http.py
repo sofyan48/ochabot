@@ -4,12 +4,13 @@ from fastapi import APIRouter
 routerV1 = APIRouter(prefix="/v1")
 
 
-from app.ucase.qna import chat, delete, history
+from app.ucase.chat import chat, delete, history, files
 routerV1.include_router(chat.router)
 routerV1.include_router(delete.router)
 routerV1.include_router(history.router)
+routerV1.include_router(files.router)
 
-from app.ucase.qna import socket
+from app.ucase.chat import socket
 routerV1.include_router(socket.router)
 
 
