@@ -67,6 +67,6 @@ class OpenAILLM(object):
         prompt = prompt_template  
         if prompt_template == "":  
            prompt = cls.promptTemplates()  
-        document_chain = create_stuff_documents_chain(model, prompt)  
+        document_chain = create_stuff_documents_chain(model, prompt) 
         retrieval_chain = create_retrieval_chain(retriever, document_chain)  
         return retrieval_chain  

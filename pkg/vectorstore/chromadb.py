@@ -4,6 +4,7 @@ from chromadb import HttpClient
 from chromadb.config import Settings  
 from pkg.embedding.mistral import MistralInference  
 from langchain_core.vectorstores import VectorStoreRetriever  
+from pkg.logger.logging import logger
 import os  
   
 class ChromaDB:  
@@ -49,9 +50,9 @@ class ChromaDB:
             raise e  
   
     @classmethod  
-    def build(cls, data, collection, chunk=2000, overlap=500):  
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk, chunk_overlap=overlap)  
-        all_splits = text_splitter.split_documents(data)  
+    def build(cls, data, collection, chunk=2000, overlap=500):
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk, chunk_overlap=overlap)
+        all_splits = text_splitter.split_documents(data)
         return Chroma.from_documents(  
             documents=all_splits,   
             embedding=cls._embeddings,   

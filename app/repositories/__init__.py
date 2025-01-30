@@ -1,6 +1,6 @@
 from pkg.redis import Redis
+from pkg.database.alchemy import AlChemy
 from app import logger
-from app import alchemy
 
 redis = Redis()
-
+alchemy_url = AlChemy.get_write_uri()

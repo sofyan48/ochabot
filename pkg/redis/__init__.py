@@ -3,6 +3,7 @@ from pkg.logger.logging import logger
 
 class Redis:
     redis_client: redis.Redis = None
+    
     @classmethod
     async def connect(
         cls, host: str = "localhost", port: int = 6379, username=None, password=None

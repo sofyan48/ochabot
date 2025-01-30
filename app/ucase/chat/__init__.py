@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from app.ucase import BasicAuth
 from app.library.wrapper import AIWrapperLLM
 from app.repositories import prompt, setup
-from app.repositories import alchemy
+from app.repositories import alchemy_url
 from app import (
                 redis,
                 logger,
@@ -21,3 +21,4 @@ chromadb = ChromaDB()
 
 from app.appctx.websocket import WebSocketManager
 ws_manager = WebSocketManager()
+alchemy = alchemy_url

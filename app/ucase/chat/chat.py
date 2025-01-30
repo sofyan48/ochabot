@@ -4,6 +4,7 @@ from app.presentation import request
 from fastapi.security import HTTPBasicCredentials
 from app.ucase import session_middleware, BasicAuth
 from pkg.history import MessageHistory
+from pkg.chain.prompter import PromptTemplate
 from app.ucase.chat import (
     router, 
     auth, 
@@ -21,6 +22,7 @@ async def send_chat(payload: request.RequesChat,
     
     auth.authenticate(credentials=credentials)
     history = MessageHistory(alchemy, x_session).sql()
+    await history.aclear()
     history_msg = await history.aget_messages()
     setup = await setup_repo.get_all_setup()
     # validate model name
@@ -63,14 +65,18 @@ async def send_chat(payload: request.RequesChat,
         fetch_k=fetch_k,
         collection=collection
     )
-    
+    prompt = ""
     try:
-        prompt = await prompt_repo.get_prompt()
+        prompt_tpl = await prompt_repo.get_prompt()
+        if prompt_tpl != "":
+            prompt = PromptTemplate(input_variables=["answer", "question", "history", "context"],template=prompt_tpl)
     except:
-        prompt = ""
-
-    qa_retrieval = llm.retrieval(prompt, retriever=retriever)
+        return HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Please setup retriever collection or set from payload"
+            )
     
+    qa_retrieval = llm.retrieval(prompt, retriever=retriever)
     chain_with_history = llm.chain_with_history(
         qa_retrieval,
         history=history,

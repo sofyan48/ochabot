@@ -30,6 +30,7 @@ async def build_retriever_chroma(collection: str = Form(...),
 
     file_extension = os.path.splitext(file.filename)[1] 
     data = None
+    logger.info("Splitting Process")
     if (file_extension == ".pdf"):
         data = loader_model.pdf_loader(file_path)
     elif (file_extension == ".csv"):
@@ -41,7 +42,7 @@ async def build_retriever_chroma(collection: str = Form(...),
             message="Please select loader: text, pdf, csv",
             data=None
         )
-    
+    logger.info("Splitting Success")
     try:
         chromadb.build(data=data, collection=collection, chunk=chunk, overlap=overlap)
     except Exception as e:

@@ -20,6 +20,10 @@ from starlette.middleware.cors import CORSMiddleware
 APP_ROOT = os.path.join(os.path.dirname(__file__), '..')
 UPLOAD_MODEL_DIR = APP_ROOT+"/knowledge/model"
 
+
+register_alchemy_async()
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await redis.register_redis()
@@ -40,7 +44,6 @@ app = FastAPI(
 )
 
 # Database
-alchemy = register_alchemy_async()
 
 # logger
 logger = logging.setup_logger()

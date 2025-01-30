@@ -4,6 +4,7 @@ class MessageHistory(object):
     def __init__(self, client=None, session=None) -> SQLChatMessageHistory:
         self.client = client
         self.session = session
+        
     def sql(self) -> SQLChatMessageHistory:
         return SQLChatMessageHistory(
             session_id=self.session,
