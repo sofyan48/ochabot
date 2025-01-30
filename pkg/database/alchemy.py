@@ -1,6 +1,6 @@
 from pkg.database import DatabaseConfig
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, AsyncSession
-from sqlalchemy import select, insert, delete, update  
+from sqlalchemy import select, insert, delete, update, create_engine
 from typing import Optional, List, Dict
 
 
@@ -13,7 +13,28 @@ class AlChemy:
     def __new__(cls, *args, **kwargs):    
         if cls._instance is None:    
             cls._instance = super(AlChemy, cls).__new__(cls)    
-        return cls._instance    
+        return cls._instance 
+
+    def connection_setup_sync(self, config: DatabaseConfig, driver: str) -> str:
+        connection_str = ""
+        cfg = config.get_config()
+        if driver == "postgres":
+            connection_str = "postgresql://{}:{}@{}:{}/{}".format(
+                cfg.get("user"),
+                cfg.get("password"),
+                cfg.get("host"),
+                cfg.get("port"),
+                cfg.get("name")
+            )
+        else:
+            connection_str = "mysql://{}:{}@{}:{}/{}".format(
+                cfg.get("user"),
+                cfg.get("password"),
+                cfg.get("host"),
+                cfg.get("port"),
+                cfg.get("name")
+            )
+        return connection_str   
     
     def connection_setup(self, config: DatabaseConfig, driver: str) -> str:
         connection_str = ""
@@ -44,7 +65,7 @@ class AlChemy:
             isolation_level="AUTOCOMMIT", 
             echo=debug,
             pool_pre_ping=True,
-            connect_args={"ssl_context": False}
+            connect_args={}
         )
     
     @classmethod
@@ -80,20 +101,19 @@ class AlChemy:
         return cls._write_url
     
     @classmethod
-    async def fetch(cls, query: select) -> Optional[dict]:       
+    async def fetch(cls, query: select, arguments: dict) -> Optional[dict]:       
         async with AsyncSession(cls._instance_read) as session:    
             try:    
-                result = await session.execute(query)    
-                row = result.scalar_one_or_none()  
-                return dict(row) if row else None  
+                result = await session.execute(query, arguments)    
+                return result.fetchone()
             except Exception as e:    
                 raise e
     
     @classmethod      
-    async def find(cls, query: select) -> List[dict]:  
+    async def find(cls, query: select, arguments: dict) -> List[dict]:  
         async with AsyncSession(cls._instance_read) as session:  
             try:  
-                result = await session.execute(query)  
+                result = await session.execute(query, arguments)  
                 rows = result.fetchall()  
                 return [dict(row._mapping) for row in rows] if rows else []  
             except Exception as e:  

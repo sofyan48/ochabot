@@ -33,7 +33,6 @@ async def chat_with_files(
     with open(file_path, "wb") as f:
         f.write(await file.read())
     file_extension = os.path.splitext(file.filename)[1]
-    print(file_extension)
     if (file_extension == ".pdf"):
         data = loader_model.pdf_loader(file_path)
     elif (file_extension == ".csv"):

@@ -4,7 +4,7 @@ import os
     
 
 def register_alchemy_async():
-    driver = os.environ.get("DB_DRIVER", "mysql")
+    driver = os.environ.get("DB_DRIVER", "postgres")
     configWrite = DatabaseConfig(
         dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),

@@ -46,6 +46,16 @@ with docker
 docker compose up --build
 ```
 
+## Migration
+Using Alembic
+```
+alembic revision --autogenerate -m "Your Table"
+```
+run migration
+```
+alembic upgrade head
+```
+
 ## Swagger
 ```
 http://localhost:8081/docs

@@ -10,19 +10,20 @@ from bootstrap.database import (
 from bootstrap import (
     redis,
     logging,
-     openai, 
-     mistral, 
-     groq,
-    vectorstore
+    openai, 
+    mistral, 
+    groq,
+    vectorstore,
+    prompter
 )
 from starlette.middleware.cors import CORSMiddleware
 
 APP_ROOT = os.path.join(os.path.dirname(__file__), '..')
 UPLOAD_MODEL_DIR = APP_ROOT+"/knowledge/model"
 
-
+# bootstraping
 register_alchemy_async()
-
+prompter.regist_default_prompter()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

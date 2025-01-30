@@ -5,19 +5,12 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.vectorstores import VectorStoreRetriever  
 from langchain_core.prompts import PromptTemplate  
 from langchain.chains.retrieval import Runnable, create_retrieval_chain  
-  
+from pkg.chain.prompter import DefaultPrompter  
 class OpenAILLM(object):  
     _instance = None    
     _model = "gpt-4o-mini"    
     _apikey = ""    
-    _template = """Your name is Cinbot OpenAI.  
-        Answer in Bahasa Indonesia.  
-        If you don't know, don't go out of context just answer 'I don't know.  
-        Histroy: {history}  
-        Context: {context}  
-        Question: {input}  
-        Helpfull answer:  
-    """  
+    _template = DefaultPrompter.default_prompter()
     
     def __new__(cls, *args, **kwargs):    
         if cls._instance is None:    
