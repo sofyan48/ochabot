@@ -1,6 +1,15 @@
 from pkg.database import DatabaseConfig
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, AsyncSession
-from sqlalchemy import select, insert, delete, update, create_engine
+from sqlalchemy import (
+    select, 
+    insert, 
+    delete, 
+    update, 
+    and_, 
+    or_,
+    
+)
+
 from typing import Optional, List, Dict
 
 
@@ -101,7 +110,7 @@ class AlChemy:
         return cls._write_url
     
     @classmethod
-    async def fetch(cls, query: select, arguments: dict) -> Optional[dict]:       
+    async def fetch(cls, query: select, arguments: dict = {}) -> Optional[dict]:       
         async with AsyncSession(cls._instance_read) as session:    
             try:    
                 result = await session.execute(query, arguments)    
@@ -110,7 +119,7 @@ class AlChemy:
                 raise e
     
     @classmethod      
-    async def find(cls, query: select, arguments: dict) -> List[dict]:  
+    async def find(cls, query: select, arguments: dict = {}) -> List[dict]:  
         async with AsyncSession(cls._instance_read) as session:  
             try:  
                 result = await session.execute(query, arguments)  
