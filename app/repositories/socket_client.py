@@ -1,8 +1,7 @@
     
 from pkg.database.alchemy import (
     AlChemy,
-    select,
-    where,
+    select
 )
 from typing import Optional    
 from datetime import datetime  
