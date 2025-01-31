@@ -22,3 +22,7 @@ chromadb = ChromaDB()
 from app.appctx.websocket import WebSocketManager
 ws_manager = WebSocketManager()
 alchemy = alchemy_url
+
+from app.library.storage import Storage
+from app.library import minio
+minio_client = Storage(minio)
