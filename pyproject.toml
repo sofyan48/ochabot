@@ -66,6 +66,7 @@ asyncpg = "^0.30.0"
 motor = "^3.6.1"
 alembic = "^1.14.1"
 psycopg2 = "^2.9.10"
+minio = "^7.2.15"
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = [ "F401",]

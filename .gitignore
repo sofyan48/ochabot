@@ -127,4 +127,5 @@ cached.db
 poetry.lock
 .env.*
 chroma
+minio/
 

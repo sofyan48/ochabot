@@ -1,6 +1,17 @@
 version: '3'
 
 services:
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: password
+    volumes:
+      - ./minio:/data
+    command: server /data --console-address ":9001"
   redis:
     image: redis/redis-stack-server:latest
     container_name: redis
@@ -44,15 +55,15 @@ services:
       - ./mydb:/var/lib/postgresql/data  
     networks:  
       - code-network  
-  app:
-    build: .
-    ports:
-      - 8081:8081
-    networks:
-      - code-network
-    restart: always
-    volumes:
-      - ./:/app/
+  # app:
+  #   build: .
+  #   ports:
+  #     - 8081:8081
+  #   networks:
+  #     - code-network
+  #   restart: always
+  #   volumes:
+  #     - ./:/app/
 networks:
   code-network:
     driver: bridge

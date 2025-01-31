@@ -1,12 +1,10 @@
 import os 
 from contextlib import asynccontextmanager
-from fastapi import (
-    FastAPI,
-    WebSocket
-)
+from fastapi import FastAPI
 from bootstrap.database import (
     register_alchemy_async,
 )
+
 from bootstrap import (
     redis,
     logging,
@@ -14,7 +12,8 @@ from bootstrap import (
     mistral, 
     groq,
     vectorstore,
-    prompter
+    prompter,
+    minio
 )
 from starlette.middleware.cors import CORSMiddleware
 
@@ -24,6 +23,8 @@ UPLOAD_MODEL_DIR = APP_ROOT+"/knowledge/model"
 # bootstraping
 register_alchemy_async()
 prompter.regist_default_prompter()
+minio.register_storage_minio()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
