@@ -13,3 +13,6 @@ openai_llm = OpenAILLM()
 groq_llm = GroqLLM()
 chromadb = ChromaDB()
 minio = StorageMinio
+
+from app.repositories.setup import SetupConfig
+repo_config = SetupConfig()

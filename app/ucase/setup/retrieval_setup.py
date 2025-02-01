@@ -13,8 +13,8 @@ async def setup_retriever_insert(payload: request.RequestRetrievalSetup,
     try:
         await setup_repo.vector_db(payload.vector_db)
         await setup_repo.collection(payload.collection)
-        await setup_repo.fetch_k(payload.fetch_k)
-        await setup_repo.top_k(payload.top_k)
+        await setup_repo.fetch_k(str(payload.fetch_k))
+        await setup_repo.top_k(str(payload.top_k))
     except Exception as e:
         logger.error("Error saving retrieval", {
             "error": str(e),

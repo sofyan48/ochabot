@@ -1,8 +1,8 @@
-"""Create Index Table Config
+"""Index Table Config
 
-Revision ID: 3f10f02af3b4
-Revises: fbfc4531b29e
-Create Date: 2025-01-31 08:34:12.809274
+Revision ID: 3fd2aaf0a53d
+Revises: 5ff6e72c50ab
+Create Date: 2025-02-01 20:54:18.859586
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '3f10f02af3b4'
-down_revision: Union[str, None] = 'fbfc4531b29e'
+revision: str = '3fd2aaf0a53d'
+down_revision: Union[str, None] = '5ff6e72c50ab'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
