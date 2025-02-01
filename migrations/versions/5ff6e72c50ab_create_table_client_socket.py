@@ -1,8 +1,8 @@
-"""Create SocketClient Table
+"""Create Table Client Socket
 
-Revision ID: 288d9677323f
-Revises: 
-Create Date: 2025-01-30 21:08:10.138567
+Revision ID: 5ff6e72c50ab
+Revises: 31b92c51b921
+Create Date: 2025-02-01 20:54:04.589683
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '288d9677323f'
-down_revision: Union[str, None] = None
+revision: str = '5ff6e72c50ab'
+down_revision: Union[str, None] = '31b92c51b921'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

@@ -1,15 +1,13 @@
 from pkg.database import DatabaseConfig
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, AsyncSession
 from sqlalchemy import (
-    select, 
-    insert, 
+    select,  
     delete, 
     update, 
-    and_, 
-    or_,
-    
 )
 
+from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy.exc import SQLAlchemyError
 from typing import Optional, List, Dict
 
 
@@ -67,7 +65,6 @@ class AlChemy:
         return connection_str
 
     def async_engine(self, config: DatabaseConfig, driver: str = "postgres", debug: bool = False) -> AsyncEngine:
-        """Membuat engine asinkron berdasarkan konfigurasi yang diberikan."""
         conn_str = self.connection_setup(config, driver)
         return create_async_engine(
             url=conn_str, 
@@ -79,7 +76,6 @@ class AlChemy:
     
     @classmethod
     def get_instance(cls, cfgWrite: DatabaseConfig, cfgRead: DatabaseConfig, driver: str = "postgres"):
-        """Mengambil instance dari AlChemy untuk operasi baca dan tulis."""
         if cls._instance is None:
             cls._instance = super(AlChemy, cls).__new__(cls)  
         
@@ -96,17 +92,14 @@ class AlChemy:
     
     @classmethod
     def async_write(cls) -> AsyncEngine:
-        """Mengembalikan engine untuk operasi tulis."""
         return cls._instance_write
     
     @classmethod
     def async_read(cls) -> AsyncEngine:
-        """Mengembalikan engine untuk operasi baca."""
         return cls._instance_read
 
     @classmethod
     def get_write_uri(cls) -> str:
-        """Mengembalikan URI untuk koneksi tulis."""
         return cls._write_url
     
     @classmethod
@@ -135,6 +128,61 @@ class AlChemy:
             stmt = update(table).where(where_clause).values(values)
             await session.execute(stmt)
             await session.flush()
+
+    
+    @classmethod
+    async def upsert_with_tx(cls, table, values: Dict, conflict_key: str):
+        """Upsert data dengan transaksi."""
+        async with AsyncSession(cls._instance_write) as session:
+            async with session.begin():  # Memulai transaksi
+                try:
+                    stmt = insert(table).values(values)
+                    # Create update_dict using the correct method
+                    update_structured = {}
+                    for c in table.__table__.columns:
+                        if c.name in values:  # Check if the column is in values
+                            update_structured[c.name] = values[c.name]
+
+                    # Ensure the conflict_key is valid
+                    if conflict_key not in table.__table__.columns:
+                        raise ValueError(f"Conflict key '{conflict_key}' is not a valid column.")
+
+                    stmt = stmt.on_conflict_do_update(
+                        index_elements=[conflict_key],
+                        set_=update_structured
+                    )
+                    await session.execute(stmt)
+                except SQLAlchemyError as e:
+                    await session.rollback()  # Rollback jika terjadi kesalahan
+                    raise e  # Lempar kembali kesalahan
+
+    @classmethod
+    async def upsert_without_tx(cls, table, values: Dict, conflict_key: str):
+        """Upsert data tanpa transaksi."""
+        async with AsyncSession(cls._instance_write) as session:
+            try:
+                stmt = insert(table).values(values)
+
+                # Create update_dict using the correct method
+                update_structured = {}
+                for c in table.__table__.columns:
+                    if c.name in values:  # Check if the column is in values
+                        update_structured[c.name] = values[c.name]
+
+                # Ensure the conflict_key is valid
+                if conflict_key not in table.__table__.columns:
+                    raise ValueError(f"Conflict key '{conflict_key}' is not a valid column.")
+
+                stmt = stmt.on_conflict_do_update(
+                    index_elements=[conflict_key],
+                    set_=update_structured
+                )
+                await session.execute(stmt)
+                await session.commit()  # Commit perubahan
+            except SQLAlchemyError as e:
+                await session.rollback()  # Rollback jika terjadi kesalahan
+                raise e  # Lempar kembali kesalahan
+    
 
     @classmethod
     async def update_with_tx(cls, table, values: Dict, where_clause):
