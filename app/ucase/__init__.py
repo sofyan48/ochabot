@@ -2,6 +2,7 @@ from fastapi import Header, HTTPException
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import secrets, os
 from fastapi import HTTPException, status
+from pkg.jwt import JWTManager
 
 async def session_middleware(x_session: str = Header(None)):
     if x_session is None:
@@ -24,3 +25,13 @@ class BasicAuth:
                 headers={"WWW-Authenticate": "Basic"},
             )
         return credentials
+    
+# JWT Middleware
+async def jwt_middleware(x_jwt: str = Header(None)):
+    if x_jwt is None:
+        raise HTTPException(status_code=401, detail="Missing x-jwt header")
+    try:
+        payload = JWTManager.validate_jwt_token(x_jwt)
+        return payload  # Return the payload if needed for further processing
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=str(e))
