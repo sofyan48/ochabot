@@ -27,11 +27,17 @@ class BasicAuth:
         return credentials
     
 # JWT Middleware
-async def jwt_middleware(x_jwt: str = Header(None)):
-    if x_jwt is None:
-        raise HTTPException(status_code=401, detail="Missing x-jwt header")
+async def jwt_middleware(authorization: str = Header(None)):
+    if authorization is None:
+        raise HTTPException(status_code=401, detail="Missing Authorization header")
+    
+    if not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Invalid Authorization header format")
+    
+    # Extract the token from the header
+    token = authorization.split(" ")[1]
     try:
-        payload = JWTManager.validate_jwt_token(x_jwt)
+        payload = JWTManager.validate_jwt_token(token)
         return payload  # Return the payload if needed for further processing
     except Exception as e:
         raise HTTPException(status_code=401, detail=str(e))
