@@ -8,7 +8,7 @@ from app.ucase.prompt import router, auth, repoPrompt, logger
 async def prompt_list(credentials: HTTPBasicCredentials = Depends(BasicAuth().security)) -> IGetResponseBase:
     auth.authenticate(credentials=credentials)
     try: 
-        prompt_data = await repoPrompt.get_prompt()
+        prompt_data = await repoPrompt.list()
     except Exception as e:
         logger.error("Error getting prompt", {
             "error": str(e),

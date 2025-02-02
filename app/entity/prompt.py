@@ -12,6 +12,6 @@ class Prompt(Base):
     __tablename__ = "prompts"  
     id = Column(Integer, primary_key=True, index=True)  
     prompt = Column(String)
-    is_active = Column(Boolean)  
+    is_default = Column(Boolean)  
     created_at = Column(DateTime)  
     updated_at = Column(DateTime)  

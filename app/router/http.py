@@ -24,11 +24,13 @@ routerV1.include_router(llm.router)
 from app.ucase.prompt import (
     prompt_insert, 
     prompt_list,
-    prompt_delete
+    prompt_delete,
+    prompt_set
 )
 routerV1.include_router(prompt_insert.router)
 routerV1.include_router(prompt_list.router)
 routerV1.include_router(prompt_delete.router)
+routerV1.include_router(prompt_set.router)
 
 from app.ucase.setup import(
     llm_setup,

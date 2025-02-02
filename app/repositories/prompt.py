@@ -10,25 +10,40 @@ class PromptRepositories(object):
         self.db = alchemy
         self.key = "config:prompt"
 
-    async def save(self, prompt: str, is_active=False):
+    async def save(self, prompt: str, is_default=False):
         try: 
             return await self.db.insert_without_tx(self.table, {
                 "prompt": prompt,
-                "is_active": is_active
+                "is_default": is_default
             })
         except Exception as e:
             raise e
         
     async def set_prompt_config(self, id_prompt):
         try:
-            query = select(self.model).where(self.model.id==id_prompt and self.model.is_active==True)
+            query = select(self.table).where(Prompt.id==id_prompt)
             data_prompt = await self.db.fetch(query=query, arguments={})
             if data_prompt is None:
                 return None
-            return await self.redis.set(self.key, data_prompt.get('prompt'))
+            await self.db.update_without_tx(
+                table=self.table, 
+                values={
+                    "is_default": True
+                },
+                where_clause=(self.model.id==id_prompt)
+            )
+
+            return await self.redis.set(self.key, data_prompt.prompt)
         except Exception as e:
             raise e
-    
+        
+    async def list(self):
+        try:
+            query = select(self.table).limit(10)
+            return await self.db.find(query=query, arguments={})   
+        except Exception as e:
+            raise e
+        
     async def get_prompt(self):
         try:
             prompt = await self.redis.get(self.key)
@@ -40,6 +55,8 @@ class PromptRepositories(object):
                 "error": str(e),
             })
             raise e
-    
-    async def delete_prompt(self):
+    async def delete(self, id):
+        await self.db.delete_without_tx(table=self.table, where_clause=(Prompt.id==id))
+
+    async def delete_prompt_config(self):
         return await self.redis.delete(self.key)

@@ -11,7 +11,7 @@ class RequesChat(BaseModel):
 
 class RequestPrompt(BaseModel):
     prompt: str = Field(..., min_length=1)
-    is_active: Optional[bool] = False
+    is_default: Optional[bool] = False
 
 class RequestLLMSetup(BaseModel):
     platform: str = Field(..., min_length=1)

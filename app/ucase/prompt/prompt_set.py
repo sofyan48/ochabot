@@ -8,7 +8,7 @@ from app.ucase.prompt import router, auth, repoPrompt, logger
 @router.get("/prompt/set", tags=["prompt"], operation_id="prompt_set") 
 async def prompt_set(
         credentials: HTTPBasicCredentials = Depends(BasicAuth().security),
-        prompt_id: Optional[str] = Query(None, description="The prompt id to be retrieved")
+        prompt_id: Optional[int] = Query(None, description="The prompt id to be retrieved")
     ) -> IGetResponseBase:
     auth.authenticate(credentials=credentials)
     try: 
