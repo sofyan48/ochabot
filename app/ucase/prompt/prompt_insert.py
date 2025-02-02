@@ -18,7 +18,7 @@ async def insert_prompt(payload: request.RequestPrompt,
         Helpfull answer:
         """
         payload.prompt = payload.prompt+template
-        await repoPrompt.save_prompt(prompt=payload.prompt)
+        await repoPrompt.save(prompt=payload.prompt, is_active=payload.is_active)
     except Exception as e:
         logger.error("Error saving prompt", {
             "error": str(e),

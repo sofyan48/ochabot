@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, StrictBool
 from typing import Optional
 
 
@@ -11,6 +11,7 @@ class RequesChat(BaseModel):
 
 class RequestPrompt(BaseModel):
     prompt: str = Field(..., min_length=1)
+    is_active: Optional[bool] = False
 
 class RequestLLMSetup(BaseModel):
     platform: str = Field(..., min_length=1)

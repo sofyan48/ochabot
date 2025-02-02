@@ -5,4 +5,4 @@ from app.repositories import prompt
 
 auth = BasicAuth()
 router = APIRouter()
-repoPrompt = prompt.Prompt()
+repoPrompt = prompt.PromptRepositories()
