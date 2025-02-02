@@ -13,7 +13,8 @@ from bootstrap import (
     groq,
     vectorstore,
     prompter,
-    minio
+    minio,
+    jwt
 )
 from starlette.middleware.cors import CORSMiddleware
 
@@ -24,6 +25,7 @@ UPLOAD_MODEL_DIR = APP_ROOT+"/knowledge/model"
 register_alchemy_async()
 prompter.regist_default_prompter()
 minio.register_storage_minio()
+jwt.register_jwt()
 
 
 @asynccontextmanager
