@@ -30,3 +30,7 @@ class RequestDeleteSetup(BaseModel):
 class RequestClientSocket(BaseModel):
     id: Optional[int] = None
     name: str = Field(..., min_length=1)
+
+class RequestUsers(BaseModel):
+    id: Optional[int] = None
+    name: str = Field(..., min_length=1)
