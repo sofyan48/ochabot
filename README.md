@@ -1,4 +1,4 @@
-# OCHABOT GPT SEARCH (RTFM)
+# OCHABOT GPT OR RAG (RTFM)
 ## Description
 this project used on my profile page: [iank.me](https://iank.me).
 Based on mistral AI, OpenAI, Groq, langchain and chroma vector database, I'm still learning, and this is my first project in AI
