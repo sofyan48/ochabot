@@ -49,7 +49,7 @@ docker compose up --build
 ## Migration
 Using Alembic
 ```
-alembic revision --autogenerate -m "Your Table"
+alembic revision -m "Your Table"
 ```
 run migration
 ```
