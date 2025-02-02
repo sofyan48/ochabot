@@ -86,60 +86,82 @@ payload:
 ```mermaid
 graph TB
     User((External User))
+    
+    subgraph "Ochabot System"
+        subgraph "API Layer"
+            FastAPI["API Server<br>FastAPI"]
+            Router["Router<br>FastAPI Router"]
+            CORS["CORS Middleware<br>Starlette"]
+            WebSocket["WebSocket Handler<br>FastAPI WebSocket"]
+        end
 
-    subgraph "API Layer"
-        FastAPI["API Server<br>(FastAPI)"]
-        Router["Router<br>(FastAPI Router)"]
-    end
+        subgraph "Core Services"
+            AuthService["Authentication Service<br>JWT"]
+            ChatService["Chat Service<br>Python"]
+            LLMService["LLM Service<br>Python"]
+            UserService["User Service<br>Python"]
+            PromptService["Prompt Service<br>Python"]
+            RetrievalService["Retrieval Service<br>Python"]
+        end
 
-    subgraph "LLM Integration"
-        LLMWrapper["AI Wrapper<br>(Python)"]
-        subgraph "LLM Providers"
-            MistralAI["Mistral AI<br>(API Client)"]
-            OpenAI["OpenAI<br>(API Client)"]
-            Groq["Groq<br>(API Client)"]
+        subgraph "LLM Integration"
+            LLMWrapper["LLM Wrapper<br>Python"]
+            MistralAI["Mistral Integration<br>Python"]
+            OpenAI["OpenAI Integration<br>Python"]
+            GroqAI["Groq Integration<br>Python"]
+            Prompter["Prompt Chain<br>LangChain"]
+        end
+
+        subgraph "Data Layer"
+            PostgreSQL[("PostgreSQL<br>Database")]
+            Redis[("Redis<br>Cache")]
+            MinIO[("MinIO<br>Object Storage")]
+            ChromaDB[("ChromaDB<br>Vector Store")]
         end
     end
 
-    subgraph "Data Storage"
-        ChromaDB["Vector Store<br>(ChromaDB)"]
-        Redis["Cache<br>(Redis Stack)"]
-        MySQL["Database<br>(MySQL 8.0)"]
+    subgraph "External Services"
+        MistralAPI["Mistral AI API<br>External Service"]
+        OpenAIAPI["OpenAI API<br>External Service"]
+        GroqAPI["Groq API<br>External Service"]
     end
 
-    subgraph "Core Components"
-        Retriever["Retriever Service<br>(Python)"]
-        QnAService["QnA Service<br>(Python)"]
-        PromptManager["Prompt Manager<br>(Python)"]
-        SetupManager["Setup Manager<br>(Python)"]
-    end
+    %% Connections
+    User -->|"HTTP/WebSocket"| FastAPI
+    FastAPI -->|"Routes"| Router
+    FastAPI -->|"Uses"| CORS
+    FastAPI -->|"WebSocket"| WebSocket
 
-    subgraph "Infrastructure"
-        K8s["Kubernetes<br>(Helm)"]
-        LoadBalancer["Load Balancer<br>(K8s Ingress)"]
-        HPA["Auto Scaler<br>(HPA)"]
-    end
+    Router -->|"Auth"| AuthService
+    Router -->|"Chat"| ChatService
+    Router -->|"Users"| UserService
+    Router -->|"Prompts"| PromptService
+    Router -->|"Retrieval"| RetrievalService
 
-    %% Relationships
-    User -->|"HTTP Requests"| LoadBalancer
-    LoadBalancer -->|"Routes"| FastAPI
-    FastAPI -->|"Routes Requests"| Router
+    ChatService --> LLMService
+    LLMService --> LLMWrapper
+    LLMWrapper -->|"Uses"| MistralAI
+    LLMWrapper -->|"Uses"| OpenAI
+    LLMWrapper -->|"Uses"| GroqAI
+    LLMWrapper -->|"Uses"| Prompter
+
+    MistralAI -->|"API Calls"| MistralAPI
+    OpenAI -->|"API Calls"| OpenAIAPI
+    GroqAI -->|"API Calls"| GroqAPI
+
+    AuthService -->|"Read/Write"| PostgreSQL
+    UserService -->|"Read/Write"| PostgreSQL
+    PromptService -->|"Read/Write"| PostgreSQL
     
-    Router -->|"Handles QnA"| QnAService
-    Router -->|"Manages Prompts"| PromptManager
-    Router -->|"Manages Setup"| SetupManager
-    Router -->|"Handles Retrieval"| Retriever
+    ChatService -->|"Cache"| Redis
+    RetrievalService -->|"Vectors"| ChromaDB
+    ChatService -->|"Files"| MinIO
 
-    QnAService -->|"Uses"| LLMWrapper
-    LLMWrapper -->|"Calls"| MistralAI
-    LLMWrapper -->|"Calls"| OpenAI
-    LLMWrapper -->|"Calls"| Groq
-
-    Retriever -->|"Stores Vectors"| ChromaDB
-    QnAService -->|"Caches"| Redis
-    SetupManager -->|"Stores Config"| MySQL
-
-    K8s -->|"Manages"| FastAPI
-    K8s -->|"Configures"| LoadBalancer
-    K8s -->|"Scales"| HPA
+    %% Component relationships
+    subgraph "Database Components"
+        DBPool["Connection Pool<br>SQLAlchemy"]
+        DBMigrations["Migrations<br>Alembic"]
+    end
+    PostgreSQL --- DBPool
+    PostgreSQL --- DBMigrations
 ```
