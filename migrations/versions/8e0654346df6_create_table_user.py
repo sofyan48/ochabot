@@ -27,8 +27,8 @@ def upgrade() -> None:
         sa.Column('password', sa.String(length=255), nullable=False),
         sa.Column('name', sa.String(length=100), nullable=False),
         sa.Column('is_active', sa.Boolean, default=True),
-        sa.Column('created_at', sa.DateTime(), nullable=False),
-        sa.Column('updated_at', sa.DateTime(), nullable=False),
+        sa.Column('created_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP')),
+        sa.Column('updated_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), onupdate=sa.text('CURRENT_TIMESTAMP'))
     )
 
 def downgrade() -> None:

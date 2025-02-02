@@ -53,7 +53,7 @@ class UserRepositories:
     
     async def get_by_username_or_email(self, username):
         try:
-            query = select(self.table).where(or_(User.username==username, User.email==username))
+            query = select(self.table).where(or_(User.username==username, User.email==username), User.is_active==True)
             return await self.engine.fetch(
                 query=query,
                 arguments={}
