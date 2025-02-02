@@ -6,6 +6,7 @@ from fastapi import Depends, Query, HTTPException, status
 from app.appctx import IGetResponseBase, response
 from app.ucase import BasicAuth
 from datetime import datetime
+from pkg import utils
 from typing import Optional
 
 @router.post("/client/socket", tags=["client"], operation_id="insert_client_socket") 
@@ -16,7 +17,7 @@ async def insert_client_socket(payload: request.RequestClientSocket,
 
     client = {
         "name": payload.name,
-        "secret": "aaaaaa",
+        "secret": utils.generate_random_string(16),
         "created_at": datetime.now(),
         "updated_at": datetime.now()
     }
@@ -24,12 +25,17 @@ async def insert_client_socket(payload: request.RequestClientSocket,
     if payload.id is not None:
         client['id'] = payload.id
 
-    await client_socket_repo.upsert(client)
+    try:
+        lastId = await client_socket_repo.upsert(client)
+        client['id'] = lastId
+    except Exception as e:
+        logger.error("Cannot upsert client socker", {
+            "error": e
+        })
+        return HTTPException(status_code=500, detail="Cannot upsert client socket")
     return response(
         message="Successfully",
-        data={
-            "payload": payload.model_dump()
-        }
+        data=client
     )
 
 @router.get("/client/socket", tags=["client"])

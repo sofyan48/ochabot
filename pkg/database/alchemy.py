@@ -152,7 +152,7 @@ class AlChemy:
                         set_=update_structured
                     )
                     result = await session.execute(stmt)
-                    return result.inserted_primary_key
+                    return result.inserted_primary_key[0]
                 except SQLAlchemyError as e:
                     await session.rollback()  # Rollback jika terjadi kesalahan
                     raise e  # Lempar kembali kesalahan
@@ -180,7 +180,7 @@ class AlChemy:
                 )
                 result = await session.execute(stmt)
                 await session.commit()  # Commit perubahan
-                return result.inserted_primary_key
+                return result.inserted_primary_key[0]
             except SQLAlchemyError as e:
                 await session.rollback()  # Rollback jika terjadi kesalahan
                 raise e  # Lempar kembali kesalahan
@@ -201,7 +201,7 @@ class AlChemy:
             stmt = insert(table).values(values)
             result = await session.execute(stmt)
             await session.flush()
-            return result.inserted_primary_key
+            return result.inserted_primary_key[0]
            
 
     @classmethod
@@ -211,7 +211,7 @@ class AlChemy:
             async with session.begin():
                 stmt = insert(table).values(values)
                 result = await session.execute(stmt)
-                return result.inserted_primary_key
+                return result.inserted_primary_key[0]
 
     @classmethod
     async def delete_with_tx(cls, table, where_clause):

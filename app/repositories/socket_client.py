@@ -16,14 +16,13 @@ class ClientSocketRepositories:
                 
     async def upsert(self, data: dict) -> int:   
         try:
-            await self.engine.upsert_without_tx(
-                table=ClientSocket, 
+            return await self.engine.upsert_without_tx(
+                model=ClientSocket, 
                 values=data,
                 conflict_key="id"
             )
         except Exception as e:
             raise e
-        return True
     
     async def list(self, limit=10, page=1):
         offset = utils.offset(limit=limit, page=page)
