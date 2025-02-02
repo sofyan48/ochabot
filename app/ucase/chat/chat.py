@@ -25,6 +25,7 @@ async def send_chat(payload: request.RequesChat,
     await history.aclear()
     history_msg = await history.aget_messages()
     setup = await setup_repo.get_all_setup()
+    
     # validate model name
     if payload.llm is None:
         try:
@@ -59,12 +60,23 @@ async def send_chat(payload: request.RequesChat,
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="Please setup retriever collection or set from payload"
             )
+        
     
-    retriever = llm.retriever(
-        top_k=top_k,
-        fetch_k=fetch_k,
-        collection=collection
-    )
+    try:
+        retriever = llm.retriever(
+            top_k=top_k,
+            fetch_k=fetch_k,
+            collection=collection
+        )
+    except Exception as e:
+        return HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={
+                "error": e
+            }
+        )
+
+   
     prompt = ""
     try:
         prompt_tpl = await prompt_repo.get_prompt()

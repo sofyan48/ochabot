@@ -12,7 +12,7 @@ from app import (
 
 auth = BasicAuth()
 router = APIRouter()
-prompt_repo = prompt.Prompt()
+prompt_repo = prompt.PromptRepositories()
 setup_repo = setup.SetupConfig()
 llm_platform = AIWrapperLLM()
 
