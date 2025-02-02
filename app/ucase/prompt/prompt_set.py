@@ -1,4 +1,4 @@
-from fastapi.security import HTTPBasicCredentials
+from fastapi.security import HTTPAuthorizationCredentials
 from app.ucase import BasicAuth
 from fastapi import HTTPException, status,  Depends, Query
 from app.appctx import IGetResponseBase, response
@@ -7,10 +7,9 @@ from app.ucase.prompt import router, auth, repoPrompt, logger
 
 @router.get("/prompt/set", tags=["prompt"], operation_id="prompt_set") 
 async def prompt_set(
-        credentials: HTTPBasicCredentials = Depends(BasicAuth().security),
+        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
         prompt_id: Optional[int] = Query(None, description="The prompt id to be retrieved")
     ) -> IGetResponseBase:
-    auth.authenticate(credentials=credentials)
     try: 
         await repoPrompt.set_prompt_config(id_prompt=prompt_id)
     except Exception as e:

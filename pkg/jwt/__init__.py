@@ -6,29 +6,40 @@ class JWTManager:
     _instance = None
     SECRET_KEY = ""
     ALGORITHM = "HS256"
+    _blacklist = set() 
 
     @classmethod
-    def create_jwt_token(self, data: dict, expires_delta: timedelta = None):
+    def create_jwt_token(cls, data: dict, expires_delta: timedelta = None):
         """
         Create a JWT token with the given data and expiration time.
         """
         to_encode = data.copy()
         if expires_delta:
-            expire = datetime.now() + expires_delta
+            expire = datetime.utcnow() + expires_delta
         else:
-            expire = datetime.now() + timedelta(days=7)  # Default expiration time
+            expire = datetime.utcnow() + timedelta(minutes=15)  # Default expiration time
         to_encode.update({"exp": expire})
-        encoded_jwt = jwt.encode(to_encode, self.SECRET_KEY, algorithm=self.ALGORITHM)
+        encoded_jwt = jwt.encode(to_encode, cls.SECRET_KEY, algorithm=cls.ALGORITHM)
         return encoded_jwt
-    
+
     @classmethod
-    def validate_jwt_token(self, token: str):
+    def destroy_token(cls, token: str):
+        """
+        Invalidate a JWT token by adding it to the blacklist.
+        """
+        cls._blacklist.add(token)
+        
+    @classmethod
+    def validate_jwt_token(cls, token: str):
         """
         Validate a JWT token and return the decoded payload if valid.
         """
+        if token in cls._blacklist:
+            raise Exception("Token has been invalidated")
+
         try:
             # Decode and verify the token
-            payload = jwt.decode(token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
+            payload = jwt.decode(token, cls.SECRET_KEY, algorithms=[cls.ALGORITHM])
             return payload
         except ExpiredSignatureError:
             # Handle expired token

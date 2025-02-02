@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.ucase import BasicAuth
+from app.ucase import BearerAuthentication
 from app.library.wrapper import AIWrapperLLM
 from app.repositories import prompt, setup
 from app.repositories import alchemy_url
@@ -10,7 +10,7 @@ from app import (
             )
 
 
-auth = BasicAuth()
+auth = BearerAuthentication()
 router = APIRouter()
 prompt_repo = prompt.PromptRepositories()
 setup_repo = setup.SetupConfig()

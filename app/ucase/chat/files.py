@@ -2,18 +2,12 @@ import os
 from fastapi import Form, File, UploadFile, Depends, HTTPException, status
 from app.appctx import IGetResponseBase, response
 from pkg.retriever import loader as loader_model
-from fastapi.security import HTTPBasicCredentials
-from app.ucase import BasicAuth, session_middleware
-from pkg.history import MessageHistory
-from pkg import utils
+from fastapi.security import HTTPAuthorizationCredentials
+from app.ucase import session_middleware
 from app.ucase.chat import (
     router, 
     auth, 
-    logger, 
-    chromadb, 
-    llm_platform,
-    setup_repo,
-    alchemy,
+    logger,
     UPLOAD_MODEL_DIR,
     minio_client
 )
@@ -22,9 +16,8 @@ from app.ucase.chat import (
 async def chat_with_files(
     file: UploadFile = File(...),
     x_session: str = Depends(session_middleware),
-    credentials: HTTPBasicCredentials = Depends(BasicAuth().security)) -> IGetResponseBase:
+    authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
     
-    auth.authenticate(credentials=credentials)
     if not os.path.exists(UPLOAD_MODEL_DIR+"/"+x_session):
         os.makedirs(UPLOAD_MODEL_DIR+"/"+x_session)
 

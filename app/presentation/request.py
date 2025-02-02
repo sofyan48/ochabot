@@ -40,3 +40,6 @@ class RequestUsers(BaseModel):
     name: str = Field(..., min_length=1)
     is_active: Optional[bool] = True
 
+class RequestLogin(BaseModel):
+    username: str = Field(..., min_length=1)
+    password: str = Field(..., min_length=1)

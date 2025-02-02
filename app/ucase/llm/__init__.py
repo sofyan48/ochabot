@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from app.ucase import BasicAuth
+from app.ucase import BearerAuthentication
 
-auth = BasicAuth()
+auth = BearerAuthentication()
 router = APIRouter()

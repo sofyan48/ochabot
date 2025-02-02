@@ -1,5 +1,5 @@
 from app.presentation import request
-from fastapi.security import HTTPBasicCredentials
+from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status
 from app.appctx import IGetResponseBase, response
 from app.ucase.prompt import router, auth, logger, repoPrompt
@@ -7,9 +7,8 @@ from app.ucase import BasicAuth
 
 @router.post("/prompt", tags=["prompt"], operation_id="insert_prompt") 
 async def insert_prompt(payload: request.RequestPrompt,
-                        credentials: HTTPBasicCredentials = Depends(BasicAuth().security),
-                    ) -> IGetResponseBase:
-    auth.authenticate(credentials)
+        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
+    ) -> IGetResponseBase:
     try:
         template = """
         Histroy: {history}

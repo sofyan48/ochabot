@@ -1,8 +1,8 @@
 from fastapi import Depends, HTTPException, status
 from app.appctx import IGetResponseBase, response
 from app.presentation import request
-from fastapi.security import HTTPBasicCredentials
-from app.ucase import session_middleware, BasicAuth
+from fastapi.security import HTTPAuthorizationCredentials
+from app.ucase import session_middleware
 from pkg.history import MessageHistory
 from pkg.chain.prompter import PromptTemplate
 from app.ucase.chat import (
@@ -16,11 +16,12 @@ from app.ucase.chat import (
 )
 
 @router.post("/chat", tags=["chat"], operation_id="send_chat") 
-async def send_chat(payload: request.RequesChat, 
-                    x_session: str = Depends(session_middleware),
-                    credentials: HTTPBasicCredentials = Depends(BasicAuth().security)) -> IGetResponseBase:
+async def send_chat(
+        payload: request.RequesChat, 
+        x_session: str = Depends(session_middleware),
+        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)    
+    ) -> IGetResponseBase:
     
-    auth.authenticate(credentials=credentials)
     history = MessageHistory(alchemy, x_session).sql()
     await history.aclear()
     history_msg = await history.aget_messages()

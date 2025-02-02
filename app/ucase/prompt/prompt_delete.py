@@ -1,4 +1,4 @@
-from fastapi.security import HTTPBasicCredentials
+from fastapi.security import HTTPAuthorizationCredentials
 from app.ucase import BasicAuth
 from fastapi import HTTPException, status,  Depends, Query
 from typing import Optional
@@ -7,10 +7,9 @@ from app.ucase.prompt import router, auth, repoPrompt, logger
 
 @router.delete("/prompt", tags=["prompt"], operation_id="prompt_delete") 
 async def prompt_delete(
-        credentials: HTTPBasicCredentials = Depends(BasicAuth().security),
+        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
         prompt_id: Optional[int] = Query(None, description="The prompt id to be retrieved")
     ) -> IGetResponseBase:
-    auth.authenticate(credentials=credentials)
     try:
         await repoPrompt.delete(prompt_id)
         await repoPrompt.delete_prompt_config()

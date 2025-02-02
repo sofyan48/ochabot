@@ -3,7 +3,9 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, AsyncSessio
 from sqlalchemy import (
     select,  
     delete, 
-    update, 
+    update,
+    or_,
+    and_
 )
 
 from sqlalchemy.dialects.postgresql import insert

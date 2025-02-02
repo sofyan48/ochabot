@@ -1,8 +1,10 @@
+from pkg.jwt import JWTManager
+from app.repositories.user import UserRepositories
 from fastapi import APIRouter
 from app.ucase import BearerAuthentication
 from app import logger
-from app.repositories import prompt
 
 auth = BearerAuthentication()
 router = APIRouter()
-repoPrompt = prompt.PromptRepositories()
+user_repo = UserRepositories()
+jwt = JWTManager

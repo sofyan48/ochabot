@@ -1,5 +1,5 @@
 from app.presentation import request
-from fastapi.security import HTTPBasicCredentials
+from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status
 from app.appctx import IGetResponseBase, response
 from app.ucase.user import router, auth, logger, user_repo
@@ -10,10 +10,9 @@ from pkg import utils
 @router.post("/users", tags=["user"], operation_id="upsert") 
 async def upsert(
         payload: request.RequestUsers,
-        credentials: HTTPBasicCredentials = Depends(BasicAuth().security),
+        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
     ) -> IGetResponseBase:
 
-    auth.authenticate(credentials)
     try:
         entity_user = {
             "name": payload.name,

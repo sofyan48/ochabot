@@ -1,5 +1,5 @@
     
-from pkg.database.alchemy import select
+from pkg.database.alchemy import select, or_
 from typing import Optional    
 from app.repositories import alchemy
 from app.entity.user import User  
@@ -50,3 +50,13 @@ class UserRepositories:
             table=self.table,
             where_clause=(User.id == id)
         ) 
+    
+    async def get_by_username_or_email(self, username):
+        try:
+            query = select(self.table).where(or_(User.username==username, User.email==username))
+            return await self.engine.fetch(
+                query=query,
+                arguments={}
+            )
+        except Exception as e:
+            raise e

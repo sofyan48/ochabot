@@ -1,9 +1,9 @@
 from app.presentation import request
-from fastapi.security import HTTPBasicCredentials
+from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status, Query
 from app.appctx import IGetResponseBase, response
 from app.ucase.user import router, auth, logger, user_repo
-from app.ucase import BasicAuth
+
 from typing import Optional
 
 
@@ -11,10 +11,8 @@ from typing import Optional
 async def list_client_socket(
         limit: Optional[int] = Query(None, description="Limit"),
         page: Optional[int] = Query(None, description="page"),
-        credentials: HTTPBasicCredentials = Depends(BasicAuth().security),
+        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
     ) -> IGetResponseBase:
-
-    auth.authenticate(credentials)
     try:
         result = await user_repo.list(limit=limit, page=page)
     except Exception as e:

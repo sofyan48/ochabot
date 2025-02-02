@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.ucase import BasicAuth
+from app.ucase import BearerAuthentication
 from app import (
                 redis,
                 logger,
@@ -9,7 +9,7 @@ from pkg.vectorstore.chromadb import ChromaDB
 from app.repositories import setup
 
 
-auth = BasicAuth()
+auth = BearerAuthentication()
 router = APIRouter()
 setup_repo = setup.SetupConfig()
 chromadb = ChromaDB()

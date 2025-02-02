@@ -1,5 +1,5 @@
-from fastapi import Header, HTTPException
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi import Header, HTTPException, Depends
+from fastapi.security import HTTPBasic, HTTPBasicCredentials, HTTPBearer, HTTPAuthorizationCredentials
 import secrets, os
 from fastapi import HTTPException, status
 from pkg.jwt import JWTManager
@@ -26,18 +26,26 @@ class BasicAuth:
             )
         return credentials
     
-# JWT Middleware
-async def jwt_middleware(authorization: str = Header(None)):
-    if authorization is None:
-        raise HTTPException(status_code=401, detail="Missing Authorization header")
-    
-    if not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Invalid Authorization header format")
-    
-    # Extract the token from the header
-    token = authorization.split(" ")[1]
-    try:
-        payload = JWTManager.validate_jwt_token(token)
-        return payload  # Return the payload if needed for further processing
-    except Exception as e:
-        raise HTTPException(status_code=401, detail=str(e))
+
+class BearerAuthentication:
+    def __init__(self):
+        self.security = HTTPBearer()
+
+    async def authenticate(self, authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer())):
+        if authorization is None:
+            raise HTTPException(status_code=401, detail="Missing Authorization header")
+        
+        if not authorization.credentials.startswith("Bearer "):
+            raise HTTPException(status_code=401, detail="Invalid Authorization header format")
+        
+        # Extract the token from the header
+        token = authorization.credentials.split(" ")[1]
+        try:
+            payload = JWTManager.validate_jwt_token(token)
+            data = {
+                "payload": payload,
+                "token": token
+            }
+            return data  # Return the payload if needed for further processing
+        except Exception as e:
+            raise HTTPException(status_code=401, detail=str(e))

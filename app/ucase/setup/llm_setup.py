@@ -1,15 +1,13 @@
 from app.presentation import request
-from fastapi.security import HTTPBasicCredentials
+from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status
 from app.appctx import IGetResponseBase, response
 from app.ucase.setup import router, auth, logger, setup_repo, setup_library
-from app.ucase import BasicAuth
 
 @router.post("/setup/llm", tags=["setup"], operation_id="setup_llm_insert") 
 async def setup_llm_insert(payload: request.RequestLLMSetup,
-                        credentials: HTTPBasicCredentials = Depends(BasicAuth().security),
-                    ) -> IGetResponseBase:
-    auth.authenticate(credentials)
+        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
+    ) -> IGetResponseBase:
     try:
         await setup_repo.model(payload.model)
         await setup_repo.platform(payload.platform)

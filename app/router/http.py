@@ -60,3 +60,10 @@ routerV1.include_router(upsert.router)
 routerV1.include_router(user_list.router)
 routerV1.include_router(user_delete.router)
 routerV1.include_router(user_detail.router)
+
+from app.ucase.login import(
+    with_password,
+    logout
+)
+routerV1.include_router(with_password.router)
+routerV1.include_router(logout.router)

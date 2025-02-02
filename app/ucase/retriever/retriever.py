@@ -3,8 +3,7 @@ from fastapi import Form, File, UploadFile, Depends
 from typing import Optional
 from app.appctx import IGetResponseBase, response
 from pkg.retriever import loader as loader_model
-from fastapi.security import HTTPBasicCredentials
-from app.ucase import BasicAuth
+from fastapi.security import HTTPAuthorizationCredentials
 from app.ucase.retriever import (
     router, 
     auth, 
@@ -18,9 +17,8 @@ async def build_retriever_chroma(collection: str = Form(...),
     chunk: int = Form(...),
     overlap: int = Form(...),
     file: UploadFile = File(...),
-    credentials: HTTPBasicCredentials = Depends(BasicAuth().security)) -> IGetResponseBase:
+    authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
     
-    auth.authenticate(credentials=credentials)
     if not os.path.exists(UPLOAD_MODEL_DIR):
         os.makedirs(UPLOAD_MODEL_DIR)
     

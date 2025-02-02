@@ -1,20 +1,18 @@
 from app.ucase.client import client_socket_repo, router, auth, logger
 from app.ucase.client import router
 from app.presentation import request
-from fastapi.security import HTTPBasicCredentials
+from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, Query, HTTPException, status
 from app.appctx import IGetResponseBase, response
-from app.ucase import BasicAuth
 from datetime import datetime
 from pkg import utils
 from typing import Optional
 
 @router.post("/client/socket", tags=["client"], operation_id="insert_client_socket") 
-async def insert_client_socket(payload: request.RequestClientSocket,
-                        credentials: HTTPBasicCredentials = Depends(BasicAuth().security),
-                    ) -> IGetResponseBase:
-    auth.authenticate(credentials)
-
+async def insert_client_socket(
+        payload: request.RequestClientSocket,
+        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
+    ) -> IGetResponseBase:
     client = {
         "name": payload.name,
         "secret": utils.generate_random_string(16),
@@ -42,9 +40,8 @@ async def insert_client_socket(payload: request.RequestClientSocket,
 async def list_client_socket(
         limit: Optional[int] = Query(None, description="Limit"),
         page: Optional[int] = Query(None, description="page"),
-        credentials: HTTPBasicCredentials = Depends(BasicAuth().security),
+        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
     ) -> IGetResponseBase:
-    auth.authenticate(credentials)
 
     try:
         list_data = await client_socket_repo.list(limit=limit, page=page)
@@ -63,9 +60,8 @@ async def list_client_socket(
 
 @router.get("/client/socket/{id}", tags=["client"])
 async def detail_client_socket(id: int,
-        credentials: HTTPBasicCredentials = Depends(BasicAuth().security),
+        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)
     ) -> IGetResponseBase:
-    auth.authenticate(credentials)
 
     try:
         data = await client_socket_repo.fetch(id=id)
@@ -84,9 +80,8 @@ async def detail_client_socket(id: int,
 
 @router.delete("/client/socket/{id}", tags=["client"])
 async def detail_client_socket(id: int,
-        credentials: HTTPBasicCredentials = Depends(BasicAuth().security),
+        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
     ) -> IGetResponseBase:
-    auth.authenticate(credentials)
 
     try:
         await client_socket_repo.delete(id=id)

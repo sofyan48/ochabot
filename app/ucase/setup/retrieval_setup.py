@@ -1,5 +1,5 @@
 from app.presentation import request
-from fastapi.security import HTTPBasicCredentials
+from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status
 from app.appctx import IGetResponseBase, response
 from app.ucase.setup import router, auth, logger, setup_repo, setup_library
@@ -7,9 +7,8 @@ from app.ucase import BasicAuth
 
 @router.post("/setup/retriever", tags=["setup"], operation_id="setup_retriever_insert") 
 async def setup_retriever_insert(payload: request.RequestRetrievalSetup,
-                        credentials: HTTPBasicCredentials = Depends(BasicAuth().security),
+                        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
                     ) -> IGetResponseBase:
-    auth.authenticate(credentials)
     try:
         await setup_repo.vector_db(payload.vector_db)
         await setup_repo.collection(payload.collection)

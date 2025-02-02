@@ -1,5 +1,4 @@
-from app.presentation import request
-from fastapi.security import HTTPBasicCredentials
+from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status, Query
 from app.appctx import IGetResponseBase, response
 from app.ucase.setup import (
@@ -13,8 +12,8 @@ from app.ucase import BasicAuth
 
 @router.get("/setup", tags=["setup"], operation_id="setup_list_key") 
 async def setup_list_key(
-        credentials: HTTPBasicCredentials = Depends(BasicAuth().security)) -> IGetResponseBase:
-    auth.authenticate(credentials)
+        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
+
     try:
         data_key = await setup_repo.list_key()
     except Exception as e:
