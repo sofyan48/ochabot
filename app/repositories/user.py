@@ -8,7 +8,7 @@ from pkg import utils
 class UserRepositories:    
     def __init__(self):    
         self.engine = alchemy   
-        self.table = UserRepositories.__table__ 
+        self.table = User.__table__ 
             
     async def fetch(self, id: int) -> Optional[dict]:    
         query = select(UserRepositories).where(UserRepositories.id == id)    
@@ -17,7 +17,7 @@ class UserRepositories:
     async def upsert(self, data: dict) -> int:   
         try:
             return await self.engine.upsert_without_tx(
-                model=UserRepositories, 
+                model=User, 
                 values=data,
                 conflict_key="id"
             )

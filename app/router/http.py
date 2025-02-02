@@ -48,5 +48,15 @@ routerV1.include_router(get_setup.router)
 from app.ucase.client import(
     socket
 )
-
 routerV1.include_router(socket.router)
+
+from app.ucase.user import (
+    upsert,
+    user_list,
+    user_delete,
+    user_detail
+)
+routerV1.include_router(upsert.router)
+routerV1.include_router(user_list.router)
+routerV1.include_router(user_delete.router)
+routerV1.include_router(user_detail.router)

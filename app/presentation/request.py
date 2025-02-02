@@ -34,3 +34,9 @@ class RequestClientSocket(BaseModel):
 class RequestUsers(BaseModel):
     id: Optional[int] = None
     name: str = Field(..., min_length=1)
+    email: str = Field(..., min_length=1)
+    username: str = Field(..., min_length=1)
+    password: str = Field(..., min_length=1)
+    name: str = Field(..., min_length=1)
+    is_active: Optional[bool] = True
+
