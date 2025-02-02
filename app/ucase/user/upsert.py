@@ -5,6 +5,7 @@ from app.appctx import IGetResponseBase, response
 from app.ucase.user import router, auth, logger, user_repo
 from app.ucase import BasicAuth
 from datetime import datetime
+from pkg import utils
 
 @router.post("/users", tags=["user"], operation_id="upsert") 
 async def upsert(
@@ -18,7 +19,7 @@ async def upsert(
             "name": payload.name,
             "email": payload.email,
             "username": payload.username,
-            "password": payload.password, 
+            "password": utils.generate_hashed_password(payload.password), 
             "is_active": payload.is_active,
             "created_at": datetime.now(),
             "updated_at": datetime.now()

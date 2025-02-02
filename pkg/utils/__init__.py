@@ -2,6 +2,7 @@ import os, csv, string, random
 from collections import deque
 from datetime import datetime
 from sqlalchemy.engine.row import Row
+import bcrypt
 
 def environment_transform(environment=None):
     if environment is None:
@@ -89,3 +90,32 @@ def generate_random_string(length):
     random_string = ''.join(random.choice(characters) for _ in range(length))  
       
     return random_string 
+
+def generate_hashed_password(plain_password: str) -> str:
+    """
+    Generate a hashed password using bcrypt.
+
+    Args:
+        plain_password (str): The plain text password to hash.
+
+    Returns:
+        str: The hashed password.
+    """
+    # Generate a salt
+    salt = bcrypt.gensalt()
+    # Hash the password
+    hashed_password = bcrypt.hashpw(plain_password.encode('utf-8'), salt)
+    return hashed_password.decode('utf-8')
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """
+    Verify a plain text password against a hashed password.
+
+    Args:
+        plain_password (str): The plain text password to verify.
+        hashed_password (str): The hashed password to check against.
+
+    Returns:
+        bool: True if the password matches, False otherwise.
+    """
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))

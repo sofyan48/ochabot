@@ -19,7 +19,7 @@ class UserRepositories:
             return await self.engine.upsert_without_tx(
                 model=User, 
                 values=data,
-                conflict_key="id"
+                conflict_key=["id"]
             )
         except Exception as e:
             raise e

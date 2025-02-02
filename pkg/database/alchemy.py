@@ -131,7 +131,7 @@ class AlChemy:
 
     
     @classmethod
-    async def upsert_with_tx(cls, model, values: Dict, conflict_key: str):
+    async def upsert_with_tx(cls, model, values: Dict, conflict_key):
         """Upsert data dengan transaksi."""
         async with AsyncSession(cls._instance_write) as session:
             async with session.begin():  # Memulai transaksi
@@ -144,11 +144,12 @@ class AlChemy:
                             update_structured[c.name] = values[c.name]
 
                     # Ensure the conflict_key is valid
-                    if conflict_key not in model.__table__.columns:
-                        raise ValueError(f"Conflict key '{conflict_key}' is not a valid column.")
-
+                    for i in conflict_key:
+                        if i not in model.__table__.columns:
+                            raise ValueError(f"Conflict key '{conflict_key}' is not a valid column.")
+                    
                     stmt = stmt.on_conflict_do_update(
-                        index_elements=[conflict_key],
+                        index_elements=conflict_key,
                         set_=update_structured
                     )
                     result = await session.execute(stmt)
@@ -158,7 +159,7 @@ class AlChemy:
                     raise e  # Lempar kembali kesalahan
 
     @classmethod
-    async def upsert_without_tx(cls, model, values: Dict, conflict_key: str):
+    async def upsert_without_tx(cls, model, values: Dict, conflict_key):
         """Upsert data tanpa transaksi."""
         async with AsyncSession(cls._instance_write) as session:
             try:
@@ -171,13 +172,14 @@ class AlChemy:
                         update_structured[c.name] = values[c.name]
 
                 # Ensure the conflict_key is valid
-                if conflict_key not in model.__table__.columns:
-                    raise ValueError(f"Conflict key '{conflict_key}' is not a valid column.")
-
+                for i in conflict_key:
+                    if i not in model.__table__.columns:
+                        raise ValueError(f"Conflict key '{conflict_key}' is not a valid column.")
                 stmt = stmt.on_conflict_do_update(
-                    index_elements=[conflict_key],
+                    index_elements=conflict_key,
                     set_=update_structured
                 )
+
                 result = await session.execute(stmt)
                 await session.commit()  # Commit perubahan
                 return result.inserted_primary_key[0]

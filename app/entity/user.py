@@ -11,8 +11,8 @@ from app.entity import Base
 class User(Base):  
     __tablename__ = "users"  
     id = Column(Integer, primary_key=True, index=True) 
-    email = Column(String)
-    username = Column(String)  
+    email = Column(String, unique=True)
+    username = Column(String, unique=True)  
     password = Column(String)
     name = Column(String)
     is_active = Column(Boolean)  
