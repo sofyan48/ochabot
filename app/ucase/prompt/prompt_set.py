@@ -1,0 +1,28 @@
+from fastapi.security import HTTPBasicCredentials
+from app.ucase import BasicAuth
+from fastapi import HTTPException, status,  Depends, Query
+from app.appctx import IGetResponseBase, response
+from typing import Optional
+from app.ucase.prompt import router, auth, repoPrompt, logger
+
+@router.get("/prompt/set", tags=["prompt"], operation_id="prompt_set") 
+async def prompt_set(
+        credentials: HTTPBasicCredentials = Depends(BasicAuth().security),
+        prompt_id: Optional[str] = Query(None, description="The prompt id to be retrieved")
+    ) -> IGetResponseBase:
+    auth.authenticate(credentials=credentials)
+    try: 
+        await repoPrompt.set_prompt_config(id_prompt=prompt_id)
+    except Exception as e:
+        logger.error("Error getting prompt", {
+            "error": str(e),
+        })
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+    
+    return response(
+        message="Successfully",
+        data={
+            "prompt": prompt_id
+        },
+    )
