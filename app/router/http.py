@@ -44,3 +44,9 @@ routerV1.include_router(retrieval_setup.router)
 routerV1.include_router(delete_setup.router)
 routerV1.include_router(list_setup.router)
 routerV1.include_router(get_setup.router)
+
+from app.ucase.client import(
+    socket
+)
+
+routerV1.include_router(socket.router)

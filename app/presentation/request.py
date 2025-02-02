@@ -26,3 +26,7 @@ class RequestRetrievalSetup(BaseModel):
 
 class RequestDeleteSetup(BaseModel):
     key: str = Field(..., min_length=1)
+
+class RequestClientSocket(BaseModel):
+    id: Optional[int] = None
+    name: str = Field(..., min_length=1)

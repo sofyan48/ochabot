@@ -1,39 +1,51 @@
     
-from pkg.database.alchemy import (
-    AlChemy,
-    select
-)
+from pkg.database.alchemy import select
 from typing import Optional    
-from datetime import datetime  
+from app.repositories import alchemy
 from app.entity.client_socket import ClientSocket  
+from pkg import utils
   
 class ClientSocketRepositories:    
-    def __init__(self, engine: AlChemy):    
-        self.engine = engine    
+    def __init__(self):    
+        self.engine = alchemy   
+        self.table = ClientSocket.__table__ 
             
     async def fetch(self, id: int) -> Optional[dict]:    
         query = select(ClientSocket).where(ClientSocket.id == id)    
         return await self.engine.fetch(query=query)
                 
-    async def insert(self, name: str, secret: str) -> int:      
-        return await self.engine.insert_without_tx(ClientSocket.__tablename__, {
-            "name": name, 
-            "secret": secret,
-            "created_at": datetime.now(),
-            "updated_at": datetime.now()
-        })
+    async def upsert(self, data: dict) -> int:   
+        try:
+            await self.engine.upsert_without_tx(
+                table=ClientSocket, 
+                values=data,
+                conflict_key="id"
+            )
+        except Exception as e:
+            raise e
+        return True
     
-    async def update(self, name: str, secret: str) -> int:      
-        return await self.engine.update_without_tx(table=ClientSocket.__tablename__, 
-            values={
-                "name": name, 
-                "secret": secret,
-                "created_at": datetime.now(),
-                "updated_at": datetime.now()
-            },
-            where_clause=(ClientSocket.id==id)
-        )
-  
+    async def list(self, limit=10, page=1):
+        offset = utils.offset(limit=limit, page=page)
+        try:
+            query = select(self.table).limit(limit=limit).offset(offset=offset)
+            return await self.engine.find(
+                query=query,
+                arguments={}
+            )
+        except Exception as e:
+            raise e
+        
+    async def fetch(self, id):
+        try:
+            query = select(self.table).where(ClientSocket.id==id)
+            return await self.engine.fetch(
+                query=query,
+                arguments={}
+            )
+        except Exception as e:
+            raise e
+    
     async def delete(self, id: int) -> bool: 
         return await self.engine.delete_without_tx(
             table=ClientSocket.__tablename__,

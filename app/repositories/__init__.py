@@ -5,6 +5,3 @@ from app import logger
 redis = Redis()
 alchemy_url = AlChemy.get_write_uri()
 alchemy = AlChemy
-
-from app.repositories.socket_client import ClientSocketRepositories
-client_socket_repo = ClientSocketRepositories(AlChemy)

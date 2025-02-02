@@ -131,54 +131,56 @@ class AlChemy:
 
     
     @classmethod
-    async def upsert_with_tx(cls, table, values: Dict, conflict_key: str):
+    async def upsert_with_tx(cls, model, values: Dict, conflict_key: str):
         """Upsert data dengan transaksi."""
         async with AsyncSession(cls._instance_write) as session:
             async with session.begin():  # Memulai transaksi
                 try:
-                    stmt = insert(table).values(values)
+                    stmt = insert(model).values(values)
                     # Create update_dict using the correct method
                     update_structured = {}
-                    for c in table.__table__.columns:
+                    for c in model.__table__.columns:
                         if c.name in values:  # Check if the column is in values
                             update_structured[c.name] = values[c.name]
 
                     # Ensure the conflict_key is valid
-                    if conflict_key not in table.__table__.columns:
+                    if conflict_key not in model.__table__.columns:
                         raise ValueError(f"Conflict key '{conflict_key}' is not a valid column.")
 
                     stmt = stmt.on_conflict_do_update(
                         index_elements=[conflict_key],
                         set_=update_structured
                     )
-                    await session.execute(stmt)
+                    result = await session.execute(stmt)
+                    return result.inserted_primary_key
                 except SQLAlchemyError as e:
                     await session.rollback()  # Rollback jika terjadi kesalahan
                     raise e  # Lempar kembali kesalahan
 
     @classmethod
-    async def upsert_without_tx(cls, table, values: Dict, conflict_key: str):
+    async def upsert_without_tx(cls, model, values: Dict, conflict_key: str):
         """Upsert data tanpa transaksi."""
         async with AsyncSession(cls._instance_write) as session:
             try:
-                stmt = insert(table).values(values)
+                stmt = insert(model).values(values)
 
                 # Create update_dict using the correct method
                 update_structured = {}
-                for c in table.__table__.columns:
+                for c in model.__table__.columns:
                     if c.name in values:  # Check if the column is in values
                         update_structured[c.name] = values[c.name]
 
                 # Ensure the conflict_key is valid
-                if conflict_key not in table.__table__.columns:
+                if conflict_key not in model.__table__.columns:
                     raise ValueError(f"Conflict key '{conflict_key}' is not a valid column.")
 
                 stmt = stmt.on_conflict_do_update(
                     index_elements=[conflict_key],
                     set_=update_structured
                 )
-                await session.execute(stmt)
+                result = await session.execute(stmt)
                 await session.commit()  # Commit perubahan
+                return result.inserted_primary_key
             except SQLAlchemyError as e:
                 await session.rollback()  # Rollback jika terjadi kesalahan
                 raise e  # Lempar kembali kesalahan
@@ -197,8 +199,10 @@ class AlChemy:
         """Insert data tanpa transaksi."""
         async with AsyncSession(cls._instance_write) as session:
             stmt = insert(table).values(values)
-            await session.execute(stmt)
+            result = await session.execute(stmt)
             await session.flush()
+            return result.inserted_primary_key
+           
 
     @classmethod
     async def insert_with_tx(cls, table, values: Dict):
@@ -206,7 +210,8 @@ class AlChemy:
         async with AsyncSession(cls._instance_write) as session:
             async with session.begin():
                 stmt = insert(table).values(values)
-                await session.execute(stmt)
+                result = await session.execute(stmt)
+                return result.inserted_primary_key
 
     @classmethod
     async def delete_with_tx(cls, table, where_clause):
