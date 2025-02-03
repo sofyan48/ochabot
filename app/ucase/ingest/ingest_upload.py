@@ -15,7 +15,7 @@ from app.ucase.ingest import (
     ingest_docs_repo
 )
 
-@router.post("/ingest/preview", tags=["retriever"], operation_id="ingest_preview")
+@router.post("/ingest", tags=["ingest"], operation_id="ingest_preview")
 async def ingest_preview(
     chunk: int = Form(...),
     overlap: int = Form(...),

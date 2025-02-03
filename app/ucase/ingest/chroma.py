@@ -15,7 +15,7 @@ from app.ucase.ingest import (
     ingest_docs_repo
 )
 
-@router.post("/ingest/chroma", tags=["retriever"], operation_id="build_retriever_chroma")
+@router.post("/ingest/chroma", tags=["ingest"], operation_id="build_retriever_chroma")
 async def build_retriever_chroma(
     payload: request.RequestIngestChroma,
     authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
