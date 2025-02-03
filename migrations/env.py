@@ -2,12 +2,13 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
+from sqlalchemy.ext.declarative import declarative_base
+from pkg.database import DatabaseConfig
 from pkg.database.alchemy import AlChemy
 from dotenv import load_dotenv, find_dotenv
-from pkg.database import DatabaseConfig
-from app.entity import Base
 import os
 
+Base = declarative_base()
 try:
     dotenv_path = find_dotenv()
     load_dotenv(dotenv_path)
@@ -25,8 +26,6 @@ configMigration = DatabaseConfig(
 
 alchemy = AlChemy()
 connstr = alchemy.connection_setup_sync(configMigration, driver=os.environ.get("DB_DRIVER", "postgres"))
-# engine = alchemy.async_engine(config=configMigration, driver=os.environ.get("DB_DRIVER", "postgres"))
-
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

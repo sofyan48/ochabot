@@ -6,8 +6,8 @@ from app.ucase.client import router, auth, logger, client_repo
 from datetime import datetime
 from pkg import utils
 
-@router.post("/client", tags=["client"], operation_id="upsert") 
-async def upsert(
+@router.post("/client", tags=["client"], operation_id="upsert_client") 
+async def upsert_client(
         payload: request.RequestClient,
         authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
     ) -> IGetResponseBase:

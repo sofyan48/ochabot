@@ -25,7 +25,7 @@ class SetupConfig(object):
             "key": key,
             "value": value,
             "is_active": True
-        }, conflict_key="key")
+        }, conflict_key=["key"])
           
     
     async def model(self, value):
@@ -34,7 +34,7 @@ class SetupConfig(object):
             "key": key,
             "value": value,
             "is_active": True
-        }, conflict_key="key")
+        }, conflict_key=["key"])
     
     async def top_k(self, value):
         key = self.key+"retriever:top_k"
@@ -42,7 +42,7 @@ class SetupConfig(object):
             "key": key,
             "value": value,
             "is_active": True
-        }, conflict_key="key")
+        }, conflict_key=["key"])
     
     async def fetch_k(self, value):
         key = self.key+"retriever:fetch_k"
@@ -50,7 +50,7 @@ class SetupConfig(object):
             "key": key,
             "value": value,
             "is_active": True
-        }, conflict_key="key")
+        }, conflict_key=["key"])
     
     async def collection(self, value):
         key = self.key+"retriever:collection"
@@ -58,7 +58,7 @@ class SetupConfig(object):
             "key": key,
             "value": value,
             "is_active": True
-        }, conflict_key="key")
+        }, conflict_key=["key"])
     
     async def vector_db(self, value):
         key = self.key+"retriever:vector_db"
@@ -66,7 +66,7 @@ class SetupConfig(object):
             "key": key,
             "value": value,
             "is_active": True
-        }, conflict_key="key")
+        }, conflict_key=["key"])
     
     async def fetch(self, key):
         try:

@@ -12,6 +12,8 @@ services:
     volumes:
       - ./minio:/data
     command: server /data --console-address ":9001"
+    networks:
+      - code-network
   redis:
     image: redis/redis-stack-server:latest
     container_name: redis
@@ -29,7 +31,7 @@ services:
     networks:
       - code-network
     ports:
-      - 6479:6379
+      - :6379
   chromadb:
     image: ghcr.io/chroma-core/chroma:0.5.0
     container_name: chromadb
@@ -42,28 +44,29 @@ services:
     networks:
       - code-network
     ports:
-      - 8000:8000
-  postgres:  
-    image: postgres:13  
-    environment:  
-      POSTGRES_PASSWORD: password  
-      POSTGRES_USER: iank  
-      POSTGRES_DB: mydb  
-    ports:  
-      - 5432:5432  
-    volumes:  
-      - ./mydb:/var/lib/postgresql/data  
-    networks:  
-      - code-network  
-  # app:
-  #   build: .
-  #   ports:
-  #     - 8081:8081
-  #   networks:
-  #     - code-network
-  #   restart: always
-  #   volumes:
-  #     - ./:/app/
+      - :8000
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: iank
+      POSTGRES_DB: mydb
+    ports:
+      - :5432
+    volumes:
+      - ./mydb:/var/lib/postgresql/data
+    networks:
+      - code-network
+  app:
+    build: .
+    ports:
+      - 8081:8081
+    networks:
+      - code-network
+    restart: always
+    command: "python main.py serve"
+    volumes:
+      - ./:/app/
 networks:
   code-network:
     driver: bridge
