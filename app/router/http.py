@@ -46,24 +46,34 @@ routerV1.include_router(list_setup.router)
 routerV1.include_router(get_setup.router)
 
 from app.ucase.client import(
+    client_upsert,
+    client_list,
+    client_delete,
+    client_detail,
     socket
 )
 routerV1.include_router(socket.router)
+routerV1.include_router(client_upsert.router)
+routerV1.include_router(client_list.router)
+routerV1.include_router(client_detail.router)
+routerV1.include_router(client_delete.router)
 
 from app.ucase.user import (
-    upsert,
     user_list,
     user_delete,
-    user_detail
+    user_detail,
+    user_upsert
 )
-routerV1.include_router(upsert.router)
+routerV1.include_router(user_upsert.router)
 routerV1.include_router(user_list.router)
 routerV1.include_router(user_delete.router)
 routerV1.include_router(user_detail.router)
 
 from app.ucase.login import(
-    with_password,
+    client,
+    password,
     logout
 )
-routerV1.include_router(with_password.router)
+routerV1.include_router(password.router)
 routerV1.include_router(logout.router)
+routerV1.include_router(client.router)

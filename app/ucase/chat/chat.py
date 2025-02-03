@@ -61,8 +61,6 @@ async def send_chat(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="Please setup retriever collection or set from payload"
             )
-        
-    
     try:
         retriever = llm.retriever(
             top_k=top_k,

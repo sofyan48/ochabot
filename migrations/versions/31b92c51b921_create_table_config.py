@@ -24,7 +24,7 @@ def upgrade() -> None:
         sa.Column('id', sa.Integer(), primary_key=True, autoincrement=True),
         sa.Column('key', sa.String(100), nullable=False, unique=True),
         sa.Column('value', sa.String(255), nullable=False),
-        sa.Column('is_active', sa.Boolean(), default=True),
+        sa.Column('is_active', sa.Boolean(), default=True, nullable=False),
         sa.Column('created_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP')),
         sa.Column('updated_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), onupdate=sa.text('CURRENT_TIMESTAMP'))
     )

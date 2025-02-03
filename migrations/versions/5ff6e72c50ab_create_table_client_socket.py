@@ -22,8 +22,8 @@ def upgrade() -> None:
     op.create_table(
         'client_sockets',
         sa.Column('id', sa.Integer(), primary_key=True, index=True),
-        sa.Column('name', sa.String(), index=True),
-        sa.Column('secret', sa.String()),
+        sa.Column('name', sa.String()),
+        sa.Column('secret', sa.String(), nullable=False, index=True),
         sa.Column('created_at', sa.DateTime(), nullable=False),
         sa.Column('updated_at', sa.DateTime(), nullable=False),
     )

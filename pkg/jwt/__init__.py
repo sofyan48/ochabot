@@ -15,9 +15,9 @@ class JWTManager:
         """
         to_encode = data.copy()
         if expires_delta:
-            expire = datetime.utcnow() + expires_delta
+            expire = datetime.now() + expires_delta
         else:
-            expire = datetime.utcnow() + timedelta(minutes=15)  # Default expiration time
+            expire = datetime.now() + timedelta(days=7)  # Default expiration time
         to_encode.update({"exp": expire})
         encoded_jwt = jwt.encode(to_encode, cls.SECRET_KEY, algorithm=cls.ALGORITHM)
         return encoded_jwt

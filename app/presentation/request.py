@@ -40,6 +40,15 @@ class RequestUsers(BaseModel):
     name: str = Field(..., min_length=1)
     is_active: Optional[bool] = True
 
+class RequestClient(BaseModel):
+    id: Optional[int] = None
+    name: str = Field(..., min_length=1)
+    is_active: Optional[bool] = True
+
 class RequestLogin(BaseModel):
     username: str = Field(..., min_length=1)
     password: str = Field(..., min_length=1)
+
+class RequestGrantClient(BaseModel):
+    api_key: str = Field(..., min_length=1)
+    secret_key: str = Field(..., min_length=1)
