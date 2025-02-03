@@ -16,15 +16,18 @@ class Storage(object):
             )
         except Exception as e:
             raise e
+    
     def read(self, name: str, file_path: str):
         try:
             return self.minio.read(
                 bucket=self.bucket,
                 object_name=name,
-                file_path=file_path,
+                file_path=file_path
             )
         except Exception as e:
+            print("PROBLEM", e)
             raise e
+        
     def get_presign_url(self, name: str):
         try:
             return self.minio.get_presign_url(

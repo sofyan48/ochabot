@@ -48,11 +48,15 @@ class ChromaDB:
             )  
         except Exception as e:  
             raise e  
-  
+        
+    @classmethod
+    def text_splitter(cls, data, chunk=2000, overlap=500):
+       text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk, chunk_overlap=overlap)
+       return text_splitter.split_documents(data)
+    
     @classmethod  
     def build(cls, data, collection, chunk=2000, overlap=500):
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk, chunk_overlap=overlap)
-        all_splits = text_splitter.split_documents(data)
+        all_splits = cls.text_splitter(data=data, chunk=chunk, overlap=overlap)
         return Chroma.from_documents(  
             documents=all_splits,   
             embedding=cls._embeddings,   

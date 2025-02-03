@@ -14,8 +14,12 @@ from app.ucase.chat import socket
 routerV1.include_router(socket.router)
 
 
-from app.ucase.retriever import retriever
-routerV1.include_router(retriever.router)
+from app.ucase.ingest import (
+    chroma,
+    ingest_upload
+)
+routerV1.include_router(chroma.router)
+routerV1.include_router(ingest_upload.router)
 
 from app.ucase.llm import llm
 routerV1.include_router(llm.router)
