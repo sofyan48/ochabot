@@ -128,4 +128,5 @@ poetry.lock
 .env.*
 chroma
 minio/
+storage/
 
