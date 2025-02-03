@@ -36,7 +36,7 @@ class StorageMinio:
             raise e
         
     @classmethod
-    def read(cls,  bucket: str, object_name: str, file_path: str):
+    def read(cls, bucket: str, object_name: str, file_path):
         try:
             return cls._minio.fget_object(
                 bucket_name=bucket,
