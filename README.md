@@ -19,6 +19,8 @@ Based on mistral AI, OpenAI, Groq, langchain and chroma vector database, I'm sti
 - Redis (LLM Cache and setup)
 - Postgree (History)
 - ChromaDB (Vector Database)
+### Storage
+- Minio
 
 ## How To Run
 Running via poetry and activate virtualenvironment
