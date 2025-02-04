@@ -15,8 +15,10 @@ if __name__ == '__main__':
     parser.add_argument("command", help="Perintah yang ingin Anda jalankan")
     args = parser.parse_args()
     if args.command == "serve":
-        # from config.multiprocessing import UvicornWorkerRecommender
-        # worker = UvicornWorkerRecommender().recommend_workers()
+        worker = 2
+        if os.environ.get("IS_WORKER_SET", False):
+            from config.multiprocessing import UvicornWorkerRecommender
+            worker = UvicornWorkerRecommender().recommend_workers()
         if utils.environment_transform() != "loc":
             uvicorn.run(
                 app="app:app",

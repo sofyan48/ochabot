@@ -3,3 +3,4 @@ knowledge/history.db
 knowledge/model/index*
 knowledge/userguide_v1/*.pdf
 poetry.lock
+.git
