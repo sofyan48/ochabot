@@ -19,11 +19,15 @@ jobs:
       - uses: actions/labeler@v4
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Docker login
         run: docker login ghcr.io -u $ACTOR -p $GITHUB_TOKEN
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ACTOR: ${{ github.actor }}
+      
+      - name: Create .env
+        run: Touch .env
 
       - name: Build and tag image
         run: docker build --no-cache -t "$REGISTRY:$APP_TAG" -f deployment/dockerfiles/dockerfile-prd .
