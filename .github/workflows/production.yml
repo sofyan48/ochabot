@@ -1,0 +1,33 @@
+name: OCHABOT Push to Registry
+
+on:
+  push:
+    tags:
+      - "**"
+
+env:
+  REGISTRY: "ghcr.io/sofyan48/ochabot/ochabot"
+  APP_TAG: ${{ github.ref_name }}
+  APP_NAME: "ochabot"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - uses: actions/labeler@v4
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker login
+        run: docker login ghcr.io -u $ACTOR -p $GITHUB_TOKEN
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACTOR: ${{ github.actor }}
+
+      - name: Build and tag image
+        run: docker build --no-cache -t "$REGISTRY:$APP_TAG" -f deployment/dockerfiles/dockerfile-prd .
+
+      - name: Publish to GPR
+        run: docker push $REGISTRY:$APP_TAG
+      
