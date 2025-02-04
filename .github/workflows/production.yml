@@ -27,7 +27,7 @@ jobs:
           ACTOR: ${{ github.actor }}
       
       - name: Create .env
-        run: Touch .env
+        run: touch .env
 
       - name: Build and tag image
         run: docker build --no-cache -t "$REGISTRY:$APP_TAG" -f deployment/dockerfiles/dockerfile-prd .
