@@ -18,10 +18,21 @@ async def chat_with_files(
     x_session: str = Depends(session_middleware),
     authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
     
-    if not os.path.exists(UPLOAD_MODEL_DIR+"/"+x_session):
-        os.makedirs(UPLOAD_MODEL_DIR+"/"+x_session)
+    session_path = os.path.normpath(os.path.join(UPLOAD_MODEL_DIR, x_session))
+    if not session_path.startswith(UPLOAD_MODEL_DIR):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail="Invalid session path"
+        )
+    if not os.path.exists(session_path):
+        os.makedirs(session_path)
 
-    file_path = os.path.join(UPLOAD_MODEL_DIR, file.filename)
+    file_path = os.path.normpath(os.path.join(session_path, file.filename))
+    if not file_path.startswith(session_path):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail="Invalid file path"
+        )
     with open(file_path, "wb") as f:
         f.write(await file.read())
 
