@@ -37,6 +37,16 @@ class PromptRepositories(object):
         except Exception as e:
             raise e
         
+    async def get_prompt_config(self):
+        try:
+            query = select(self.table).where(Prompt.is_default==True)
+            data_prompt = await self.db.fetch(query=query, arguments={})
+            if data_prompt is None:
+                return None
+            return data_prompt
+        except Exception as e:
+            raise e
+        
     async def list(self):
         try:
             query = select(self.table).limit(10)
@@ -55,6 +65,7 @@ class PromptRepositories(object):
                 "error": str(e),
             })
             raise e
+        
     async def delete(self, id):
         await self.db.delete_without_tx(table=self.table, where_clause=(Prompt.id==id))
 

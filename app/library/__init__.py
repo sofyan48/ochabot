@@ -15,4 +15,6 @@ chromadb = ChromaDB()
 minio = StorageMinio
 
 from app.repositories.setup import SetupConfig
+from app.repositories.prompt import PromptRepositories
 repo_config = SetupConfig()
+repo_prompt = PromptRepositories()
