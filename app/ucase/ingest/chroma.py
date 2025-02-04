@@ -5,6 +5,7 @@ from app.appctx import IGetResponseBase, response
 from pkg.retriever import loader as loader_model
 from fastapi.security import HTTPAuthorizationCredentials
 from pkg import utils
+from datetime import datetime
 from app.ucase.ingest import (
     router, 
     auth, 
@@ -36,6 +37,12 @@ async def build_retriever_chroma(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Getting ingest code error"
+        )
+    
+    if ingest_docs_data.is_build is True:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Document have build in chroma"
         )
     
     file_path = "./storage/"+ingest_docs_data.file_path
@@ -71,11 +78,31 @@ async def build_retriever_chroma(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Cannot build chroma ingest"
         )
+    
+    entity_ingest_docs = {
+        "id": ingest_docs_data.id,
+        "ingest_code": ingest_docs_data.ingest_code,
+        "file_path": ingest_docs_data.file_path,
+        "overlap": ingest_docs_data.overlap,
+        "collection": payload.collection,
+        "is_build": True,
+        "chunk": ingest_docs_data.chunk,
+        "updated_at": datetime.now()
+    }
+
+    try:
+        await ingest_docs_repo.upsert(entity_ingest_docs)
+    except Exception as e:
+        logger.error("Error update ingest status", {
+            "error", e
+        })
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error update ingest status"
+        )
+
     os.remove(file_path)
     return response(
         message="Ingestion Success",
-        data={
-            "collection": payload.collection,
-            "ingest_document": utils.json_serializable(ingest_docs_data)
-        }
+        data=utils.json_serializable(ingest_docs_data)
     )

@@ -24,6 +24,7 @@ async def ingest_preview(
     
 
     auth_payload = authorization.get('payload')
+    print(auth_payload)
     if auth_payload.get('roles') != "user":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -81,6 +82,7 @@ async def ingest_preview(
         "ingest_code": ingest_code,
         "file_path": bucket_path,
         "overlap": overlap,
+        "is_build": False,
         "chunk": chunk,
         "created_at": datetime.now(),
         "updated_at": datetime.now()

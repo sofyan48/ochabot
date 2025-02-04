@@ -2,7 +2,6 @@ from fastapi import Header, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import HTTPException, status
 from pkg.jwt import JWTManager
-from pkg import utils
 import os
 
 async def session_middleware(x_session: str = Header(None)):
@@ -16,14 +15,6 @@ class BearerAuthentication:
         self.security = HTTPBearer()
 
     async def authenticate(self, authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer())):
-        if utils.environment_transform() == "loc" :
-            return {
-                "payload": {
-                    "username": "local"
-                },
-                "token": "xxxxxxxx"
-            }
-        
         if authorization is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing Authorization header")
         

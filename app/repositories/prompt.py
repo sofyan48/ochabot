@@ -1,6 +1,6 @@
 from app.repositories import redis, logger, alchemy
 from app.entity.prompt import Prompt
-from pkg.database.alchemy import select
+from pkg.database.alchemy import select, desc
 
 class PromptRepositories(object):
     def __init__(self):
@@ -49,8 +49,8 @@ class PromptRepositories(object):
         
     async def list(self):
         try:
-            query = select(self.table).limit(10)
-            return await self.db.find(query=query, arguments={})   
+            query = select(self.table).limit(10).order_by(desc(Prompt.id))
+            return await self.db.find(query=query, arguments={})
         except Exception as e:
             raise e
         

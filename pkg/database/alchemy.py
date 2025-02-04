@@ -5,7 +5,9 @@ from sqlalchemy import (
     delete, 
     update,
     or_,
-    and_
+    and_,
+    desc,
+    asc
 )
 
 from sqlalchemy.dialects.postgresql import insert

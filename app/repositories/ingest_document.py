@@ -1,5 +1,5 @@
     
-from pkg.database.alchemy import select    
+from pkg.database.alchemy import select, desc, asc
 from app.repositories import alchemy
 from app.entity.ingest_document import IngestDocument  
 from pkg import utils
@@ -42,7 +42,7 @@ class IngestDocumentRepositories:
 
     async def fetch_row_by_ingest_code(self, ingest_code):
         try:
-            query = select(self.table).where(IngestDocument.ingest_code==ingest_code)
+            query = select(self.table).where(IngestDocument.ingest_code==ingest_code).order_by(desc(IngestDocument.id))
             return await self.engine.fetch(
                 query=query,
                 arguments={}

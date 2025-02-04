@@ -70,7 +70,7 @@ class SetupConfig(object):
     
     async def fetch(self, key):
         try:
-            query = select(self.table).where(Config.key == key)    
+            query = select(self.table).where(Config.key == key) 
             self.db.fetch(query=query, arguments={})
         except Exception as e:
             raise e

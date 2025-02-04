@@ -1,5 +1,5 @@
     
-from pkg.database.alchemy import select
+from pkg.database.alchemy import select, desc
 from typing import Optional    
 from app.repositories import alchemy
 from app.entity.client_socket import ClientSocket  
@@ -27,7 +27,7 @@ class ClientSocketRepositories:
     async def list(self, limit=10, page=1):
         offset = utils.offset(limit=limit, page=page)
         try:
-            query = select(self.table).limit(limit=limit).offset(offset=offset)
+            query = select(self.table).limit(limit=limit).offset(offset=offset).order_by(desc(ClientSocket.id))
             return await self.engine.find(
                 query=query,
                 arguments={}

@@ -15,5 +15,7 @@ class IngestDocument(Base):
     file_path = Column(String, unique=True)  
     overlap = Column(Integer)
     chunk = Column(Integer)
+    is_build = Column(Boolean)
+    collection = Column(String)
     created_at = Column(DateTime)  
     updated_at = Column(DateTime)  

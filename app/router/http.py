@@ -15,10 +15,12 @@ routerV1.include_router(socket.router)
 
 from app.ucase.ingest import (
     chroma,
-    ingest_upload
+    ingest_upload,
+    ingest_list
 )
 routerV1.include_router(chroma.router)
 routerV1.include_router(ingest_upload.router)
+routerV1.include_router(ingest_list.router)
 
 from app.ucase.llm import llm
 routerV1.include_router(llm.router)

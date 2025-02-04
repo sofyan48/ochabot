@@ -1,5 +1,5 @@
     
-from pkg.database.alchemy import select, or_
+from pkg.database.alchemy import select, or_, desc
 from typing import Optional    
 from app.repositories import alchemy
 from app.entity.user import User  
@@ -27,7 +27,7 @@ class UserRepositories:
     async def list(self, limit=10, page=1):
         offset = utils.offset(limit=limit, page=page)
         try:
-            query = select(self.table).limit(limit=limit).offset(offset=offset)
+            query = select(self.table).limit(limit=limit).offset(offset=offset).order_by(desc(User.id))
             return await self.engine.find(
                 query=query,
                 arguments={}
