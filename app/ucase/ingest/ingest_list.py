@@ -39,7 +39,8 @@ async def ingest_document_list(
                 'ingest_code': i.get('ingest_code'), 
                 'file_path': url, 
                 'overlap': i.get('overlap'), 
-                'chunk': i.get('chunk'), 
+                'chunk': i.get('chunk'),
+                'collection': i.get('collection'),
                 'is_build': i.get('is_build'), 
                 'created_at': i.get('created_at'), 
                 'updated_at': i.get('updated_at')
