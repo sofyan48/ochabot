@@ -38,5 +38,5 @@ jobs:
 
       - name: Tagging Latest and Push 
         run: |
-          docekr tag $REGISTRY:$APP_TAG $REGISTRY:latest
+          docker tag $REGISTRY:$APP_TAG $REGISTRY:latest
           docker push $REGISTRY:latest
