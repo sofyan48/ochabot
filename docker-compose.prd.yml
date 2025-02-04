@@ -67,6 +67,16 @@ services:
     command: "python main.py serve"
     volumes:
       - ./.env:/app/.env
+      - ./storage:/app/storage
+
+  migrate:
+    image: ghcr.io/sofyan48/ochabot/ochabot
+    networks:
+      - code-network
+    restart: on-failure:3
+    command: "alembic upgrade head"
+    volumes:
+      - ./.env:/app/.env
 networks:
   code-network:
     driver: bridge

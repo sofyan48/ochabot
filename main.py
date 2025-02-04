@@ -22,7 +22,7 @@ if __name__ == '__main__':
                 app="app:app",
                 host=os.getenv("APP_HOST", "0.0.0.0"),
                 port=int(os.getenv("APP_PORT", "8080")),
-                # workers=worker,
+                workers=2,
                 reload=False,
                 log_config=logging_config
             )

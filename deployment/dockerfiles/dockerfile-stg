@@ -27,5 +27,3 @@ RUN poetry config virtualenvs.create false \
 # Expose the port the app runs on
 EXPOSE 8081
 
-# Command to run the application
-CMD ["python", "main.py", "serve"]
