@@ -22,7 +22,6 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      serviceAccountName: {{.Values.deployment.serviceAccount}}
   strategy:
     blueGreen:
       activeService: {{ .Values.deployment.name }}

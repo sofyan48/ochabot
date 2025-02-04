@@ -1,0 +1,54 @@
+# Default values for kaj-dev-argo-testing-srvc.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+deployment:
+  name: ochabot
+  namespace: default
+  autoPromote: true
+  delayPromote: 5
+  isInternal: false
+  
+replicaCount: 2
+
+image:
+  repository: docker pull ghcr.io/sofyan48/ochabot/ochabot
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8081
+
+ingress:
+  enabled: true
+  priority: 10
+  domain: ocha.iank.me
+  greenDomain: green-ocha.iank.me
+  internalDomain: ocha.iank.intl
+  className: nginx
+  ssl: true
+  ssl_redirect: "true"
+  force_ssl_redirect: "true"
+
+tls: 
+  secretName: iank-me-cert
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 500Mi
+  limits:
+    cpu: 500m
+    memory: 2048Mi
+
+hpa:
+  enabled: true
+  spec:
+    minReplicas: 2
+    maxReplicas: 8
+    memory:
+      averageUtilization: 80
+    cpu:
+      averageUtilization: 80
