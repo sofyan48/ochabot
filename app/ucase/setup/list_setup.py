@@ -7,8 +7,6 @@ from app.ucase.setup import (
     logger, 
     setup_repo
 )
-from pkg.utils import json_serializable
-from app.ucase import BasicAuth
 
 @router.get("/setup", tags=["setup"], operation_id="setup_list_key") 
 async def setup_list_key(

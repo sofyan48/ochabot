@@ -8,7 +8,6 @@ from app.ucase.setup import (
     logger, 
     setup_repo
 )
-from app.ucase import BasicAuth
 
 @router.delete("/setup/delete", tags=["setup"], operation_id="setup_delete") 
 async def setup_llm_delete(

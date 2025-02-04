@@ -1,5 +1,4 @@
 from fastapi.security import HTTPAuthorizationCredentials
-from app.ucase import BasicAuth
 from fastapi import HTTPException, status,  Depends, Query
 from typing import Optional
 from app.appctx import IGetResponseBase, response

@@ -8,7 +8,6 @@ from app.ucase.setup import (
     logger, 
     setup_repo
 )
-from app.ucase import BasicAuth
 
 @router.get("/setup/detail", tags=["setup"], operation_id="setup_detail_key") 
 async def setup_detail_key(

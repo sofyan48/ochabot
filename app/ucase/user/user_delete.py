@@ -2,7 +2,6 @@ from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status, Path
 from app.appctx import IGetResponseBase, response
 from app.ucase.user import router, auth, logger, user_repo
-from app.ucase import BasicAuth
 
 
 @router.delete("/users/{id}", tags=["user"], operation_id="delete_user")

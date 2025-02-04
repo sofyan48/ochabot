@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, status
 from app.appctx import IGetResponseBase, response
 from fastapi.security import HTTPAuthorizationCredentials
-from app.ucase import session_middleware, BasicAuth
+from app.ucase import session_middleware
 from pkg.history import MessageHistory
 from app.ucase.chat import router, auth, redis, logger, AIWrapperLLM
 
