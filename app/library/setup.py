@@ -2,6 +2,7 @@ from app.repositories import redis
 from app.repositories.setup import SetupConfig
 from pkg.redis import Redis
 from app.library import repo_config
+from app import logger
 
 class SetupConfigLibrary(object):
     _instance = None  # Class variable to hold the singleton instance
@@ -18,6 +19,7 @@ class SetupConfigLibrary(object):
     @classmethod
     async def save_all(cls):
         try:
+            logger.info('Setup Initialization')
             data_config = await cls._instance_repo.list_key()
         except Exception as e:
             raise e

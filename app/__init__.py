@@ -35,6 +35,9 @@ async def lifespan(app: FastAPI):
     openai.register_openai()
     groq.register_groq()
     vectorstore.register_chroma_retriever()
+    # initial setup
+    from app.library.setup import SetupConfigLibrary
+    await SetupConfigLibrary.save_all()
     yield
     # clearing env after shutdown
     os.environ.clear()

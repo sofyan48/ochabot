@@ -58,7 +58,7 @@ services:
     networks:
       - code-network
   app:
-    image: ghcr.io/sofyan48/ochabot/ochabot:v0.6.8
+    image: ghcr.io/sofyan48/ochabot/ochabot
     ports:
       - 8081:8081
     networks:

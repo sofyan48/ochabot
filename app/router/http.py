@@ -3,7 +3,6 @@ from fastapi import APIRouter
 
 routerV1 = APIRouter(prefix="/v1")
 
-
 from app.ucase.chat import chat, delete, history, files
 routerV1.include_router(chat.router)
 routerV1.include_router(delete.router)
