@@ -20,6 +20,13 @@ async def build_retriever_chroma(
     payload: request.RequestIngestChroma,
     authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
     
+    auth_payload = authorization.get('payload')
+    if auth_payload.get('roles') != "user":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Please use user mode if you ingest data"
+        )
+    
     if not os.path.exists(UPLOAD_MODEL_DIR):
         os.makedirs(UPLOAD_MODEL_DIR)
     

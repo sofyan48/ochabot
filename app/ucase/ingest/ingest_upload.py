@@ -22,6 +22,14 @@ async def ingest_preview(
     file: UploadFile = File(...),
     authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
     
+
+    auth_payload = authorization.get('payload')
+    if auth_payload.get('roles') != "user":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Please use user mode if you ingest data"
+        )
+
     if not os.path.exists(UPLOAD_MODEL_DIR):
         os.makedirs(UPLOAD_MODEL_DIR)
 
@@ -52,7 +60,6 @@ async def ingest_preview(
         })
 
     ingest_code = utils.generate_random_string(6)
-    auth_payload = authorization.get('payload')
     client = auth_payload.get("username")
     
     bucket_path = "ingest/"+client+"/"+ingest_code+"/"+file_name

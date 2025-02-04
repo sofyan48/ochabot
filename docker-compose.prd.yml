@@ -4,8 +4,8 @@ services:
   minio:
     image: minio/minio
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - ":9000"
+      - ":9001"
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: password
@@ -31,7 +31,7 @@ services:
     networks:
       - code-network
     ports:
-      - 6479:6379
+      - :6379
   chromadb:
     image: ghcr.io/chroma-core/chroma:0.5.0
     container_name: chromadb
@@ -44,7 +44,7 @@ services:
     networks:
       - code-network
     ports:
-      - 8000:8000
+      - :8000
   postgres:
     image: postgres:13
     environment:
@@ -52,21 +52,21 @@ services:
       POSTGRES_USER: iank
       POSTGRES_DB: mydb
     ports:
-      - 5432:5432
+      - :5432
     volumes:
       - ./mydb:/var/lib/postgresql/data
     networks:
       - code-network
-  # app:
-  #   build: .
-  #   ports:
-  #     - 8081:8081
-  #   networks:
-  #     - code-network
-  #   restart: always
-  #   command: "python main.py serve"
-  #   volumes:
-  #     - ./:/app/
+  app:
+    build: .
+    ports:
+      - 8081:8081
+    networks:
+      - code-network
+    restart: always
+    command: "python main.py serve"
+    volumes:
+      - ./:/app/
 networks:
   code-network:
     driver: bridge
