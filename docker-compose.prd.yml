@@ -58,7 +58,7 @@ services:
     networks:
       - code-network
   app:
-    build: .
+    image: ghcr.io/sofyan48/ochabot/ochabot:v0.6.8
     ports:
       - 8081:8081
     networks:
@@ -66,7 +66,7 @@ services:
     restart: always
     command: "python main.py serve"
     volumes:
-      - ./:/app/
+      - ./.env:/app/.env
 networks:
   code-network:
     driver: bridge
