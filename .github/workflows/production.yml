@@ -21,9 +21,9 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Docker login
-        run: docker login ghcr.io -u $ACTOR -p $GITHUB_TOKEN
+        run: docker login ghcr.io -u $ACTOR -p $MY_GITHUB_TOKEN
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
           ACTOR: ${{ github.actor }}
       
       - name: Create .env
