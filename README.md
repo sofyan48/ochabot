@@ -88,82 +88,82 @@ payload:
 ```mermaid
 graph TB
     User((External User))
-    
+    Client((Client Application))
+
     subgraph "Ochabot System"
         subgraph "API Layer"
-            FastAPI["API Server<br>FastAPI"]
-            Router["Router<br>FastAPI Router"]
-            CORS["CORS Middleware<br>Starlette"]
-            WebSocket["WebSocket Handler<br>FastAPI WebSocket"]
+            FastAPI["API Server<br>(FastAPI)"]
+            Router["Router<br>(FastAPI Router)"]
+            WebSocket["WebSocket Handler<br>(FastAPI WebSocket)"]
         end
 
         subgraph "Core Services"
-            AuthService["Authentication Service<br>JWT"]
-            ChatService["Chat Service<br>Python"]
-            LLMService["LLM Service<br>Python"]
-            UserService["User Service<br>Python"]
-            PromptService["Prompt Service<br>Python"]
-            RetrievalService["Retrieval Service<br>Python"]
+            ChatService["Chat Service<br>(Python)"]
+            LLMService["LLM Service<br>(Python)"]
+            UserMgmt["User Management<br>(Python)"]
+            DocumentIngest["Document Ingestion<br>(Python)"]
+            PromptMgmt["Prompt Management<br>(Python)"]
         end
 
-        subgraph "LLM Integration"
-            LLMWrapper["LLM Wrapper<br>Python"]
-            MistralAI["Mistral Integration<br>Python"]
-            OpenAI["OpenAI Integration<br>Python"]
-            GroqAI["Groq Integration<br>Python"]
-            Prompter["Prompt Chain<br>LangChain"]
+        subgraph "AI Integration Layer"
+            AIWrapper["AI Wrapper<br>(Python)"]
+            subgraph "LLM Providers"
+                MistralAI["Mistral AI<br>(API Client)"]
+                OpenAI["OpenAI<br>(API Client)"]
+                GroqAI["Groq AI<br>(API Client)"]
+            end
         end
 
-        subgraph "Data Layer"
-            PostgreSQL[("PostgreSQL<br>Database")]
-            Redis[("Redis<br>Cache")]
-            MinIO[("MinIO<br>Object Storage")]
-            ChromaDB[("ChromaDB<br>Vector Store")]
+        subgraph "Data Storage"
+            PostgreSQL[("PostgreSQL<br>(Primary Database)")]
+            Redis[("Redis<br>(Cache)")]
+            ChromaDB[("ChromaDB<br>(Vector Store)")]
+            MinIO[("MinIO<br>(Object Storage)")]
+        end
+
+        subgraph "Authentication"
+            JWTAuth["JWT Service<br>(Python JWT)"]
+            AuthHandler["Auth Handler<br>(FastAPI Auth)"]
         end
     end
 
+    %% External Systems
     subgraph "External Services"
-        MistralAPI["Mistral AI API<br>External Service"]
-        OpenAIAPI["OpenAI API<br>External Service"]
-        GroqAPI["Groq API<br>External Service"]
+        MistralCloud["Mistral Cloud<br>(AI Service)"]
+        OpenAICloud["OpenAI Cloud<br>(AI Service)"]
+        GroqCloud["Groq Cloud<br>(AI Service)"]
     end
 
     %% Connections
-    User -->|"HTTP/WebSocket"| FastAPI
-    FastAPI -->|"Routes"| Router
-    FastAPI -->|"Uses"| CORS
-    FastAPI -->|"WebSocket"| WebSocket
-
-    Router -->|"Auth"| AuthService
-    Router -->|"Chat"| ChatService
-    Router -->|"Users"| UserService
-    Router -->|"Prompts"| PromptService
-    Router -->|"Retrieval"| RetrievalService
-
-    ChatService --> LLMService
-    LLMService --> LLMWrapper
-    LLMWrapper -->|"Uses"| MistralAI
-    LLMWrapper -->|"Uses"| OpenAI
-    LLMWrapper -->|"Uses"| GroqAI
-    LLMWrapper -->|"Uses"| Prompter
-
-    MistralAI -->|"API Calls"| MistralAPI
-    OpenAI -->|"API Calls"| OpenAIAPI
-    GroqAI -->|"API Calls"| GroqAPI
-
-    AuthService -->|"Read/Write"| PostgreSQL
-    UserService -->|"Read/Write"| PostgreSQL
-    PromptService -->|"Read/Write"| PostgreSQL
+    User -->|"Accesses"| FastAPI
+    Client -->|"Connects via WebSocket"| WebSocket
     
-    ChatService -->|"Cache"| Redis
-    RetrievalService -->|"Vectors"| ChromaDB
-    ChatService -->|"Files"| MinIO
-
-    %% Component relationships
-    subgraph "Database Components"
-        DBPool["Connection Pool<br>SQLAlchemy"]
-        DBMigrations["Migrations<br>Alembic"]
-    end
-    PostgreSQL --- DBPool
-    PostgreSQL --- DBMigrations
+    FastAPI -->|"Routes requests"| Router
+    Router -->|"Handles auth"| AuthHandler
+    AuthHandler -->|"Validates"| JWTAuth
+    
+    Router -->|"Directs"| ChatService
+    Router -->|"Directs"| UserMgmt
+    Router -->|"Directs"| DocumentIngest
+    Router -->|"Directs"| PromptMgmt
+    Router -->|"Directs"| LLMService
+    
+    ChatService -->|"Uses"| AIWrapper
+    LLMService -->|"Uses"| AIWrapper
+    
+    AIWrapper -->|"Calls"| MistralAI
+    AIWrapper -->|"Calls"| OpenAI
+    AIWrapper -->|"Calls"| GroqAI
+    
+    MistralAI -->|"Connects to"| MistralCloud
+    OpenAI -->|"Connects to"| OpenAICloud
+    GroqAI -->|"Connects to"| GroqCloud
+    
+    DocumentIngest -->|"Stores vectors"| ChromaDB
+    DocumentIngest -->|"Stores files"| MinIO
+    
+    ChatService -->|"Caches"| Redis
+    UserMgmt -->|"Stores data"| PostgreSQL
+    PromptMgmt -->|"Stores data"| PostgreSQL
+    DocumentIngest -->|"Stores metadata"| PostgreSQL
 ```
