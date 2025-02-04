@@ -37,5 +37,4 @@ class SetupConfigLibrary(object):
             key_value_pairs = {key: await cls._instance_redis.get(key) for key in keys}
             return key_value_pairs
         except Exception as e:
-            print("ERRR:", e)
             raise e

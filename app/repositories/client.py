@@ -42,7 +42,6 @@ class ClientRepositories:
             raise e
     
     async def fetch_row_by_apikey(self, apikey: str):
-        print(apikey)
         try:
             query = select(self.table).where(Client.api_key==apikey)
             return await self.engine.fetch(

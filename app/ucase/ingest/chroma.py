@@ -33,7 +33,6 @@ async def build_retriever_chroma(
     try:
         ingest_docs_data = await ingest_docs_repo.fetch_row_by_ingest_code(payload.ingest_code)
     except Exception as e:
-        print(e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Getting ingest code error"

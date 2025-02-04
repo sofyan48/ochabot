@@ -25,7 +25,6 @@ class Storage(object):
                 file_path=file_path
             )
         except Exception as e:
-            print("PROBLEM", e)
             raise e
         
     def get_presign_url(self, name: str):
