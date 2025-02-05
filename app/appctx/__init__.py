@@ -9,12 +9,6 @@ from pydantic import BaseModel as GenericModel
 DataType = TypeVar("DataType")
 T = TypeVar("T")
 
-class PageBase(Page[T], Generic[T]):
-    previous_page: int | None = Field(
-        None, description="Page number of the previous page"
-    )
-    next_page: int | None = Field(None, description="Page number of the next page")
-
 
 class IResponseBase(GenericModel, Generic[T]):
     message: str = ""
