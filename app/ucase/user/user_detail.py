@@ -1,14 +1,14 @@
 from app.presentation import request
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status, Query
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from app.ucase.user import router, auth, logger, user_repo
 
 
 @router.get("/users/{id}", tags=["user"], operation_id="detail_user")
 async def detail_user(id: int,
         authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
-    ) -> IGetResponseBase:
+    ) -> IResponseBase:
 
     try:
         result = await user_repo.fetch(id=id)

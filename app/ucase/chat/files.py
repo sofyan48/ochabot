@@ -1,6 +1,6 @@
 import os
 from fastapi import Form, File, UploadFile, Depends, HTTPException, status
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from pkg.retriever import loader as loader_model
 from fastapi.security import HTTPAuthorizationCredentials
 from app.ucase import session_middleware
@@ -16,7 +16,7 @@ from app.ucase.chat import (
 async def chat_with_files(
     file: UploadFile = File(...),
     x_session: str = Depends(session_middleware),
-    authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
+    authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IResponseBase:
     
     session_path = os.path.normpath(os.path.join(UPLOAD_MODEL_DIR, x_session))
     if not session_path.startswith(UPLOAD_MODEL_DIR):

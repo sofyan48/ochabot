@@ -1,6 +1,6 @@
 from app.presentation import request
 from fastapi import HTTPException, status
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from app.ucase.login import router, logger, client_repo, jwt
 from datetime import datetime, timedelta
 from pkg import utils
@@ -8,7 +8,7 @@ from pkg import utils
 @router.post("/grant", tags=["login"], operation_id="grant_client") 
 async def grant_client_with_password(
         payload: request.RequestGrantClient,
-    ) -> IGetResponseBase:
+    ) -> IResponseBase:
     try:
         client_data = await client_repo.fetch_row_by_apikey(payload.api_key)
     except Exception as e:

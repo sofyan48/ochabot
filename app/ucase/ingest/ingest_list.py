@@ -1,6 +1,6 @@
 import os
 from fastapi import Query, Depends, HTTPException, status
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from pkg import utils
 from fastapi.security import HTTPAuthorizationCredentials
 from typing import Optional
@@ -18,7 +18,7 @@ from app.ucase.ingest import (
 async def ingest_document_list(
     limit: Optional[int] = Query(10, description="Limit"),
     page: Optional[int] = Query(1, description="page"),
-    authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
+    authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IResponseBase:
     
     if not os.path.exists(UPLOAD_MODEL_DIR):
         os.makedirs(UPLOAD_MODEL_DIR)

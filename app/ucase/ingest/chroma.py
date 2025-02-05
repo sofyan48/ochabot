@@ -1,7 +1,7 @@
 import os
 from fastapi import Depends, HTTPException, status
 from app.presentation import request
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from pkg.retriever import loader as loader_model
 from fastapi.security import HTTPAuthorizationCredentials
 from pkg import utils
@@ -19,7 +19,7 @@ from app.ucase.ingest import (
 @router.post("/ingest/chroma", tags=["ingest"], operation_id="build_retriever_chroma")
 async def build_retriever_chroma(
     payload: request.RequestIngestChroma,
-    authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
+    authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IResponseBase:
     
     auth_payload = authorization.get('payload')
     if auth_payload.get('roles') != "user":

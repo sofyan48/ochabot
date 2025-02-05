@@ -1,6 +1,6 @@
 import os
 from fastapi import Form, File, UploadFile, Depends, HTTPException, status
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from pkg.retriever import loader as loader_model
 from fastapi.security import HTTPAuthorizationCredentials
 from pkg import utils
@@ -20,7 +20,7 @@ async def ingest_preview(
     chunk: int = Form(...),
     overlap: int = Form(...),
     file: UploadFile = File(...),
-    authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
+    authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IResponseBase:
     
 
     auth_payload = authorization.get('payload')

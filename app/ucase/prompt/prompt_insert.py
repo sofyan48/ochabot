@@ -1,13 +1,13 @@
 from app.presentation import request
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from app.ucase.prompt import router, auth, logger, repoPrompt
 
 @router.post("/prompt", tags=["prompt"], operation_id="insert_prompt") 
 async def insert_prompt(payload: request.RequestPrompt,
         authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
-    ) -> IGetResponseBase:
+    ) -> IResponseBase:
     try:
         template = """
         Histroy: {history}

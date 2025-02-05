@@ -1,7 +1,7 @@
 from app.presentation import request
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from app.ucase.user import router, auth, logger, user_repo
 from datetime import datetime
 from pkg import utils
@@ -10,7 +10,7 @@ from pkg import utils
 async def upsert_user(
         payload: request.RequestUsers,
         authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
-    ) -> IGetResponseBase:
+    ) -> IResponseBase:
 
     try:
         entity_user = {

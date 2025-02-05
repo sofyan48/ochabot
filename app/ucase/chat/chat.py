@@ -1,5 +1,5 @@
 from fastapi import Depends, HTTPException, status
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from app.presentation import request
 from fastapi.security import HTTPAuthorizationCredentials
 from app.ucase import session_middleware
@@ -20,7 +20,7 @@ async def send_chat(
         payload: request.RequesChat, 
         x_session: str = Depends(session_middleware),
         authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)    
-    ) -> IGetResponseBase:
+    ) -> IResponseBase:
     
     history = MessageHistory(alchemy, x_session).sql()
     await history.aclear()

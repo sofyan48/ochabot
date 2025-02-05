@@ -1,7 +1,7 @@
 from app.presentation import request
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status, Query
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from app.ucase.setup import (
     router, 
     auth, 
@@ -12,7 +12,7 @@ from app.ucase.setup import (
 @router.delete("/setup/delete", tags=["setup"], operation_id="setup_delete") 
 async def setup_llm_delete(
         key: str = Query(..., description="Key of the setup to delete"),
-        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
+        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IResponseBase:
     try:
         await setup_repo.delete(key=key)
     except Exception as e:

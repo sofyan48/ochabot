@@ -1,10 +1,10 @@
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import HTTPException, status,  Depends
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from app.ucase.prompt import router, auth, repoPrompt, logger
 
 @router.get("/prompt", tags=["prompt"], operation_id="prompt_list") 
-async def prompt_list(authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
+async def prompt_list(authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IResponseBase:
     try: 
         prompt_data = await repoPrompt.list()
     except Exception as e:

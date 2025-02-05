@@ -1,7 +1,7 @@
 from app.presentation import request
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from app.ucase.client import router, auth, logger, client_repo
 from datetime import datetime
 from pkg import utils
@@ -10,7 +10,7 @@ from pkg import utils
 async def upsert_client(
         payload: request.RequestClient,
         authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
-    ) -> IGetResponseBase:
+    ) -> IResponseBase:
 
     try:
         client_api_key = utils.generate_random_string(32)

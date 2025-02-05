@@ -21,75 +21,15 @@ class IResponseBase(GenericModel, Generic[T]):
     meta: dict = {}
     data: T | None
 
-
-class IGetResponsePaginated(AbstractPage[T], Generic[T]):
-    message: str | None = ""
-    meta: dict = {}
-    data: PageBase[T]
-
-    __params_type__ = Params  # Set params related to Page
-
-    @classmethod
-    def create(
-        cls,
-        items: Sequence[T],
-        total: int,
-        params: AbstractParams,
-    ) -> PageBase[T] | None:
-        if params.size is not None and total is not None and params.size != 0:
-            pages = ceil(total / params.size)
-        else:
-            pages = 0
-
-        return cls(
-            data=PageBase[T](
-                items=items,
-                page=params.page,
-                size=params.size,
-                total=total,
-                pages=pages,
-                next_page=params.page + 1 if params.page < pages else None,
-                previous_page=params.page - 1 if params.page > 1 else None,
-            )
-        )
-
-
-class IGetResponseBase(IResponseBase[DataType], Generic[DataType]):
-    message: str | None = "Data got correctly"
-
-
-class IPostResponseBase(IResponseBase[DataType], Generic[DataType]):
-    message: str | None = "Data created correctly"
-
-
-class IPutResponseBase(IResponseBase[DataType], Generic[DataType]):
-    message: str | None = "Data updated correctly"
-
-
-class IDeleteResponseBase(IResponseBase[DataType], Generic[DataType]):
-    message: str | None = "Data deleted correctly"
-
-
 def response(
     data: DataType,
     message: str | None = None,
-    meta: dict | Any | None = {},
-) -> (
-    IResponseBase[DataType]
-    | IGetResponsePaginated[DataType]
-    | IGetResponseBase[DataType]
-    | IPutResponseBase[DataType]
-    | IDeleteResponseBase[DataType]
-    | IPostResponseBase[DataType]
-):
-    if isinstance(data, IGetResponsePaginated):
-        data.message = None if message is None else message
-        data.meta = None if meta is None else meta
-        return data
-    if message is None:
-        return {"data": data, "meta": meta}
-    return {
-        "message": message, 
-        "data": data, 
-        "meta": meta
-    }
+    meta: dict | Any | None = {}) -> (IResponseBase[DataType]):
+    response = {}
+    if message is not None:
+        response["message"] = message
+    if data is not None:
+        response["data"] = data
+    if meta is not None:
+        response["meta"] = meta
+    return response

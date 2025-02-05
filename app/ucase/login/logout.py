@@ -1,7 +1,7 @@
 from app.presentation import request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 
 
 from app.ucase.login import router, logger, jwt, auth
@@ -9,7 +9,7 @@ from app.ucase.login import router, logger, jwt, auth
 @router.post("/logout", tags=["login"], operation_id="logout_with_password") 
 async def logout_with_password(
         authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)
-    ) -> IGetResponseBase:
+    ) -> IResponseBase:
 
     try:
         jwt.destroy_token(token=authorization.get('token'))

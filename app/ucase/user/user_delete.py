@@ -1,13 +1,13 @@
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status, Path
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from app.ucase.user import router, auth, logger, user_repo
 
 
 @router.delete("/users/{id}", tags=["user"], operation_id="delete_user")
 async def delete_user(id: int,
         authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
-    ) -> IGetResponseBase:
+    ) -> IResponseBase:
     
     try:
         await user_repo.delete(id=id)

@@ -1,5 +1,5 @@
 from fastapi import Depends, HTTPException, status
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from fastapi.security import HTTPAuthorizationCredentials
 from app.ucase import session_middleware
 from pkg.history import MessageHistory
@@ -9,7 +9,7 @@ from app.ucase.chat import router, auth, redis, logger
 async def delete_chat_session(
         x_session: str = Depends(session_middleware),
         authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)
-    ) -> IGetResponseBase:
+    ) -> IResponseBase:
     try:
         history = MessageHistory(session=x_session).redis(redis.str_conn())
         await history.aclear()

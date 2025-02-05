@@ -1,6 +1,6 @@
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status, Query
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from app.ucase.setup import (
     router, 
     auth, 
@@ -10,7 +10,7 @@ from app.ucase.setup import (
 
 @router.get("/setup", tags=["setup"], operation_id="setup_list_key") 
 async def setup_list_key(
-        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
+        authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IResponseBase:
 
     try:
         data_key = await setup_repo.list_key()

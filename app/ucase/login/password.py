@@ -1,6 +1,6 @@
 from app.presentation import request
 from fastapi import HTTPException, status
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from app.ucase.login import router, logger, user_repo, jwt
 from datetime import datetime, timedelta
 from pkg import utils
@@ -8,7 +8,7 @@ from pkg import utils
 @router.post("/login", tags=["login"], operation_id="login_with_password") 
 async def login_with_password(
         payload: request.RequestLogin,
-    ) -> IGetResponseBase:
+    ) -> IResponseBase:
     try:
         user_data = await user_repo.get_by_username_or_email(username=payload.username)
     except Exception as e:

@@ -3,7 +3,7 @@ from app.ucase.client import router
 from app.presentation import request
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, Query, HTTPException, status
-from app.appctx import IGetResponseBase, response
+from app.appctx import IResponseBase, response
 from datetime import datetime
 from pkg import utils
 from typing import Optional
@@ -12,7 +12,7 @@ from typing import Optional
 async def insert_client_socket(
         payload: request.RequestClientSocket,
         authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
-    ) -> IGetResponseBase:
+    ) -> IResponseBase:
     client = {
         "name": payload.name,
         "secret": utils.generate_random_string(16),
@@ -41,7 +41,7 @@ async def list_client_socket(
         limit: Optional[int] = Query(None, description="Limit"),
         page: Optional[int] = Query(None, description="page"),
         authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
-    ) -> IGetResponseBase:
+    ) -> IResponseBase:
 
     try:
         list_data = await client_socket_repo.list(limit=limit, page=page)
@@ -62,7 +62,7 @@ async def list_client_socket(
 @router.get("/client/socket/{id}", tags=["client"])
 async def detail_client_socket(id: int,
         authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)
-    ) -> IGetResponseBase:
+    ) -> IResponseBase:
 
     try:
         data = await client_socket_repo.fetch(id=id)
@@ -81,7 +81,7 @@ async def detail_client_socket(id: int,
 @router.delete("/client/socket/{id}", tags=["client"])
 async def detail_client_socket(id: int,
         authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
-    ) -> IGetResponseBase:
+    ) -> IResponseBase:
 
     try:
         await client_socket_repo.delete(id=id)
