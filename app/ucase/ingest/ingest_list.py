@@ -26,6 +26,7 @@ async def ingest_document_list(
     try:
         document_list = await ingest_docs_repo.fetch(limit=limit, page=page)
     except Exception as e:
+        logger.error(e)
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Ingest not found"

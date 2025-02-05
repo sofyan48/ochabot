@@ -67,8 +67,7 @@ async def ingest_preview(
     try:
         minio_client.save(bucket_path, file_path=file_path)
     except Exception as e:
-        logger.error(
-            "Error Uploading files",
+        logger.error("Error Uploading files",
             {
                 "error": str(e)
             }

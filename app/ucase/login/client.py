@@ -39,6 +39,7 @@ async def grant_client_with_password(
             expires_delta=expire
         )
     except Exception as e:
+        logger.error(e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="JWT Token not created"

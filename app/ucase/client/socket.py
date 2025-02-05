@@ -46,6 +46,7 @@ async def list_client_socket(
     try:
         list_data = await client_socket_repo.list(limit=limit, page=page)
     except Exception as e:
+        logger.error(e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail={
@@ -66,11 +67,10 @@ async def detail_client_socket(id: int,
     try:
         data = await client_socket_repo.fetch(id=id)
     except Exception as e:
+        logger.error(e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail={
-                "error": e
-            }
+            detail="Internal failure"
         )
 
     return response(
@@ -86,11 +86,10 @@ async def detail_client_socket(id: int,
     try:
         await client_socket_repo.delete(id=id)
     except Exception as e:
+        logger.error(e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail={
-                "error": e
-            }
+            detail="Internal Failure"
         )
 
     return response(

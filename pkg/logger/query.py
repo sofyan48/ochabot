@@ -23,7 +23,7 @@ class JsonFormatter(logging.Formatter):
         return json.dumps(log_record)
     
 # Configure the logger
-logger = logging.getLogger("app_logger")
+logger = logging.getLogger("query_logger")
 logger.setLevel(logging.DEBUG)
 
 # Create a console handler

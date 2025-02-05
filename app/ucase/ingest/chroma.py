@@ -47,8 +47,9 @@ async def build_retriever_chroma(
     
     file_path = "./storage/"+ingest_docs_data.file_path
     try:
-        file = minio_client.read(name=ingest_docs_data.file_path, file_path=file_path)
+        minio_client.read(name=ingest_docs_data.file_path, file_path=file_path)
     except Exception as e:
+        logger.error(e)
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Cannot get file from storage"

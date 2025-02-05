@@ -13,6 +13,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import SQLAlchemyError
 from typing import Optional, List, Dict
+from pkg.logger.query import logger
 
 
 class AlChemy:
@@ -67,16 +68,20 @@ class AlChemy:
                 cfg.get("name")
             )
         return connection_str
-
+    
     def async_engine(self, config: DatabaseConfig, driver: str = "postgres", debug: bool = False) -> AsyncEngine:
         conn_str = self.connection_setup(config, driver)
-        return create_async_engine(
-            url=conn_str, 
-            isolation_level="AUTOCOMMIT", 
-            echo=debug,
-            pool_pre_ping=True,
-            connect_args={}
-        )
+        try:
+            return create_async_engine(
+                url=conn_str, 
+                isolation_level="AUTOCOMMIT", 
+                echo=debug,
+                pool_pre_ping=True,
+                connect_args={}
+            )
+        except Exception as e:
+            logger.error(e)
+            raise e
     
     @classmethod
     def get_instance(cls, cfgWrite: DatabaseConfig, cfgRead: DatabaseConfig, driver: str = "postgres"):
