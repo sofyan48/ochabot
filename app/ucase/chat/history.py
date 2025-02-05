@@ -15,7 +15,7 @@ async def chat_histories(
         history = MessageHistory(session=x_session).redis(redis.str_conn())
         data_history = await history.aget_messages()
     except Exception as e:
-        return HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Internal failure",
         )

@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from bootstrap.database import (
     register_alchemy_async,
 )
-
+from dotenv import load_dotenv
 from bootstrap import (
     redis,
     logging,
@@ -21,6 +21,9 @@ from starlette.middleware.cors import CORSMiddleware
 
 APP_ROOT = os.path.join(os.path.dirname(__file__), '..')
 UPLOAD_MODEL_DIR = APP_ROOT+"/knowledge/model"
+
+# load env
+load_dotenv()
 
 # bootstraping
 register_alchemy_async()

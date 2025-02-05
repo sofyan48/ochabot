@@ -30,7 +30,7 @@ async def insert_client_socket(
         logger.error("Cannot upsert client socker", {
             "error": e
         })
-        return HTTPException(status_code=500, detail="Cannot upsert client socket")
+        raise HTTPException(status_code=500, detail="Cannot upsert client socket")
     return response(
         message="Successfully",
         data=client
@@ -46,7 +46,7 @@ async def list_client_socket(
     try:
         list_data = await client_socket_repo.list(limit=limit, page=page)
     except Exception as e:
-        return HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail={
                 "error": e
@@ -66,7 +66,7 @@ async def detail_client_socket(id: int,
     try:
         data = await client_socket_repo.fetch(id=id)
     except Exception as e:
-        return HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail={
                 "error": e
@@ -86,7 +86,7 @@ async def detail_client_socket(id: int,
     try:
         await client_socket_repo.delete(id=id)
     except Exception as e:
-        return HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail={
                 "error": e

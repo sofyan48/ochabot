@@ -58,7 +58,7 @@ async def send_chat(
     if collection is None:
         collection = setup.get('config:retriever:collection')
         if collection is None:
-            return HTTPException(
+            raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="Please setup retriever collection or set from payload"
             )
@@ -69,7 +69,7 @@ async def send_chat(
             collection=collection
         )
     except Exception as e:
-        return HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail={
                 "error": e
@@ -83,7 +83,7 @@ async def send_chat(
         if prompt_tpl != "":
             prompt = PromptTemplate(input_variables=["answer", "question", "history", "context"],template=prompt_tpl)
     except:
-        return HTTPException(
+        raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="Please setup retriever collection or set from payload"
             )
