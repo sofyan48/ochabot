@@ -16,8 +16,8 @@ from app.ucase.ingest import (
 
 @router.get("/ingest", tags=["ingest"], operation_id="ingest_document_list")
 async def ingest_document_list(
-     limit: Optional[int] = Query(None, description="Limit"),
-    page: Optional[int] = Query(None, description="page"),
+    limit: Optional[int] = Query(10, description="Limit"),
+    page: Optional[int] = Query(1, description="page"),
     authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IGetResponseBase:
     
     if not os.path.exists(UPLOAD_MODEL_DIR):
@@ -32,7 +32,7 @@ async def ingest_document_list(
         )
     result = []
     for i in document_list:
-        url = minio_client.get_presign_url("/"+i.get('file_path'))
+        url = minio_client.get_presign_url(i.get('file_path'))
         result.append(
             {
                 'id': i.get('id'), 

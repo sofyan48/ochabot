@@ -9,8 +9,8 @@ from typing import Optional
 
 @router.get("/client", tags=["client"])
 async def list_client(
-        limit: Optional[int] = Query(None, description="Limit"),
-        page: Optional[int] = Query(None, description="page"),
+        limit: Optional[int] = Query(10, description="Limit"),
+        page: Optional[int] = Query(1, description="page"),
         authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate),
     ) -> IGetResponseBase:
     try:

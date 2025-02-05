@@ -24,7 +24,6 @@ async def ingest_preview(
     
 
     auth_payload = authorization.get('payload')
-    print(auth_payload)
     if auth_payload.get('roles') != "user":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
