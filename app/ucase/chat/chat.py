@@ -34,6 +34,7 @@ async def send_chat(
         except Exception:
             payload.llm = "mistral"
     
+    
     if payload.model is None:
         try:
             payload.model = setup.get('config:llm:model')
@@ -41,7 +42,7 @@ async def send_chat(
             payload.model = None
     
     payload.model = None
-   
+    
     llm = llm_platform.initiate(payload.llm, model=payload.model)
     try: 
         top_k = int(setup.get('config:retriever:top_k'))

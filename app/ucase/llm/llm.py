@@ -9,6 +9,7 @@ async def llm_list(authorization: HTTPAuthorizationCredentials = Depends(auth.au
         data=[
             "openai",
             "mistral",
-            "groq"
+            "groq",
+            "deepseek"
         ],
     )

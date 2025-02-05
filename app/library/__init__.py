@@ -7,10 +7,12 @@ from pkg.openai import OpenAILLM
 from pkg.groq import GroqLLM
 from pkg.vectorstore.chromadb import ChromaDB
 from pkg.storage.minio import StorageMinio
+from pkg.deepseek import DeepSeekLLM
 
 mistral_llm = MistralLLM()
 openai_llm = OpenAILLM()
 groq_llm = GroqLLM()
+deepseek_llm = DeepSeekLLM()
 chromadb = ChromaDB()
 minio = StorageMinio
 

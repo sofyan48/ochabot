@@ -14,7 +14,8 @@ from bootstrap import (
     vectorstore,
     prompter,
     minio,
-    jwt
+    jwt,
+    deepseek
 )
 from starlette.middleware.cors import CORSMiddleware
 
@@ -34,6 +35,7 @@ async def lifespan(app: FastAPI):
     mistral.register_mistral()
     openai.register_openai()
     groq.register_groq()
+    deepseek.register_deepseek()
     vectorstore.register_chroma_retriever()
     # initial setup
     from app.library.setup import SetupConfigLibrary

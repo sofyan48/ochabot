@@ -9,6 +9,7 @@ Based on mistral AI, OpenAI, Groq, langchain and chroma vector database, I'm sti
 - OpenAI
 - MistralAI
 - Groq
+- Deepseek
 
 ### Embedding
 - Huggingface
