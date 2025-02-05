@@ -1,4 +1,4 @@
-from langchain_openai.chat_models import ChatOpenAI  
+from langchain_openai.chat_models import ChatOpenAI 
 from langchain.globals import set_llm_cache  
 from langchain_redis import RedisCache  
 from langchain.chains.combine_documents import create_stuff_documents_chain  
@@ -35,19 +35,22 @@ class DeepSeekLLM(object):
   
         if model is not None:  
             cls._model = model
-        return ChatOpenAI(  
-            cache=cache,  
-            model=cls._model,  
-            temperature=0.4,  
-            max_tokens=None,  
-            timeout=None,  
-            max_retries=2,  
-            top_p=0.8,  
-            api_key=cls._apikey,  
-            presence_penalty=0.8,  
-            frequency_penalty=0.8,
-            base_url="https://api.deepseek.com"
-        )  
+        try:
+            return ChatOpenAI(  
+                cache=cache,  
+                model=cls._model,  
+                temperature=0.4,  
+                max_tokens=None,  
+                timeout=None,  
+                max_retries=2,  
+                top_p=0.8,  
+                api_key=cls._apikey,  
+                presence_penalty=0.8,  
+                frequency_penalty=0.8,
+                base_url="https://api.deepseek.com"
+            )  
+        except Exception as e:
+            raise e
       
     @classmethod  
     def promptTemplates(cls, input_variable: list = ["answer", "question", "history", "context"]) -> PromptTemplate:  
