@@ -33,7 +33,7 @@ services:
     ports:
       - 6379:6379
   chromadb:
-    image: ghcr.io/chroma-core/chroma:0.5.0
+    image: ghcr.io/chroma-core/chroma:0.5.23
     container_name: chromadb
     volumes:
       - ./chroma:/chroma/chroma/  # Persist data to a volume

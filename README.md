@@ -10,6 +10,7 @@ Based on mistral AI, OpenAI, Groq, langchain and chroma vector database, I'm sti
 - MistralAI
 - Groq
 - Deepseek
+- Ollama
 
 ### Embedding
 - Huggingface
@@ -94,82 +95,93 @@ payload:
 ```mermaid
 graph TB
     User((External User))
-    Client((Client Application))
-
+    
     subgraph "Ochabot System"
         subgraph "API Layer"
             FastAPI["API Server<br>(FastAPI)"]
             Router["Router<br>(FastAPI Router)"]
             WebSocket["WebSocket Handler<br>(FastAPI WebSocket)"]
+            
+            subgraph "API Components"
+                ChatHandler["Chat Handler<br>(Python)"]
+                UserHandler["User Handler<br>(Python)"]
+                IngestHandler["Ingest Handler<br>(Python)"]
+                PromptHandler["Prompt Handler<br>(Python)"]
+                SetupHandler["Setup Handler<br>(Python)"]
+                ClientHandler["Client Handler<br>(Python)"]
+                LoginHandler["Login Handler<br>(Python)"]
+            end
         end
 
-        subgraph "Core Services"
-            ChatService["Chat Service<br>(Python)"]
-            LLMService["LLM Service<br>(Python)"]
-            UserMgmt["User Management<br>(Python)"]
-            DocumentIngest["Document Ingestion<br>(Python)"]
-            PromptMgmt["Prompt Management<br>(Python)"]
-        end
-
-        subgraph "AI Integration Layer"
-            AIWrapper["AI Wrapper<br>(Python)"]
+        subgraph "LLM Services"
+            LLMWrapper["LLM Wrapper<br>(Python)"]
+            
             subgraph "LLM Providers"
-                MistralAI["Mistral AI<br>(API Client)"]
-                OpenAI["OpenAI<br>(API Client)"]
-                GroqAI["Groq AI<br>(API Client)"]
+                OpenAI["OpenAI Service<br>(OpenAI API)"]
+                Mistral["Mistral Service<br>(Mistral API)"]
+                Groq["Groq Service<br>(Groq API)"]
+                DeepSeek["DeepSeek Service<br>(DeepSeek API)"]
+                Ollama["Ollama Service<br>(Ollama API)"]
             end
         end
 
         subgraph "Data Storage"
             PostgreSQL[("PostgreSQL<br>(Primary Database)")]
             Redis[("Redis<br>(Cache)")]
-            ChromaDB[("ChromaDB<br>(Vector Store)")]
             MinIO[("MinIO<br>(Object Storage)")]
+            ChromaDB[("ChromaDB<br>(Vector Store)")]
         end
 
-        subgraph "Authentication"
-            JWTAuth["JWT Service<br>(Python JWT)"]
-            AuthHandler["Auth Handler<br>(FastAPI Auth)"]
+        subgraph "Core Services"
+            DatabaseService["Database Service<br>(SQLAlchemy)"]
+            VectorService["Vector Store Service<br>(LangChain)"]
+            CacheService["Cache Service<br>(Redis Stack)"]
+            StorageService["Storage Service<br>(MinIO)"]
         end
-    end
-
-    %% External Systems
-    subgraph "External Services"
-        MistralCloud["Mistral Cloud<br>(AI Service)"]
-        OpenAICloud["OpenAI Cloud<br>(AI Service)"]
-        GroqCloud["Groq Cloud<br>(AI Service)"]
     end
 
     %% Connections
-    User -->|"Accesses"| FastAPI
-    Client -->|"Connects via WebSocket"| WebSocket
+    User -->|"HTTP/WebSocket"| FastAPI
+    FastAPI -->|"Routes"| Router
+    Router -->|"Handles WebSocket"| WebSocket
     
-    FastAPI -->|"Routes requests"| Router
-    Router -->|"Handles auth"| AuthHandler
-    AuthHandler -->|"Validates"| JWTAuth
+    %% API Components connections
+    Router --> ChatHandler
+    Router --> UserHandler
+    Router --> IngestHandler
+    Router --> PromptHandler
+    Router --> SetupHandler
+    Router --> ClientHandler
+    Router --> LoginHandler
+
+    %% LLM Service connections
+    ChatHandler --> LLMWrapper
+    LLMWrapper --> OpenAI
+    LLMWrapper --> Mistral
+    LLMWrapper --> Groq
+    LLMWrapper --> DeepSeek
+    LLMWrapper --> Ollama
+
+    %% Data Storage connections
+    DatabaseService --> PostgreSQL
+    CacheService --> Redis
+    StorageService --> MinIO
+    VectorService --> ChromaDB
+
+    %% Service Usage connections
+    ChatHandler --> DatabaseService
+    UserHandler --> DatabaseService
+    IngestHandler --> DatabaseService
+    PromptHandler --> DatabaseService
+    SetupHandler --> DatabaseService
+    ClientHandler --> DatabaseService
+    LoginHandler --> DatabaseService
+
+    ChatHandler --> VectorService
+    IngestHandler --> VectorService
     
-    Router -->|"Directs"| ChatService
-    Router -->|"Directs"| UserMgmt
-    Router -->|"Directs"| DocumentIngest
-    Router -->|"Directs"| PromptMgmt
-    Router -->|"Directs"| LLMService
+    ChatHandler --> CacheService
+    UserHandler --> CacheService
     
-    ChatService -->|"Uses"| AIWrapper
-    LLMService -->|"Uses"| AIWrapper
-    
-    AIWrapper -->|"Calls"| MistralAI
-    AIWrapper -->|"Calls"| OpenAI
-    AIWrapper -->|"Calls"| GroqAI
-    
-    MistralAI -->|"Connects to"| MistralCloud
-    OpenAI -->|"Connects to"| OpenAICloud
-    GroqAI -->|"Connects to"| GroqCloud
-    
-    DocumentIngest -->|"Stores vectors"| ChromaDB
-    DocumentIngest -->|"Stores files"| MinIO
-    
-    ChatService -->|"Caches"| Redis
-    UserMgmt -->|"Stores data"| PostgreSQL
-    PromptMgmt -->|"Stores data"| PostgreSQL
-    DocumentIngest -->|"Stores metadata"| PostgreSQL
+    IngestHandler --> StorageService
 ```
