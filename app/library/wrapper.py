@@ -2,6 +2,7 @@ from app.library.mistral import MistralAILibrary
 from app.library.openai import OpenAILibrary
 from app.library.groq import GroqAILibrary
 from app.library.deepseek import DeepSeekLibrary
+from app.library.ollama import OllamaLibrary
 from app import (
                 redis,
                 logger
@@ -12,7 +13,8 @@ from app.library import (
     openai_llm, 
     groq_llm, 
     chromadb,
-    deepseek_llm
+    deepseek_llm,
+    ollama_llm
 )
 
 class AIWrapperLLM(object):
@@ -23,6 +25,8 @@ class AIWrapperLLM(object):
             self.llm = self.groq(model="llama-3.3-70b-versatile")
         elif llm == "deepseek":
             self.llm = self.deepseek(model="deepseek-chat")
+        elif llm == "ollama":
+            self.llm = self.ollama(model="deepseek-r1:1.5b")
         else:
             self.llm = self.mistral(model=model)
         
@@ -69,6 +73,16 @@ class AIWrapperLLM(object):
             model=model
         )
     
+    def ollama(self, model=None):
+        if model is None:
+            model = "deepseek-r1:1.5b"
+        return OllamaLibrary(
+            chroma=chromadb,
+            llm=ollama_llm,
+            redis=redis,
+            model=model,
+        )
+    
     def initiate(self, llm: str = "mistral", model=None) -> (OpenAILibrary | MistralAILibrary | GroqAILibrary| DeepSeekLibrary):
         if model is None:
             model = None
@@ -80,6 +94,8 @@ class AIWrapperLLM(object):
             return  self.groq(model=model)
         elif llm == "deepseek":
             return  self.deepseek(model=model)
+        elif llm == "ollama":
+            return  self.ollama(model=model)
         else:
             return self.llm
             
