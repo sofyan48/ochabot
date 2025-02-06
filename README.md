@@ -34,6 +34,15 @@ Run the serve
 ```
 poetry run http serve
 ```
+or
+```
+python main.py serve
+```
+
+## Dependency
+```
+docker compose up
+```
 
 ## Install Requirement
 ```
@@ -45,15 +54,6 @@ poetry install
 cp env.example .env
 ```
 please setup APP_ENVIRONTMENT to local if you setup on development mode
-
-## Running 
-```
-python main.py serve
-```
-with docker
-```
-docker compose up --build
-```
 
 ## Migration
 Im using alembic migration via poetry custom command
