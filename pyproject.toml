@@ -33,7 +33,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
-httpx = "^0.26.0"
+httpx = "^0.27.0"
 python-dotenv = "^1.0.1"
 fastapi-pagination = "^0.12.14"
 python-json-logger = "^2.0.7"
@@ -69,6 +69,7 @@ psycopg2 = "^2.9.10"
 minio = "^7.2.15"
 pyjwt = "^2.10.1"
 pydantic = "^2.10.6"
+langchain-ollama = "^0.2.3"
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = [ "F401",]
