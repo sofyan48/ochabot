@@ -27,7 +27,7 @@ Based on mistral AI, OpenAI, Groq, langchain and chroma vector database, I'm sti
 ## How To Run
 Running via poetry and activate virtualenvironment
 ```
-poetry shell
+poetry env activate
 ```
 Run the serve
 ```
