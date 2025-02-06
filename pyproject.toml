@@ -1,18 +1,20 @@
 [tool.poetry]
 name = "ochabot"
-version = "0.8.3"
+version = "0.8.4"
 description = "Ochabot RAG Tools"
 authors = [ "Sofyan Saputra <meongbego@gmail.com>",]
 readme = "README.md"
+exclude = [".env"]
 [[tool.poetry.packages]]
 include = "app"
 
 [tool.poetry.scripts]
 http = "main:http"
+"db:migrate" = "main:migrate"
 
 [tool.black]
 line-length = 88
-target-version = [ "py37", "py38", "py39", "py310", "py311",]
+target-version = [ "py37", "py38", "py39", "py310", "py311","py312",]
 exclude = "((.eggs | .git | .pytest_cache | build | dist))"
 
 [tool.ruff]

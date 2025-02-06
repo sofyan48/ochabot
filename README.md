@@ -56,13 +56,17 @@ docker compose up --build
 ```
 
 ## Migration
-Using Alembic
+Im using alembic migration via poetry custom command
 ```
-alembic revision -m "Your Table"
+poetry run db:migrate create "your table name"
 ```
-run migration
+up migration
 ```
-alembic upgrade head
+poetry run db:migrate up
+```
+downgrade migration
+```
+poetry run db:migrate down "your revision"
 ```
 
 ## Swagger
