@@ -8,7 +8,7 @@ readme = "README.md"
 include = "app"
 
 [tool.poetry.scripts]
-http = "main:serve"
+http = "main:http"
 
 [tool.black]
 line-length = 88
