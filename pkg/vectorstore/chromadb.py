@@ -1,6 +1,7 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter  
 from langchain_chroma import Chroma  
-from chromadb import HttpClient  
+from chromadb import HttpClient 
+from chromadb.config import DEFAULT_DATABASE, DEFAULT_TENANT
 from chromadb.config import Settings  
 from pkg.embedding.mistral import MistralInference  
 from langchain_core.vectorstores import VectorStoreRetriever  
@@ -22,7 +23,7 @@ class ChromaDB:
         return cls._instance  
   
     @classmethod  
-    def configure(cls, topK: int, fetchK: int, host: str, port: int, embedding=None):  
+    def configure(cls, topK: int, fetchK: int, host: str, port: int, embedding=None, tenant=None, database=None):  
         """Method to configure the retriever settings."""  
         cls._topK = topK  
         cls._fetchK = fetchK  
@@ -34,7 +35,13 @@ class ChromaDB:
             cls._embeddings = MistralInference(apikey=cls._apikey)  
         else:  
             cls._embeddings = embedding  
-          
+
+        if tenant is None:
+            tenant = DEFAULT_TENANT
+
+        if database is None:
+            database = DEFAULT_DATABASE
+
         try:  
             chroma_settings = Settings(  
                 chroma_api_impl="chromadb.api.segment.SegmentAPI",  
@@ -44,7 +51,9 @@ class ChromaDB:
             cls._chroma = HttpClient(  
                 host=cls._host,  
                 port=cls._port,  
-                settings=chroma_settings  
+                settings=chroma_settings,
+                tenant=tenant,
+                database=database
             )  
         except Exception as e:  
             raise e  
