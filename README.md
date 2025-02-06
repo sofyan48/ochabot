@@ -1,5 +1,6 @@
 # OCHABOT GPT OR RAG (RTFM)
-[![OCHABOT Push to Registry](https://github.com/sofyan48/ochabot/actions/workflows/production.yml/badge.svg?branch=main)](https://github.com/sofyan48/ochabot/actions/workflows/production.yml)
+[![OCHABOT Push to Registry](https://github.com/sofyan48/ochabot/actions/workflows/production.yml/badge.svg)](https://github.com/sofyan48/ochabot/actions/workflows/production.yml)
+
 ## Description
 this project used on my profile page: [iank.me](https://iank.me).
 Based on mistral AI, OpenAI, Groq, langchain and chroma vector database, I'm still learning, and this is my first project in AI
