@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "kaj-gpt-chat-srvc"
-version = "0.1.0"
-description = "Kiriminaja GPT Chat"
-authors = [ "Sofyan Saputra <sofyansaputra@kiriminaja.com>",]
+name = "ochabot"
+version = "0.8.3"
+description = "Ochabot RAG Tools"
+authors = [ "Sofyan Saputra <meongbego@gmail.com>",]
 readme = "README.md"
 [[tool.poetry.packages]]
 include = "app"
 
 [tool.poetry.scripts]
-serve = "main:__main__"
+http = "main:serve"
 
 [tool.black]
 line-length = 88
@@ -33,7 +33,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
-httpx = "^0.26.0"
+httpx = "^0.27.0"
 python-dotenv = "^1.0.1"
 fastapi-pagination = "^0.12.14"
 python-json-logger = "^2.0.7"
@@ -69,6 +69,7 @@ psycopg2 = "^2.9.10"
 minio = "^7.2.15"
 pyjwt = "^2.10.1"
 pydantic = "^2.10.6"
+langchain-ollama = "^0.2.3"
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = [ "F401",]

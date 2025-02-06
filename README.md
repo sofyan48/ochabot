@@ -29,6 +29,10 @@ Running via poetry and activate virtualenvironment
 ```
 poetry shell
 ```
+Run the serve
+```
+poetry run http serve
+```
 
 ## Install Requirement
 ```

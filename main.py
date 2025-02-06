@@ -4,10 +4,11 @@ from dotenv import load_dotenv
 from config.logger import logging_config
 
 load_dotenv()
-if __name__ == '__main__':
+def http():
     parser = argparse.ArgumentParser()
     parser.add_argument("command", help="Perintah yang ingin Anda jalankan")
     args = parser.parse_args()
+
     if args.command == "serve":
         is_reload = False
         if utils.environment_transform() == 'loc':
@@ -19,4 +20,7 @@ if __name__ == '__main__':
             reload=is_reload,
             log_config=logging_config
         )
-        exit(0);
+
+if __name__ == '__main__':
+    # setup default comman if manualy run main.py serve
+    http()  # Call the serve function directly
