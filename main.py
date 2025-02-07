@@ -42,17 +42,28 @@ def http():
     parser = argparse.ArgumentParser()
     parser.add_argument("command", help="Perintah yang ingin Anda jalankan")
     args = parser.parse_args()
-
+    from pkg.logger.logging import logger
     if args.command == "serve":
+        host = os.getenv("APP_HOST", "0.0.0.0")
+        port = int(os.getenv("APP_PORT", "8080"))
+        
         is_reload = False
         if utils.environment_transform() == 'loc':
             is_reload = True
+            logging_config = None
+        
+        logger.info("Starting Server", {
+            "host": host,
+            "port": port,
+        })
+        
         uvicorn.run(
             app="app:app",
-            host=os.getenv("APP_HOST", "0.0.0.0"),
-            port=int(os.getenv("APP_PORT", "8080")),
+            host=host,
+            port=port,
             reload=is_reload,
-            log_config=logging_config
+            log_config=logging_config,
+            access_log=True,
         )
         exit(0)
 
