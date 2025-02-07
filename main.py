@@ -11,17 +11,20 @@ load_dotenv()
 def migrate():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="subcommand", help="All Command")
-    migrate_create_parser = subparsers.add_parser("up", help="Running migrate")
+    migrate_up_parser = subparsers.add_parser("up", help="Running migrate")
     migrate_create_parser = subparsers.add_parser("create", help="Create migrate")
-    migrate_create_parser = subparsers.add_parser("down", help="Downgrade migrate")
+    migrate_down_parser = subparsers.add_parser("down", help="Downgrade migrate")
     migrate_create_parser.add_argument("migration_name", help="Nama untuk migrasi baru")
-    migrate_create_parser.add_argument("migration_revision", help="Migrate revision")
-
+    migrate_down_parser.add_argument("migration_revision", help="Migrate revision")
+    migrate_up_parser.add_argument("migration_revision", help="Migrate revision")
     args = parser.parse_args()
     alembic_cfg = Config("alembic.ini")
+    
+    print(args.subcommand)
 
     if args.subcommand == "up":
-        command.upgrade(alembic_cfg, "head")
+        migrate_revision = args.migration_revision
+        command.upgrade(alembic_cfg, migrate_revision)
         exit(0)
 
     if args.subcommand == "create":
