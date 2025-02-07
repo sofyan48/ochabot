@@ -9,7 +9,7 @@ exclude = [".env"]
 include = "app"
 
 [tool.poetry.scripts]
-http = "main:http"
+http = "main:main"
 "db:migrate" = "main:migrate"
 
 [tool.black]
