@@ -56,6 +56,5 @@ def http():
         )
         exit(0)
 
-if __name__ == '__main__':
-    # setup default comman if manualy run main.py serve
-    http()  # Call the serve function directly
+def main():
+    http()
