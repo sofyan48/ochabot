@@ -30,13 +30,13 @@ class SetupConfigLibrary(object):
             try:
                 await cls._instance_redis.set(i.get('key'), i.get('value'))
             except Exception as e:
-                raise e
+                logger.warning("No config found using default configuration")
             
         try:
             data_prompt = await cls._instance_repo_prompt.get_prompt_config()
             await cls._instance_redis.set("config:prompt", data_prompt.prompt)
         except Exception as e:
-            raise e
+            logger.warning("No prompt database found using default configuration")
     
     @classmethod
     async def get_all_config(cls):

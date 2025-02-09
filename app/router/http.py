@@ -14,11 +14,11 @@ routerV1.include_router(socket.router)
 
 
 from app.ucase.ingest import (
-    chroma,
+    build,
     ingest_upload,
     ingest_list
 )
-routerV1.include_router(chroma.router)
+routerV1.include_router(build.router)
 routerV1.include_router(ingest_upload.router)
 routerV1.include_router(ingest_list.router)
 

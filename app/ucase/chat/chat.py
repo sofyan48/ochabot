@@ -63,7 +63,13 @@ async def send_chat(
                 detail="Please setup retriever collection or set from payload"
             )
     try:
+        vectorDB = int(setup.get('config:retriever:vector_db'))
+    except Exception:
+        vectorDB = "chroma"
+    
+    try:
         retriever = llm.retriever(
+            vector=vectorDB,
             top_k=top_k,
             fetch_k=fetch_k,
             collection=collection

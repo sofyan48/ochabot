@@ -16,11 +16,6 @@ class ElasticsearcVector:
     _embeddings = None  
     _elastic = None  
   
-    def __new__(cls, *args, **kwargs):  
-        if cls._instance is None:  
-            cls._instance = super(ElasticsearcVector, cls).__new__(cls)  
-        return cls._instance  
-  
     @classmethod  
     def configure(cls, topK: int, fetchK: int, host: str, port: str, user: str, password: str, index: str, embedding=None):  
         """Method to configure the Elasticsearch vector store settings."""  
@@ -33,7 +28,6 @@ class ElasticsearcVector:
         cls._index = index  
           
         es_uri = f"{cls._host}:{cls._port}"  
-          
         if embedding is None:  
             cls._apikey = os.getenv("MISTRAL_API_KEY")  
             cls._embeddings = MistralInference(apikey=cls._apikey)  
@@ -52,14 +46,19 @@ class ElasticsearcVector:
             raise e  
   
     @classmethod  
-    def build(cls, data, chunk=2000, overlap=500):  
+    def build(cls, data, collection, chunk=2000, overlap=500):  
         if cls._embeddings is None:  
             return "please add embedding"  
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk, chunk_overlap=overlap)  
-        all_splits = text_splitter.split_documents(data)  
+        all_splits = text_splitter.split_documents(data)
+        es_uri = f"{cls._host}:{cls._port}"
         return cls._elastic.from_documents(  
             documents=all_splits,   
-            embedding=cls._embeddings,  
+            embedding=cls._embeddings,
+            index_name=collection,
+            es_url=es_uri, 
+            es_user=cls._user,  
+            es_password=cls._password,
         )  
   
     @classmethod  

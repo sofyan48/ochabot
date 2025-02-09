@@ -12,7 +12,7 @@ from app.library import (
     mistral_llm, 
     openai_llm, 
     groq_llm, 
-    chromadb,
+    vectorstoreDB,
     deepseek_llm,
     ollama_llm
 )
@@ -37,7 +37,7 @@ class AIWrapperLLM(object):
         if model is None:
             model = "open-mistral-nemo"
         return MistralAILibrary(
-            chroma=chromadb,
+            vectorstores=vectorstoreDB,
             llm=mistral_llm,
             redis=redis,
             model=model
@@ -46,8 +46,9 @@ class AIWrapperLLM(object):
     def openai(self, model=None):
         if model is None:
             model = "gpt-4o-mini"
+        
         return OpenAILibrary(
-            chroma=chromadb,
+            vectorstores=vectorstoreDB,
             llm=openai_llm,
             redis=redis,
             model=model
@@ -57,7 +58,7 @@ class AIWrapperLLM(object):
         if model is None:
             model = "llama-3.3-70b-versatile"
         return GroqAILibrary(
-            chroma=chromadb,
+            vectorstores=vectorstoreDB,
             llm=groq_llm,
             redis=redis,
             model=model
@@ -67,7 +68,7 @@ class AIWrapperLLM(object):
         if model is None:
             model = "deepseek-chat"
         return DeepSeekLibrary(
-            chroma=chromadb,
+            vectorstores=vectorstoreDB,
             llm=deepseek_llm,
             redis=redis,
             model=model
@@ -77,13 +78,13 @@ class AIWrapperLLM(object):
         if model is None:
             model = "deepseek-r1:1.5b"
         return OllamaLibrary(
-            chroma=chromadb,
+            vectorstores=vectorstoreDB,
             llm=ollama_llm,
             redis=redis,
             model=model,
         )
     
-    def initiate(self, llm: str = "mistral", model=None) -> (OpenAILibrary | MistralAILibrary | GroqAILibrary| DeepSeekLibrary):
+    def initiate(self, llm: str = "mistral", model=None) -> (OpenAILibrary | MistralAILibrary | GroqAILibrary| DeepSeekLibrary| OllamaLibrary):
         if model is None:
             model = None
         if llm == "mistral":
