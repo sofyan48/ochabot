@@ -13,14 +13,17 @@ from app.ucase.ingest import (
     chromadb, 
     UPLOAD_MODEL_DIR,
     minio_client,
-    ingest_docs_repo
+    ingest_docs_repo,
+    setup_repo,
+    vectorstoreDB
 )
 
-@router.post("/ingest/chroma", tags=["ingest"], operation_id="build_retriever_chroma")
-async def build_retriever_chroma(
-    payload: request.RequestIngestChroma,
+@router.post("/ingest/vector", tags=["ingest"], operation_id="build_ingest_vector")
+async def build_ingest_vector(
+    payload: request.RequestIngestVector,
     authorization: HTTPAuthorizationCredentials = Depends(auth.authenticate)) -> IResponseBase:
     
+    setup = await setup_repo.get_all_setup()
     auth_payload = authorization.get('payload')
     if auth_payload.get('roles') != "user":
         raise HTTPException(
@@ -70,14 +73,20 @@ async def build_retriever_chroma(
         )
     
     try:
-        chromadb.build(data=data, collection=payload.collection, chunk=ingest_docs_data.chunk, overlap=ingest_docs_data.overlap)
+        vector_db_config = int(setup.get('config:retriever:vector_db'))
+    except Exception:
+        vector_db_config = "chroma"
+
+    try:
+        vector_db= vectorstoreDB.configure(vectorestore=vector_db_config)
+        vector_db.build(data=data, collection=payload.collection, chunk=ingest_docs_data.chunk, overlap=ingest_docs_data.overlap)
     except Exception as e:
-        logger.error("Error building chroma", {
+        logger.error("Error building data", {
             "error", e
         })
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Cannot build chroma ingest"
+            detail="Cannot build ingest data"
         )
     
     entity_ingest_docs = {
@@ -104,6 +113,6 @@ async def build_retriever_chroma(
 
     os.remove(file_path)
     return response(
-        message="Ingestion Success",
+        message="Ingestion Success on: "+ vector_db,
         data=utils.json_serializable(ingest_docs_data)
     )

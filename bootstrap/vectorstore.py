@@ -19,12 +19,15 @@ def register_chroma_retriever():
         raise e
     
 def register_elasticsearch_vectorstore():
-    ElasticsearcVector.configure(
+    host = "http://{}".format(
+        os.getenv("ELASTIC_HOST")
+    )
+    return ElasticsearcVector.configure(
         topK=int(os.getenv("RETRIEVER_TOPK")),
         fetchK=int(os.getenv("RETRIEVER_FETCHK")),
         user=os.getenv("ELASTIC_USER"),
         password=os.getenv("ELASTIC_PASSWORD"),
-        host=os.getenv("ELASTIC_HOST"),
+        host=host,
         port=os.getenv("ELASTIC_PORT"),
         index=os.getenv("ELASTIC_COLLECTION"),
         embedding=MistralInference(

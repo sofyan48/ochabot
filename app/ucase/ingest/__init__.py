@@ -8,13 +8,15 @@ from app import (
 from pkg.vectorstore.chromadb import ChromaDB
 from app.repositories import setup
 from app.repositories.ingest_document import IngestDocumentRepositories
+from app.repositories import setup
+from app.library import vectorstoreDB
 
 
 auth = BearerAuthentication()
 router = APIRouter()
 setup_repo = setup.SetupConfig()
 chromadb = ChromaDB()
-
+setup_repo = setup.SetupConfig()
 ingest_docs_repo = IngestDocumentRepositories()
 
 

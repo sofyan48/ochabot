@@ -53,6 +53,6 @@ class RequestGrantClient(BaseModel):
     api_key: str = Field(..., min_length=1)
     secret_key: str = Field(..., min_length=1)
 
-class RequestIngestChroma(BaseModel):
+class RequestIngestVector(BaseModel):
     collection: str = Field(..., min_length=1)
     ingest_code: str = Field(..., min_length=1)

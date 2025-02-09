@@ -9,6 +9,8 @@ from pkg.vectorstore.chromadb import ChromaDB
 from pkg.storage.minio import StorageMinio
 from pkg.deepseek import DeepSeekLLM
 from pkg.ollama import OllamaPlatform
+from pkg.vectorstore.elasticsearch import ElasticsearcVector
+from app.library.vectorstore import Vectorstores
 
 mistral_llm = MistralLLM()
 openai_llm = OpenAILLM()
@@ -16,7 +18,10 @@ groq_llm = GroqLLM()
 deepseek_llm = DeepSeekLLM()
 ollama_llm = OllamaPlatform()
 chromadb = ChromaDB()
+elastic = ElasticsearcVector
 minio = StorageMinio
+vectorstoreDB = Vectorstores()
+
 
 from app.repositories.setup import SetupConfig
 from app.repositories.prompt import PromptRepositories
