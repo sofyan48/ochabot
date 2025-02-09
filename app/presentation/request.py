@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, StrictBool
+from pydantic import BaseModel, Field
 from typing import Optional
 
 
@@ -7,6 +7,7 @@ class RequesChat(BaseModel):
     collection: Optional[str] = None
     llm: Optional[str] = None
     model: Optional[str] = None
+    input_variabels: Optional[list] = None
 
 
 class RequestPrompt(BaseModel):

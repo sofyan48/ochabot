@@ -81,17 +81,19 @@ async def send_chat(
                 "error": e
             }
         )
-
    
     prompt = ""
     try:
         prompt_tpl = await prompt_repo.get_prompt()
         if prompt_tpl != "":
-            prompt = PromptTemplate(input_variables=["answer", "question", "history", "context"],template=prompt_tpl)
+            input_variabel = payload.input_variabels
+            if input_variabel is None:
+                input_variabel = ["answer", "question", "history", "context"]
+            prompt = PromptTemplate(input_variables=input_variabel,template=prompt_tpl)
     except:
         raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail="Please setup retriever collection or set from payload"
+                detail="Prompt template or input variabel error"
             )
     
     qa_retrieval = llm.retrieval(prompt, retriever=retriever)
@@ -111,13 +113,15 @@ async def send_chat(
             "error": str(e)
         })
         raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Internal failure",
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Invoking message error",
             )
+    
     logger.info("AI Result", {
         "payload": payload.model_dump(),
-        "content": resultAI['answer'],
+        "content": resultAI,
     })
+
     return response(
         message="Successfully",
         data={
