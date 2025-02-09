@@ -77,9 +77,7 @@ async def send_chat(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail={
-                "error": e
-            }
+            detail="Create retriever error"
         )
    
     prompt = ""
