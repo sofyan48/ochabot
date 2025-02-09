@@ -37,15 +37,16 @@ jwt.register_jwt()
 vectorstore.register_chroma_retriever()
 # vectorstore.register_elasticsearch_vectorstore()
 
+# LLM Platform
+mistral.register_mistral()
+openai.register_openai()
+groq.register_groq()
+deepseek.register_deepseek()
+ollama.register_ollama()
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await redis.register_redis()
-    mistral.register_mistral()
-    openai.register_openai()
-    groq.register_groq()
-    deepseek.register_deepseek()
-    ollama.register_ollama()
-
     # initial setup
     from app.library.setup import SetupConfigLibrary
     await SetupConfigLibrary.save_all()
