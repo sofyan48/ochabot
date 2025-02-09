@@ -42,7 +42,7 @@ class ElasticsearcVector:
                 es_user=cls._user,  
                 es_password=cls._password,  
             )  
-        except Exception as e:  
+        except Exception as e:
             raise e  
   
     @classmethod  

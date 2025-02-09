@@ -31,10 +31,11 @@ load_dotenv()
 register_alchemy_async()
 prompter.regist_default_prompter()
 minio.register_storage_minio()
-elasticsearch.register_elasticsearch()
-vectorstore.register_elasticsearch_vectorstore()
 jwt.register_jwt()
 
+# vectorstores
+vectorstore.register_chroma_retriever()
+# vectorstore.register_elasticsearch_vectorstore()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -44,7 +45,7 @@ async def lifespan(app: FastAPI):
     groq.register_groq()
     deepseek.register_deepseek()
     ollama.register_ollama()
-    vectorstore.register_chroma_retriever()
+
     # initial setup
     from app.library.setup import SetupConfigLibrary
     await SetupConfigLibrary.save_all()
