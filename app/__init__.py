@@ -16,7 +16,8 @@ from bootstrap import (
     minio,
     jwt,
     deepseek,
-    ollama
+    ollama,
+    elasticsearch
 )
 from starlette.middleware.cors import CORSMiddleware
 
@@ -30,6 +31,7 @@ load_dotenv()
 register_alchemy_async()
 prompter.regist_default_prompter()
 minio.register_storage_minio()
+elasticsearch.register_elasticsearch()
 jwt.register_jwt()
 
 
