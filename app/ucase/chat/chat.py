@@ -88,7 +88,7 @@ async def send_chat(
         if prompt_tpl != "":
             input_variabel = payload.input_variabels
             if input_variabel is None:
-                input_variabel = ["answer", "question", "history", "context"]
+                input_variabel = ["question", "history", "context"]
             prompt = PromptTemplate(input_variables=input_variabel,template=prompt_tpl)
     except:
         raise HTTPException(
