@@ -1,6 +1,5 @@
 from app import (
                 redis,
-                logger
             )
 from pkg.mistral import MistralLLM
 from pkg.openai import OpenAILLM
@@ -11,6 +10,9 @@ from pkg.deepseek import DeepSeekLLM
 from pkg.ollama import OllamaPlatform
 from pkg.vectorstore.elasticsearch import ElasticsearcVector
 from app.library.vectorstore import Vectorstores
+
+from pkg.logger.logging import configure_logger
+logger = configure_logger("ucase:chat")
 
 mistral_llm = MistralLLM()
 openai_llm = OpenAILLM()

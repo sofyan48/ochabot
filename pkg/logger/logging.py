@@ -21,18 +21,24 @@ class JsonFormatter(logging.Formatter):
         if record.exc_info:
             log_record["exception"] = self.formatException(record.exc_info)
         return json.dumps(log_record)
+
+def configure_logger(logger_name="app_logger", level=logging.DEBUG):
+    # Configure the logger
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(level)
+
+    # Create a console handler
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(level)
+
+    # Attach the JSON formatter
+    json_formatter = JsonFormatter()
+    console_handler.setFormatter(json_formatter)
+
+    # Add the handler to the logger
+    logger.addHandler(console_handler)
     
-# Configure the logger
-logger = logging.getLogger("app_logger")
-logger.setLevel(logging.DEBUG)
+    return logger
 
-# Create a console handler
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.DEBUG)
 
-# Attach the JSON formatter
-json_formatter = JsonFormatter()
-console_handler.setFormatter(json_formatter)
-
-# Add the handler to the logger
-logger.addHandler(console_handler)
+logger = configure_logger()

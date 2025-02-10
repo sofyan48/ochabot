@@ -36,53 +36,68 @@ class AIWrapperLLM(object):
     def mistral(self, model=None):
         if model is None:
             model = "open-mistral-nemo"
-        return MistralAILibrary(
-            vectorstores=vectorstoreDB,
-            llm=mistral_llm,
-            redis=redis,
-            model=model
-        )
+        try:
+            return MistralAILibrary(
+                vectorstores=vectorstoreDB,
+                llm=mistral_llm,
+                redis=redis,
+                model=model
+            )
+        except Exception as e:
+            raise e
     
     def openai(self, model=None):
         if model is None:
             model = "gpt-4o-mini"
         
-        return OpenAILibrary(
-            vectorstores=vectorstoreDB,
-            llm=openai_llm,
-            redis=redis,
-            model=model
-        )
+        try:
+            return OpenAILibrary(
+                vectorstores=vectorstoreDB,
+                llm=openai_llm,
+                redis=redis,
+                model=model
+            )
+        except Exception as e:
+            raise e
     
     def groq(self, model="llama-3.3-70b-versatile"):
         if model is None:
             model = "llama-3.3-70b-versatile"
-        return GroqAILibrary(
-            vectorstores=vectorstoreDB,
-            llm=groq_llm,
-            redis=redis,
-            model=model
-        )
+        try:
+            return GroqAILibrary(
+                vectorstores=vectorstoreDB,
+                llm=groq_llm,
+                redis=redis,
+                model=model
+            )
+        except Exception as e:
+            raise e
     
     def deepseek(self, model=None):
         if model is None:
             model = "deepseek-chat"
-        return DeepSeekLibrary(
-            vectorstores=vectorstoreDB,
-            llm=deepseek_llm,
-            redis=redis,
-            model=model
-        )
+        try:
+            return DeepSeekLibrary(
+                vectorstores=vectorstoreDB,
+                llm=deepseek_llm,
+                redis=redis,
+                model=model
+            )
+        except Exception as e:
+            raise e
     
     def ollama(self, model=None):
         if model is None:
             model = "deepseek-r1:1.5b"
-        return OllamaLibrary(
-            vectorstores=vectorstoreDB,
-            llm=ollama_llm,
-            redis=redis,
-            model=model,
-        )
+        try:
+            return OllamaLibrary(
+                vectorstores=vectorstoreDB,
+                llm=ollama_llm,
+                redis=redis,
+                model=model,
+            )
+        except Exception as e:
+            raise e
     
     def initiate(self, llm: str = "mistral", model=None) -> (OpenAILibrary | MistralAILibrary | GroqAILibrary| DeepSeekLibrary| OllamaLibrary):
         if model is None:

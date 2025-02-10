@@ -5,10 +5,11 @@ from app.repositories import prompt, setup
 from app.repositories import alchemy_url
 from app import (
                 redis,
-                logger,
                 UPLOAD_MODEL_DIR
             )
 
+from pkg.logger.logging import configure_logger
+logger = configure_logger("ucase:chat")
 
 auth = BearerAuthentication()
 router = APIRouter()
