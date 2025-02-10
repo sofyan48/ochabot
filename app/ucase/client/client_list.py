@@ -25,7 +25,6 @@ async def list_client(
     for user in result:
         user_data = user.copy()
         user_data.pop('secret_key', None)
-        user_data.pop('api_key', None)
         filtered_result.append(user_data)
     return response(
         message="Client list successfully",
