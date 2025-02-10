@@ -21,8 +21,13 @@ async def list_client_socket(
         })
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+    filtered_result = []
+    for user in result:
+        user_data = user.copy()
+        user_data.pop('password', None)
+        filtered_result.append(user_data)
     return response(
         message="User list successfully",
-        data=result
+        data=filtered_result
     )
     
