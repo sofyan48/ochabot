@@ -21,7 +21,6 @@ async def list_client_socket(
         })
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
-    
     return response(
         message="User list successfully",
         data=result

@@ -5,7 +5,7 @@ from app.library.setup import SetupConfigLibrary
 
 
 from pkg.logger.logging import configure_logger
-logger = configure_logger("ucase:chat")
+logger = configure_logger("ucase:setup")
 
 auth = BearerAuthentication()
 router = APIRouter()

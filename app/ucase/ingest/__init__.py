@@ -12,7 +12,7 @@ from app.library import vectorstoreDB
 
 
 from pkg.logger.logging import configure_logger
-logger = configure_logger("ucase:chat")
+logger = configure_logger("ucase:ingest")
 
 
 auth = BearerAuthentication()
