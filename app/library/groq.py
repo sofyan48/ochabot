@@ -1,4 +1,4 @@
-from pkg.groq import GroqLLM, Runnable
+from pkg.groq import GroqLLM, ChatGroq, Runnable
 from pkg.vectorstore.chromadb import VectorStoreRetriever
 from app.library.vectorstore import Vectorstores
 from app import redis
@@ -30,7 +30,7 @@ class GroqAILibrary(object):
             raise e
 
     
-    def get_llm(self, model):
+    def get_llm(self, model) -> ChatGroq:
         try:
             return self.groq.run(
                 redis_url=self.redis.str_conn(),
@@ -50,7 +50,7 @@ class GroqAILibrary(object):
         except Exception as e:
             raise e
 
-
+   
     def chain_with_history(
             self, 
             retrival: Runnable, 

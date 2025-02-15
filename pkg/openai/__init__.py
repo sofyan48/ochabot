@@ -6,6 +6,8 @@ from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_core.prompts import PromptTemplate  
 from langchain.chains.retrieval import Runnable, create_retrieval_chain  
 from pkg.chain.prompter import DefaultPrompter  
+
+
 class OpenAILLM(object):  
     _instance = None    
     _model = "gpt-4o-mini"    
@@ -30,11 +32,10 @@ class OpenAILLM(object):
         if redis_url != "":  
             redis_cache = RedisCache(redis_url=redis_url, ttl=14400)  
             set_llm_cache(redis_cache)  
-            cache = True  
+            cache = False  
   
         if model is not None:  
             cls._model = model  
-              
         return ChatOpenAI(  
             cache=cache,  
             model=cls._model,  
@@ -46,8 +47,9 @@ class OpenAILLM(object):
             api_key=cls._apikey,  
             presence_penalty=0.8,  
             frequency_penalty=0.8  
-        )  
-      
+        )
+    
+    
     @classmethod  
     def promptTemplates(cls, input_variable: list = ["answer", "question", "history", "context"]) -> PromptTemplate:  
         return PromptTemplate(  
@@ -61,5 +63,5 @@ class OpenAILLM(object):
         if prompt_template == "":  
            prompt = cls.promptTemplates()  
         document_chain = create_stuff_documents_chain(model, prompt) 
-        retrieval_chain = create_retrieval_chain(retriever, document_chain)  
-        return retrieval_chain  
+        retrieval_chain = create_retrieval_chain(retriever, document_chain)
+        return retrieval_chain

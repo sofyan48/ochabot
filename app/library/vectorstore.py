@@ -22,7 +22,7 @@ class Vectorstores(object):
         if vectorestore is None:
             return self.chroma_client()
         
-        if vectorestore=="elastic":
+        if vectorestore=="elasticsearch":
             return self.elastic_client()
         else:
             return self.chroma_client()

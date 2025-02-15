@@ -1,14 +1,8 @@
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_message_histories import RedisChatMessageHistory
 from langchain.chains.retrieval import Runnable
-from langchain.schema import BaseOutputParser
 
-class Chain(object):
-    def __init__(self):
-        pass
-
-    def chain_with_history(
-            self, retrieval: Runnable,
+def chain_with_history(retrieval: Runnable,
             history: RedisChatMessageHistory,
             input_messages_key,
             history_messages_key,
@@ -20,4 +14,3 @@ class Chain(object):
             history_messages_key=history_messages_key,
             output_messages_key=output_messages_key
         )
-    

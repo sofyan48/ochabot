@@ -1,4 +1,4 @@
-from pkg.openai import OpenAILLM, Runnable
+from pkg.openai import OpenAILLM, ChatOpenAI, Runnable
 from pkg.vectorstore.chromadb import VectorStoreRetriever
 from app.library.vectorstore import Vectorstores
 from app import redis
@@ -16,7 +16,7 @@ class OpenAILibrary(object):
     
     def retriever(self, vector: str, top_k, fetch_k, collection) -> VectorStoreRetriever:
         if top_k is None:
-            top_k = 3
+            top_k = 2
 
         if fetch_k is None:
             fetch_k = 10
@@ -30,7 +30,7 @@ class OpenAILibrary(object):
         except Exception as e:
             raise e
     
-    def get_llm(self, model):
+    def get_llm(self, model) -> ChatOpenAI:
         try:
             return self.openai.run(
                 redis_url=self.redis.str_conn(),
@@ -49,7 +49,6 @@ class OpenAILibrary(object):
             )
         except Exception as e:
             raise e
-
 
     def chain_with_history(
             self, 

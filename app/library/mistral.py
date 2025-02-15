@@ -1,4 +1,4 @@
-from pkg.mistral import MistralLLM, Runnable
+from pkg.mistral import MistralLLM, ChatMistralAI, Runnable
 from pkg.vectorstore.chromadb import VectorStoreRetriever
 from app.library.vectorstore import Vectorstores
 from app import redis
@@ -30,7 +30,7 @@ class MistralAILibrary(object):
             raise e
 
     
-    def get_llm(self, model):
+    def get_llm(self, model) -> ChatMistralAI:
         try:
             return self.mistral.run(
                 redis_url=self.redis.str_conn(),
@@ -49,7 +49,6 @@ class MistralAILibrary(object):
             )
         except Exception as e:
             raise e
-
 
     def chain_with_history(
             self, 

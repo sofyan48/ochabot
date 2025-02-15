@@ -45,7 +45,7 @@ async def build_ingest_vector(
     if ingest_docs_data.is_build is True:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Document have build in chroma"
+            detail="Document have build"
         )
     
     file_path = "./storage/"+ingest_docs_data.file_path
@@ -73,11 +73,13 @@ async def build_ingest_vector(
         )
     
     try:
-        vector_db_config = int(setup.get('config:retriever:vector_db'))
+        vector_db_config = setup.get('config:retriever:vector_db')
     except Exception:
+        logger.info("Using default setup for chroma")
         vector_db_config = "chroma"
 
     try:
+        
         vector_db= vectorstoreDB.configure(vectorestore=vector_db_config)
         vector_db.build(data=data, collection=payload.collection, chunk=ingest_docs_data.chunk, overlap=ingest_docs_data.overlap)
     except Exception as e:
@@ -113,6 +115,6 @@ async def build_ingest_vector(
 
     os.remove(file_path)
     return response(
-        message="Ingestion Success on: "+ vector_db,
+        message="Ingestion Success on: "+ vector_db_config,
         data=utils.json_serializable(ingest_docs_data)
     )

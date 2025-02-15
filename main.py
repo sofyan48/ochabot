@@ -43,8 +43,8 @@ def migrate():
         command.downgrade(alembic_cfg, migrate_revision)
         exit(0)
 
-    
-def http():
+
+def http_development_mode():
     parser = argparse.ArgumentParser()
     parser.add_argument("command", help="Perintah yang ingin Anda jalankan")
     args = parser.parse_args()
@@ -53,10 +53,8 @@ def http():
         port = int(os.getenv("APP_PORT", "8080"))
         
         is_reload = False
-        log_conf = logging_config
         if utils.environment_transform() == 'loc':
             is_reload = True
-            log_conf = None
         
         logger.info("Starting Server", {
             "host": host,
@@ -67,7 +65,33 @@ def http():
             host=host,
             port=port,
             reload=is_reload,
-            log_config=log_conf,
+            access_log=True,
+            reload_excludes=["mydb/*", "minio/*", "chroma/*"]
+        )
+        exit(0)
+    
+def http():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("command", help="Perintah yang ingin Anda jalankan")
+    args = parser.parse_args()
+    if args.command == "serve":
+        host = os.getenv("APP_HOST", "0.0.0.0")
+        port = int(os.getenv("APP_PORT", "8080"))
+        
+        is_reload = False
+        if utils.environment_transform() == 'loc':
+            is_reload = True
+        
+        logger.info("Starting Server", {
+            "host": host,
+            "port": port,
+        })
+        uvicorn.run(
+            app="app:app",
+            host=host,
+            port=port,
+            reload=is_reload,
+            log_config=logging_config,
             access_log=True,
             reload_excludes=["mydb/*", "minio/*", "chroma/*"]
         )

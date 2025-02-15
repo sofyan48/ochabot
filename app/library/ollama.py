@@ -1,4 +1,4 @@
-from pkg.ollama import OllamaPlatform, Runnable
+from pkg.ollama import OllamaPlatform, OllamaLLM, Runnable
 from pkg.vectorstore.chromadb import VectorStoreRetriever
 from app import redis
 from app.library.vectorstore import Vectorstores
@@ -33,7 +33,7 @@ class OllamaLibrary(object):
         except Exception as e:
             raise e
     
-    def get_llm(self, model):
+    def get_llm(self, model) -> OllamaLLM:
         try:
             return self.ollama.run(
                 base_url=self.base_url,
@@ -55,8 +55,7 @@ class OllamaLibrary(object):
             )
         except Exception as e:
             raise e
-
-
+        
     def chain_with_history(
             self, 
             retrival: Runnable, 

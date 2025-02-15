@@ -5,6 +5,7 @@ from fastapi.security import HTTPAuthorizationCredentials
 from app.ucase import session_middleware
 from pkg.history import MessageHistory
 from pkg.chain.prompter import PromptTemplate
+from langchain.tools import Tool
 from app.ucase.chat import (
     router, 
     auth, 
@@ -23,7 +24,6 @@ async def send_chat(
     ) -> IResponseBase:
     
     history = MessageHistory(alchemy, x_session).sql()
-    await history.aclear()
     history_msg = await history.aget_messages()
     setup = await setup_repo.get_all_setup()
     
@@ -72,7 +72,7 @@ async def send_chat(
             vector=vectorDB,
             top_k=top_k,
             fetch_k=fetch_k,
-            collection=collection
+            collection=collection,
         )
     except Exception as e:
         raise HTTPException(
@@ -93,19 +93,17 @@ async def send_chat(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="Prompt template or input variabel error"
             )
-    
     qa_retrieval = llm.retrieval(prompt, retriever=retriever)
     chain_with_history = llm.chain_with_history(
         qa_retrieval,
         history=history,
         input_messages_key="input",
-        history_messages_key="message_store",
-        output_messages_key="answer",
+        history_messages_key="history",
+        output_messages_key="answer|",
     )
-
     config = {"configurable": {"session_id": f'{x_session}'}}
     try:
-        resultAI = await chain_with_history.ainvoke({"input": payload.chat, "history": history_msg}, config=config)
+        resultAI = await chain_with_history.ainvoke({"input": payload.chat}, config=config)
     except Exception as e:
         logger.error("Invoke message error", {
             "error": str(e)
@@ -113,16 +111,17 @@ async def send_chat(
         raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="Invoking message error",
-            )
+            )   
     
     logger.info("AI Result", {
         "payload": payload.model_dump(),
         "content": resultAI,
     })
 
+    
     return response(
         message="Successfully",
         data={
             "result": resultAI['answer'],
-        },
+        }
     )

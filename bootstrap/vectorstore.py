@@ -20,7 +20,7 @@ def register_chroma_retriever():
         raise e
     
 def register_elasticsearch_vectorstore():
-    host = "http://{}".format(
+    host = "{}".format(
         os.getenv("ELASTIC_HOST", "localhost")
     )
     try:

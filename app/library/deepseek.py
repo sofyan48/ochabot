@@ -1,4 +1,4 @@
-from pkg.deepseek import DeepSeekLLM, Runnable
+from pkg.deepseek import DeepSeekLLM, ChatOpenAI, Runnable
 from pkg.vectorstore.chromadb import VectorStoreRetriever
 from app import redis
 from app.library.vectorstore import Vectorstores
@@ -30,7 +30,7 @@ class DeepSeekLibrary(object):
         except Exception as e:
             raise e
     
-    def get_llm(self, model):
+    def get_llm(self, model) -> ChatOpenAI:
         try:
             return self.deepseek.run(
                 redis_url=self.redis.str_conn(),
@@ -49,7 +49,6 @@ class DeepSeekLibrary(object):
             )
         except Exception as e:
             raise e
-
 
     def chain_with_history(
             self, 
