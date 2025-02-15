@@ -1,17 +1,11 @@
 from langchain_openai.chat_models import ChatOpenAI 
 from langchain.globals import set_llm_cache  
-from langchain_redis import RedisCache  
-from langchain.chains.combine_documents import create_stuff_documents_chain  
-from langchain_core.vectorstores import VectorStoreRetriever  
-from langchain_core.prompts import PromptTemplate  
-from langchain.chains.retrieval import Runnable, create_retrieval_chain  
-from pkg.chain.prompter import DefaultPrompter  
+from langchain_redis import RedisCache
 
 class DeepSeekLLM(object):  
     _instance = None    
     _model = "deepseek-chat	"    
-    _apikey = ""    
-    _template = DefaultPrompter.default_prompter()
+    _apikey = ""
     
     def __new__(cls, *args, **kwargs):    
         if cls._instance is None:    
@@ -51,19 +45,4 @@ class DeepSeekLLM(object):
             )  
         except Exception as e:
             raise e
-      
-    @classmethod  
-    def promptTemplates(cls, input_variable: list = ["answer", "question", "history", "context"]) -> PromptTemplate:  
-        return PromptTemplate(  
-            input_variables=input_variable,  
-            template=cls._template,  
-        )  
-      
-    @classmethod  
-    def retrieval(cls, prompt_template: PromptTemplate, model: ChatOpenAI, retriever: VectorStoreRetriever) -> Runnable:  
-        prompt = prompt_template  
-        if prompt_template == "":  
-           prompt = cls.promptTemplates()  
-        document_chain = create_stuff_documents_chain(model, prompt) 
-        retrieval_chain = create_retrieval_chain(retriever, document_chain)  
-        return retrieval_chain  
+    

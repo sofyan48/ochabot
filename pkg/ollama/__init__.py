@@ -1,10 +1,6 @@
 from langchain_ollama import OllamaLLM
 from langchain.globals import set_llm_cache
-from langchain_redis import RedisCache  
-from langchain.chains.combine_documents import create_stuff_documents_chain  
-from langchain_core.vectorstores import VectorStoreRetriever  
-from langchain_core.prompts import PromptTemplate  
-from langchain.chains.retrieval import Runnable, create_retrieval_chain  
+from langchain_redis import RedisCache
 from pkg.chain.prompter import DefaultPrompter
 from pkg.logger.logging import logger
 
@@ -27,16 +23,6 @@ class OllamaPlatform:
         cls._apikey = apikey if apikey else cls._apikey  
         cls._template = template if template else cls._template  
         return cls._instance  
-
-           
-    @classmethod  
-    def promptTemplates(cls, template="", input_variable: list = ["answer", "question", "history", "context"]) -> PromptTemplate:  
-        if template == "":
-            template = cls._template
-        return PromptTemplate(  
-            input_variables=input_variable,  
-            template=cls._template,  
-        )  
 
     @classmethod  
     def run(cls, base_url=None, redis_url: str = "", model: str = None, mirostat=2, top_k=4, top_p=0.2) -> OllamaLLM:  
@@ -73,23 +59,6 @@ class OllamaPlatform:
                 mirostat_eta=mirostat_eta,
                 mirostat_tau=mirostat_tau,
             )  
-        except Exception as e:
-            logger.error(e)
-            raise e
-
-    @classmethod  
-    def retrieval(cls, prompt_template: PromptTemplate, model: OllamaLLM, retriever: VectorStoreRetriever) -> Runnable:  
-        prompt = prompt_template  
-        if prompt_template == "":  
-           prompt = cls.promptTemplates()  
-        try:
-            document_chain = create_stuff_documents_chain(model, prompt) 
-        except Exception as e:
-            logger.error(e)
-            raise e
-        
-        try:
-            return create_retrieval_chain(retriever, document_chain)  
         except Exception as e:
             logger.error(e)
             raise e

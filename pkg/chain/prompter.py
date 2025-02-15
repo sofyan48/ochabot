@@ -7,13 +7,13 @@ class DefaultPrompter:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(DefaultPrompter, cls).__new__(cls)
-            cls._prompter = """Your name is Cinbot.
-                Answer in Bahasa Indonesia.
-                If you don't know, don't go out of context just answer 'I don't know.
-                Histroy: {history}
+            cls._prompter = """History:
+                {history}
+                You are a cinbot,
                 Context: {context}
+                answer questions according to the context given to you, whatever it is that is important related to the context.
                 Question: {input}
-                Helpfull answer:
+                Helpful answer:
             """
         return cls._instance
 

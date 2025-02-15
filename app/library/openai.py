@@ -1,8 +1,9 @@
-from pkg.openai import OpenAILLM, ChatOpenAI, Runnable
+from pkg.openai import OpenAILLM, ChatOpenAI
 from pkg.vectorstore.chromadb import VectorStoreRetriever
 from app.library.vectorstore import Vectorstores
 from app import redis
-from pkg.chain import Chain, RunnableWithMessageHistory
+from pkg.chain import Chain, Runnable
+from pkg.runnable import RunnableChain, RunnableWithMessageHistory
 from pkg.history import RedisChatMessageHistory, SQLChatMessageHistory
 from pkg.chain.prompter import PromptTemplate
 
@@ -13,6 +14,7 @@ class OpenAILibrary(object):
         self.model = model
         self.redis = redis
         self.chain = Chain()
+        self.runable = RunnableChain()
     
     def retriever(self, vector: str, top_k, fetch_k, collection) -> VectorStoreRetriever:
         if top_k is None:
@@ -42,16 +44,15 @@ class OpenAILibrary(object):
     def retrieval(self, promp_tpl: PromptTemplate, retriever: VectorStoreRetriever) -> Runnable:
         llm = self.get_llm(self.model)
         try: 
-            return self.openai.retrieval(
+            return self.chain.retrieval(
                 prompt_template=promp_tpl,
-                model=llm,
+                platform=llm,
                 retriever=retriever
             )
         except Exception as e:
             raise e
 
-    def chain_with_history(
-            self, 
+    def chain_with_history(self, 
             retrival: Runnable, 
             history: RedisChatMessageHistory | SQLChatMessageHistory, 
             input_messages_key: str,
@@ -60,7 +61,7 @@ class OpenAILibrary(object):
         ) -> RunnableWithMessageHistory:
         
         try:
-            return self.chain.chain_with_history(
+            return self.runable.chain_with_history(
                 retrieval=retrival,
                 history=history,
                 input_messages_key=input_messages_key,
