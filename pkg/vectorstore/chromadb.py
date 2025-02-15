@@ -4,7 +4,7 @@ from chromadb import HttpClient
 from chromadb.config import DEFAULT_DATABASE, DEFAULT_TENANT
 from chromadb.config import Settings  
 from pkg.embedding.mistral import MistralInference  
-from langchain_core.vectorstores import VectorStoreRetriever  
+from pkg.vectorstore import VectorStoreRetriever
 from pkg.logger.logging import logger
 import os  
   

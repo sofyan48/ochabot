@@ -1,8 +1,8 @@
-from app.library.mistral import MistralAILibrary
-from app.library.openai import OpenAILibrary
-from app.library.groq import GroqAILibrary
-from app.library.deepseek import DeepSeekLibrary
-from app.library.ollama import OllamaLibrary
+from app.library.platform.mistral import MistralAILibrary
+from app.library.platform.openai import OpenAILibrary
+from app.library.platform.groq import GroqAILibrary
+from app.library.platform.deepseek import DeepSeekLibrary
+from app.library.platform.ollama import OllamaLibrary
 from app import (
                 redis,
                 logger
@@ -12,7 +12,6 @@ from app.library import (
     mistral_llm, 
     openai_llm, 
     groq_llm, 
-    vectorstoreDB,
     deepseek_llm,
     ollama_llm
 )
@@ -38,7 +37,6 @@ class AIWrapperLLM(object):
             model = "open-mistral-nemo"
         try:
             return MistralAILibrary(
-                vectorstores=vectorstoreDB,
                 llm=mistral_llm,
                 redis=redis,
                 model=model
@@ -52,7 +50,6 @@ class AIWrapperLLM(object):
         
         try:
             return OpenAILibrary(
-                vectorstores=vectorstoreDB,
                 llm=openai_llm,
                 redis=redis,
                 model=model
@@ -65,7 +62,6 @@ class AIWrapperLLM(object):
             model = "llama-3.3-70b-versatile"
         try:
             return GroqAILibrary(
-                vectorstores=vectorstoreDB,
                 llm=groq_llm,
                 redis=redis,
                 model=model
@@ -78,7 +74,6 @@ class AIWrapperLLM(object):
             model = "deepseek-chat"
         try:
             return DeepSeekLibrary(
-                vectorstores=vectorstoreDB,
                 llm=deepseek_llm,
                 redis=redis,
                 model=model
@@ -91,7 +86,6 @@ class AIWrapperLLM(object):
             model = "deepseek-r1:1.5b"
         try:
             return OllamaLibrary(
-                vectorstores=vectorstoreDB,
                 llm=ollama_llm,
                 redis=redis,
                 model=model,

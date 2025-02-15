@@ -5,7 +5,8 @@ from fastapi.security import HTTPAuthorizationCredentials
 from app.ucase import session_middleware
 from pkg.history import MessageHistory
 from pkg.chain.prompter import PromptTemplate
-from langchain.tools import Tool
+from app.library.chaining.retrieval_qa import RetrievalQAChainLibrary
+from app.library import Vectorstores
 from app.ucase.chat import (
     router, 
     auth, 
@@ -24,7 +25,6 @@ async def send_chat(
     ) -> IResponseBase:
     
     history = MessageHistory(alchemy, x_session).sql()
-    history_msg = await history.aget_messages()
     setup = await setup_repo.get_all_setup()
     
     # validate model name
@@ -41,9 +41,6 @@ async def send_chat(
         except Exception:
             payload.model = None
     
-    payload.model = None
-    
-    llm = llm_platform.initiate(payload.llm, model=payload.model)
     try: 
         top_k = int(setup.get('config:retriever:top_k'))
     except:
@@ -63,23 +60,10 @@ async def send_chat(
                 detail="Please setup retriever collection or set from payload"
             )
     try:
-        vectorDB = int(setup.get('config:retriever:vector_db'))
+        vectorDB = setup.get('config:retriever:vector_db')
     except Exception:
-        vectorDB = "chroma"
-    
-    try:
-        retriever = llm.retriever(
-            vector=vectorDB,
-            top_k=top_k,
-            fetch_k=fetch_k,
-            collection=collection,
-        )
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Create retriever error"
-        )
-   
+        vectorDB = None
+
     prompt = ""
     try:
         prompt_tpl = await prompt_repo.get_prompt()
@@ -93,16 +77,42 @@ async def send_chat(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="Prompt template or input variabel error"
             )
-    qa_retrieval = llm.retrieval(prompt, retriever=retriever)
-    chain_with_history = llm.chain_with_history(
-        qa_retrieval,
-        history=history,
-        input_messages_key="input",
-        history_messages_key="history",
-        output_messages_key="answer|",
-    )
-    config = {"configurable": {"session_id": f'{x_session}'}}
+
+    
     try:
+        retriever = Vectorstores().configure(vectorestore=vectorDB).retriever(
+            topK=top_k,
+            fetchK=fetch_k,
+            collection=payload.collection
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Create retriever error"
+        )
+
+    try:
+        chaining = RetrievalQAChainLibrary(retriever)
+        platform = llm_platform.initiate(payload.llm, model=payload.model)
+        retrieval = chaining.retrieval(promp_tpl=prompt, platform=platform, model=payload.model)
+        chain_with_history = chaining.chain_with_history(
+            retrival=retrieval,
+            history=history,
+            input_messages_key="input",
+            history_messages_key="history",
+            output_messages_key="answer|",
+        )
+    except Exception as e:
+        logger.error("Chaining process error", {
+            "error": str(e)
+        })
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Chaining process error"
+        )
+    
+    try:
+        config = {"configurable": {"session_id": f'{x_session}'}}
         resultAI = await chain_with_history.ainvoke({"input": payload.chat}, config=config)
     except Exception as e:
         logger.error("Invoke message error", {
@@ -110,18 +120,18 @@ async def send_chat(
         })
         raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail="Invoking message error",
+                detail="Invoking message error: "+str(e),
             )   
     
-    logger.info("AI Result", {
-        "payload": payload.model_dump(),
-        "content": resultAI,
-    })
+    # logger.info("AI Result", {
+    #     "payload": payload.model_dump(),
+    #     "content": resultAI,
+    # })
 
     
     return response(
         message="Successfully",
         data={
-            "result": resultAI['answer'],
+            "result": resultAI['answer']
         }
     )
