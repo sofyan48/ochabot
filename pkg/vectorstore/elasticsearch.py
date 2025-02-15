@@ -1,6 +1,6 @@
 from langchain_elasticsearch import ElasticsearchStore  
 from langchain.text_splitter import RecursiveCharacterTextSplitter  
-from langchain_core.vectorstores import VectorStoreRetriever  
+from pkg.vectorstore import VectorStoreRetriever  
 from pkg.embedding.mistral import MistralInference  
 import os  
   

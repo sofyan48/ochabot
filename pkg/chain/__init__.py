@@ -1,23 +1,22 @@
-from langchain_core.runnables.history import RunnableWithMessageHistory
-from langchain_community.chat_message_histories import RedisChatMessageHistory
 from langchain.chains.retrieval import Runnable
-from langchain.schema import BaseOutputParser
+from langchain.chains.retrieval import Runnable, create_retrieval_chain  
+from langchain_core.vectorstores import VectorStoreRetriever  
+from langchain.chains.combine_documents import create_stuff_documents_chain  
+from pkg.chain.prompter import DefaultPrompter, PromptTemplate
+
 
 class Chain(object):
     def __init__(self):
-        pass
+        self.template = DefaultPrompter.default_prompter()
 
-    def chain_with_history(
-            self, retrieval: Runnable,
-            history: RedisChatMessageHistory,
-            input_messages_key,
-            history_messages_key,
-            output_messages_key) -> RunnableWithMessageHistory:
-        return RunnableWithMessageHistory(
-            retrieval,
-            lambda session_id: history,
-            input_messages_key=input_messages_key,
-            history_messages_key=history_messages_key,
-            output_messages_key=output_messages_key
-        )
+    def retrieval(self, prompt_template: PromptTemplate, retriever: VectorStoreRetriever, platform) -> Runnable:  
+        prompt = prompt_template  
+        
+        if prompt_template == "":  
+            prompt = self.template  
+
+        document_chain = create_stuff_documents_chain(platform, prompt) 
+        retrieval_chain = create_retrieval_chain(retriever, document_chain)  
+        return retrieval_chain  
+
     

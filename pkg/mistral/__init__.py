@@ -1,17 +1,12 @@
 from langchain.globals import set_llm_cache  
 from langchain_mistralai.chat_models import ChatMistralAI   
-from langchain_redis import RedisCache  
-from langchain.chains.combine_documents import create_stuff_documents_chain  
-from langchain_core.vectorstores import VectorStoreRetriever  
-from langchain_core.prompts import PromptTemplate  
-from langchain.chains.retrieval import Runnable, create_retrieval_chain  
-from pkg.chain.prompter import DefaultPrompter
+from langchain_redis import RedisCache 
+
 
 class MistralLLM:  
     _instance = None  
     _model = "mistral-large-latest"  
-    _apikey = ""  
-    _template = DefaultPrompter.default_prompter()
+    _apikey = ""
   
     def __new__(cls, *args, **kwargs):  
         if cls._instance is None:  
@@ -47,21 +42,3 @@ class MistralLLM:
             top_p=0.8,  
             tfs_z=2.0,  
         )  
-           
-    @classmethod  
-    def promptTemplates(cls, template="", input_variable: list = ["answer", "question", "history", "context"]) -> PromptTemplate:  
-        if template == "":
-            template = cls._template
-        return PromptTemplate(  
-            input_variables=input_variable,  
-            template=cls._template,  
-        )  
-      
-    @classmethod  
-    def retrieval(cls, prompt_template: PromptTemplate, model: ChatMistralAI, retriever: VectorStoreRetriever) -> Runnable:  
-        prompt = prompt_template  
-        if prompt_template == "":  
-           prompt = cls.promptTemplates()  
-        document_chain = create_stuff_documents_chain(model, prompt)  
-        retrieval_chain = create_retrieval_chain(retriever, document_chain)  
-        return retrieval_chain  

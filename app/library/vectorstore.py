@@ -4,7 +4,7 @@ from pkg.logger.logging import logger
 
 class Vectorstores(object):
     def __init__(self):
-        pass
+        self.client = None
 
     def chroma_client(self):
         if ChromaDB._chroma is None:
@@ -20,9 +20,16 @@ class Vectorstores(object):
 
     def configure(self, vectorestore = None) -> ChromaDB | ElasticsearcVector:
         if vectorestore is None:
-            return self.chroma_client()
+            self.client = self.chroma_client()
         
         if vectorestore=="elasticsearch":
-            return self.elastic_client()
+            self.client = self.elastic_client()
         else:
-            return self.chroma_client()
+            self.client = self.chroma_client()
+        return self.client
+        
+    def retriever(self, vectorDB, top_k, fetch_k, collection):
+        self.client.retriever(vector=vectorDB,
+            top_k=top_k,
+            fetch_k=fetch_k,
+            collection=collection,)
