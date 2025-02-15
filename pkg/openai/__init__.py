@@ -7,7 +7,8 @@ class OpenAILLM(object):
     _instance = None    
     _model = "gpt-4o-mini"    
     _apikey = ""
-    
+    _llm: ChatOpenAI = None
+
     def __new__(cls, *args, **kwargs):    
         if cls._instance is None:    
             cls._instance = super(OpenAILLM, cls).__new__(cls)    
@@ -30,7 +31,8 @@ class OpenAILLM(object):
   
         if model is not None:  
             cls._model = model  
-        return ChatOpenAI(  
+
+        cls._llm = ChatOpenAI(  
             cache=cache,  
             model=cls._model,  
             temperature=0.4,  
@@ -42,4 +44,4 @@ class OpenAILLM(object):
             presence_penalty=0.8,  
             frequency_penalty=0.8  
         )
-    
+        return cls._llm

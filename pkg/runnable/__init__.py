@@ -20,5 +20,5 @@ class RunnableChain(object):
             output_messages_key=output_messages_key
         )
     
-    def with_lambda(self):
+    def with_openai_function(self):
         pass
