@@ -1,6 +1,32 @@
 from langchain_openai.chat_models import ChatOpenAI  
 from langchain.globals import set_llm_cache  
 from langchain_redis import RedisCache 
+from openai import OpenAI
+
+
+class OpenAIDirect(object):
+    _instance = None
+    _model = "gpt-4o-mini"    
+    _apikey = ""
+    
+    def __new__(cls, *args, **kwargs):    
+        if cls._instance is None:    
+            cls._instance = super(OpenAIDirect, cls).__new__(cls)
+        return cls._instance    
+    
+    @classmethod  
+    def configure(cls, apikey: str = ""):  
+        cls._instance = OpenAI(api_key=apikey)
+        return cls._instance
+    
+    @classmethod
+    def text_to_speech(cls, input: str, model="tts-1"):
+        return cls._instance.audio.speech.create(
+            model=model,
+            voice="alloy",
+            input=input
+        )
+
 
 
 class OpenAILLM(object):  
@@ -23,17 +49,14 @@ class OpenAILLM(object):
   
     @classmethod  
     def run(cls, redis_url: str = "", model: str = None) -> ChatOpenAI:  
-        cache = False  
-        if redis_url != "":  
+        if redis_url != "":
             redis_cache = RedisCache(redis_url=redis_url, ttl=14400)  
             set_llm_cache(redis_cache)  
-            cache = False  
   
         if model is not None:  
             cls._model = model  
 
         cls._llm = ChatOpenAI(  
-            cache=cache,  
             model=cls._model,  
             temperature=0.4,  
             max_tokens=None,  

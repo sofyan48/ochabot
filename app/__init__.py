@@ -17,7 +17,6 @@ from bootstrap import (
     jwt,
     deepseek,
     ollama,
-    elasticsearch
 )
 from starlette.middleware.cors import CORSMiddleware
 
@@ -34,12 +33,13 @@ minio.register_storage_minio()
 jwt.register_jwt()
 
 # vectorstores
-vectorstore.register_chroma_retriever()
-# vectorstore.register_elasticsearch_vectorstore()
+# vectorstore.register_chroma_retriever()
+vectorstore.register_elasticsearch_vectorstore()
 
 # LLM Platform
 mistral.register_mistral()
 openai.register_openai()
+openai.register_openai_direct()
 groq.register_groq()
 deepseek.register_deepseek()
 ollama.register_ollama()

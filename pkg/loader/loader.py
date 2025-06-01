@@ -6,7 +6,6 @@ from langchain_community.document_loaders import (
         TextLoader
     )
 
-from langchain_community.utilities import SQLDatabase
 
 def csv_loader(csv_path: str):
     loader = CSVLoader(file_path=csv_path, encoding="utf-8")

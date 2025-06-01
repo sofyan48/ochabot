@@ -4,15 +4,28 @@ from typing import Optional
 
 class RequesChat(BaseModel):
     chat: str = Field(..., min_length=1)
-    collection: Optional[str] = None
+    scope_id: int = Field(...)
     llm: Optional[str] = None
     model: Optional[str] = None
     input_variabels: Optional[list] = None
 
+class RequesChatAgent(BaseModel):
+    chat: str = Field(..., min_length=1)
+    agent: Optional[str] = None
+    llm: Optional[str] = None
+    model: Optional[str] = None
+    
+
 
 class RequestPrompt(BaseModel):
+    id: Optional[int] = None
     prompt: str = Field(..., min_length=1)
+    scope_id: int = Field(..., ge=1)
     is_default: Optional[bool] = False
+
+class RequestScopePrompt(BaseModel):
+    id: Optional[int] = None
+    name: str = Field(..., min_length=1)
 
 class RequestLLMSetup(BaseModel):
     platform: str = Field(..., min_length=1)
@@ -22,7 +35,6 @@ class RequestRetrievalSetup(BaseModel):
     top_k: int = Field(...)
     fetch_k: int = Field(...)
     overlap: int = Field(...)
-    collection: str = Field(...)
     vector_db: str = Field(...)
 
 class RequestDeleteSetup(BaseModel):
@@ -55,5 +67,5 @@ class RequestGrantClient(BaseModel):
     secret_key: str = Field(..., min_length=1)
 
 class RequestIngestVector(BaseModel):
-    collection: str = Field(..., min_length=1)
+    scope_id: int = Field(...)
     ingest_code: str = Field(..., min_length=1)

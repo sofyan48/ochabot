@@ -22,6 +22,7 @@ def upgrade() -> None:
         'prompts',
         sa.Column('id', sa.Integer(), primary_key=True, autoincrement=True),
         sa.Column('prompt', sa.Text(), nullable=False),
+        sa.Column('scope_id', sa.Integer(), nullable=False),
         sa.Column('is_default', sa.Boolean(), nullable=False, default=True),
         sa.Column('created_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP')),
         sa.Column('updated_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), onupdate=sa.text('CURRENT_TIMESTAMP'))

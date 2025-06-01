@@ -1,7 +1,6 @@
 import os
 from fastapi import Form, File, UploadFile, Depends, HTTPException, status
 from app.appctx import IResponseBase, response
-from pkg.retriever import loader as loader_model
 from fastapi.security import HTTPAuthorizationCredentials
 from app.ucase import session_middleware
 from app.ucase.chat import (

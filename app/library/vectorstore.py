@@ -19,13 +19,14 @@ class Vectorstores(object):
         return ElasticsearcVector
 
     def configure(self, vectorestore = None) -> ChromaDB | ElasticsearcVector:
+       
         if vectorestore is None:
-            self.client = self.chroma_client()
-        
-        if vectorestore=="elasticsearch":
             self.client = self.elastic_client()
-        else:
+    
+        if vectorestore=="chroma":
             self.client = self.chroma_client()
+        else:
+            self.client = self.elastic_client()
         return self.client
         
     def retriever(self, vectorDB, top_k, fetch_k, collection):

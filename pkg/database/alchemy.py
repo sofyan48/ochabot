@@ -9,7 +9,7 @@ from sqlalchemy import (
     desc,
     asc
 )
-
+from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import SQLAlchemyError
 from typing import Optional, List, Dict
@@ -239,3 +239,31 @@ class AlChemy:
             stmt = delete(table).where(where_clause)
             await session.execute(stmt)
             await session.flush()
+
+    @classmethod
+    async def count(cls, query) -> int:
+        """Hitung jumlah baris dalam tabel."""
+        async with AsyncSession(cls._instance_read) as session:
+            try:
+                result = await session.execute(query)
+                return result.scalar()  # Mengembalikan jumlah baris
+            except Exception as e:
+                logger.error("Error counting rows", {"error": str(e)})
+                raise e
+    
+    @classmethod
+    async def execute_query(cls, query, arguments: dict = {}, use_transaction: bool = False):
+        async with AsyncSession(cls._instance_read) as session:
+            try:
+                if use_transaction:
+                    async with session.begin():
+                        result = await session.execute(query, arguments)
+                else:
+                    result = await session.execute(query, arguments)
+                    await session.flush()
+                return result
+            except SQLAlchemyError as e:
+                if use_transaction:
+                    await session.rollback()  # Rollback jika terjadi kesalahan
+                logger.error("Error executing query", {"error": str(e)})
+                raise e

@@ -2,19 +2,19 @@ import os
 from fastapi import Depends, HTTPException, status
 from app.presentation import request
 from app.appctx import IResponseBase, response
-from pkg.retriever import loader as loader_model
+from pkg.loader import loader as loader_model
 from fastapi.security import HTTPAuthorizationCredentials
-from pkg import utils
 from datetime import datetime
+from app.entity.ingest_document import IngestDocument
 from app.ucase.ingest import (
     router, 
     auth, 
-    logger, 
-    chromadb, 
+    logger,
     UPLOAD_MODEL_DIR,
     minio_client,
     ingest_docs_repo,
     setup_repo,
+    scope_repo,
     vectorstoreDB
 )
 
@@ -74,14 +74,29 @@ async def build_ingest_vector(
     
     try:
         vector_db_config = setup.get('config:retriever:vector_db')
+        if vector_db_config is None:
+            vector_db_config = "elasticsearch"
     except Exception:
-        logger.info("Using default setup for chroma")
-        vector_db_config = "chroma"
+        vector_db_config = "elasticsearch"
+    
+    
+    collection = ""
+    try:
+        scope_data = await scope_repo.get(payload.scope_id)
+        print(scope_data)
+        collection = scope_data.name
+    except Exception as e:
+        logger.error("Error getting scope data", {
+            "error": str(e)
+        })
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Cannot get scope data"
+        )
 
     try:
-        
         vector_db= vectorstoreDB.configure(vectorestore=vector_db_config)
-        vector_db.build(data=data, collection=payload.collection, chunk=ingest_docs_data.chunk, overlap=ingest_docs_data.overlap)
+        vector_db.build(data=data, collection=collection, chunk=ingest_docs_data.chunk, overlap=ingest_docs_data.overlap)
     except Exception as e:
         logger.error("Error building data", {
             "error", e
@@ -91,16 +106,18 @@ async def build_ingest_vector(
             detail="Cannot build ingest data"
         )
     
-    entity_ingest_docs = {
-        "id": ingest_docs_data.id,
-        "ingest_code": ingest_docs_data.ingest_code,
-        "file_path": ingest_docs_data.file_path,
-        "overlap": ingest_docs_data.overlap,
-        "collection": payload.collection,
-        "is_build": True,
-        "chunk": ingest_docs_data.chunk,
-        "updated_at": datetime.now()
-    }
+
+    entity_ingest_docs = IngestDocument(
+        id=ingest_docs_data.id,
+        file_path=ingest_docs_data.file_path,
+        collection=collection,
+        overlap=ingest_docs_data.overlap,
+        chunk=ingest_docs_data.chunk,
+        is_build=True,
+        ingest_code=ingest_docs_data.ingest_code,
+        updated_at=datetime.now(),
+        created_at=ingest_docs_data.created_at,
+    )
 
     try:
         await ingest_docs_repo.upsert(entity_ingest_docs)
@@ -116,5 +133,5 @@ async def build_ingest_vector(
     os.remove(file_path)
     return response(
         message="Ingestion Success on: "+ vector_db_config,
-        data=utils.json_serializable(ingest_docs_data)
+        data= entity_ingest_docs.to_dict()
     )

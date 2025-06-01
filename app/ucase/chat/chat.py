@@ -14,8 +14,11 @@ from app.ucase.chat import (
     llm_platform,
     prompt_repo,
     setup_repo,
-    alchemy
+    alchemy,
+    scope_repo
 )
+
+from pkg.openai import OpenAIDirect
 
 @router.post("/chat", tags=["chat"], operation_id="send_chat") 
 async def send_chat(
@@ -25,21 +28,21 @@ async def send_chat(
     ) -> IResponseBase:
     
     history = MessageHistory(alchemy, x_session).sql()
+    history_msg = await history.aget_messages()
     setup = await setup_repo.get_all_setup()
-    
     # validate model name
     if payload.llm is None:
         try:
             payload.llm = setup.get('config:llm:platform')
         except Exception:
-            payload.llm = "mistral"
+            payload.llm = "openai"
     
     
     if payload.model is None:
         try:
             payload.model = setup.get('config:llm:model')
         except Exception:
-            payload.model = None
+            payload.model = "gpt-4o-mini"
     
     try: 
         top_k = int(setup.get('config:retriever:top_k'))
@@ -51,14 +54,19 @@ async def send_chat(
     except Exception:
         fetch_k = 10
     
-    collection = payload.collection
-    if collection is None:
-        collection = setup.get('config:retriever:collection')
-        if collection is None:
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail="Please setup retriever collection or set from payload"
-            )
+    collection = ""
+    try:
+        scope_data = await scope_repo.get(payload.scope_id)
+        collection = scope_data.name
+    except Exception as e:
+        logger.error("Error getting scope data", {
+            "error": str(e)
+        })
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Cannot get scope data"
+        )
+    
     try:
         vectorDB = setup.get('config:retriever:vector_db')
     except Exception:
@@ -66,7 +74,7 @@ async def send_chat(
 
     prompt = ""
     try:
-        prompt_tpl = await prompt_repo.get_prompt()
+        prompt_tpl = await prompt_repo.get_prompt(payload.scope_id)
         if prompt_tpl != "":
             input_variabel = payload.input_variabels
             if input_variabel is None:
@@ -83,9 +91,12 @@ async def send_chat(
         retriever = Vectorstores().configure(vectorestore=vectorDB).retriever(
             topK=top_k,
             fetchK=fetch_k,
-            collection=payload.collection
+            collection=collection,
         )
     except Exception as e:
+        logger.error("Create retriever error", {
+            "error": str(e)
+        })
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Create retriever error"
@@ -99,8 +110,8 @@ async def send_chat(
             retrival=retrieval,
             history=history,
             input_messages_key="input",
-            history_messages_key="history",
-            output_messages_key="answer|",
+            history_messages_key="message_store",
+            output_messages_key="answer",
         )
     except Exception as e:
         logger.error("Chaining process error", {
@@ -113,7 +124,7 @@ async def send_chat(
     
     try:
         config = {"configurable": {"session_id": f'{x_session}'}}
-        resultAI = await chain_with_history.ainvoke({"input": payload.chat}, config=config)
+        resultAI = await chain_with_history.ainvoke({"input": payload.chat, "history": history_msg}, config=config)
     except Exception as e:
         logger.error("Invoke message error", {
             "error": str(e)
@@ -123,15 +134,9 @@ async def send_chat(
                 detail="Invoking message error: "+str(e),
             )   
     
-    # logger.info("AI Result", {
-    #     "payload": payload.model_dump(),
-    #     "content": resultAI,
-    # })
-
-    
     return response(
         message="Successfully",
         data={
-            "result": resultAI['answer']
+            "result": resultAI['answer'],
         }
     )

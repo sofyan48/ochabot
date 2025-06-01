@@ -1,15 +1,16 @@
 import os
 from fastapi import Form, File, UploadFile, Depends, HTTPException, status
 from app.appctx import IResponseBase, response
-from pkg.retriever import loader as loader_model
+from pkg.loader import loader as loader_model
 from fastapi.security import HTTPAuthorizationCredentials
 from pkg import utils
 from datetime import datetime
+from app.entity.ingest_document import IngestDocument
 from app.ucase.ingest import (
     router, 
     auth, 
     logger, 
-    chromadb, 
+    splitter,
     UPLOAD_MODEL_DIR,
     minio_client,
     ingest_docs_repo
@@ -53,7 +54,7 @@ async def ingest_preview(
             data=None
         )
     try:
-        result = chromadb.text_splitter(data=data, chunk=chunk, overlap=overlap)
+        result = splitter.text_splitter(data=data, chunk=chunk, overlap=overlap)
     except Exception as e:
         logger.error("Error preview text splitter", {
             "error", e
@@ -76,30 +77,37 @@ async def ingest_preview(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, 
             detail="File not upload please try again"
         )
-    entity_ingest_docs = {
-        "ingest_code": ingest_code,
-        "file_path": bucket_path,
-        "overlap": overlap,
-        "is_build": False,
-        "chunk": chunk,
-        "created_at": datetime.now(),
-        "updated_at": datetime.now()
-    }
+
+    entity_ingest_docs = IngestDocument(
+        ingest_code=ingest_code,
+        file_path=bucket_path,
+        overlap=overlap,
+        chunk=chunk,
+        is_build= False,
+        created_at=datetime.now(),
+        updated_at= datetime.now(),
+    )
 
     try:
         last_id = await ingest_docs_repo.upsert(entity_ingest_docs)
-        entity_ingest_docs['id'] = last_id
+        entity_ingest_docs.id = last_id
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Ingestion docs save to db error"
         )
     
-    os.remove(file_path)
+    try:
+        os.remove(file_path)
+    except Exception as e:
+        logger.error("Error removing file", {
+            "error": str(e)
+        })
+
     return response(
         message="Preview text splitter",
         data={
-            "ingest": entity_ingest_docs,
+            "ingest": entity_ingest_docs.to_dict(),
             "result": result
         }
     )

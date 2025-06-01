@@ -1,0 +1,1 @@
+from pkg.vectorstore.splitter import TextSplitter

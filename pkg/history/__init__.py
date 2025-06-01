@@ -13,6 +13,7 @@ class MessageHistory(object):
             connection= self.client,
             async_mode=True
         )
+    
     def redis(self, str_conn):
         return RedisChatMessageHistory(
            session_id=self.session,

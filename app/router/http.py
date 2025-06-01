@@ -1,6 +1,8 @@
 # from fastapi import APIRouter
 from fastapi import APIRouter
 
+from app.ucase.scope import scope_upsert as scope_upsert
+
 routerV1 = APIRouter(prefix="/v1")
 
 from app.ucase.chat import chat, delete, history, files
@@ -82,3 +84,19 @@ from app.ucase.login import(
 routerV1.include_router(password.router)
 routerV1.include_router(logout.router)
 routerV1.include_router(client.router)
+
+
+from app.ucase.scope import (
+    scope_delete,
+    scope_list,
+    scope_upsert
+)
+
+routerV1.include_router(scope_upsert.router)
+routerV1.include_router(scope_list.router)
+routerV1.include_router(scope_delete.router)
+
+from app.ucase.agent import (
+    agent
+)
+routerV1.include_router(agent.router)

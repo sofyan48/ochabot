@@ -4,6 +4,7 @@ from fastapi import Depends, HTTPException, status
 from app.appctx import IResponseBase, response
 from app.ucase.client import router, auth, logger, client_repo
 from datetime import datetime
+from app.entity.client import Client
 from pkg import utils
 
 @router.post("/client", tags=["client"], operation_id="upsert_client") 
@@ -16,17 +17,15 @@ async def upsert_client(
         client_api_key = utils.generate_random_string(32)
         client_secret_key = utils.generate_random_string(32)
         
-        entity_client = {
-            "name": payload.name,
-            "api_key": client_api_key,
-            "secret_key": utils.generate_hashed_password(client_secret_key), 
-            "is_active": payload.is_active,
-            "created_at": datetime.now(),
-            "updated_at": datetime.now()
-        }
-
-        if payload.id is not None:
-            entity_client['id'] = payload.id
+        entity_client = Client(
+            id=payload.id,
+            name=payload.name,
+            api_key=client_api_key,
+            secret_key=utils.generate_hashed_password(client_secret_key),
+            is_active=payload.is_active,
+            created_at=datetime.now() if payload.id else None,
+            updated_at=datetime.now() 
+        )
 
         last_id = await client_repo.upsert(data=entity_client)
         entity_client['id'] = last_id

@@ -19,8 +19,8 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.create_index('idx_config_key_value_is_active', 'config', ['key', 'value', 'is_active'], unique=False)
+    op.create_index('idx_config_key_value_is_active', 'configs', ['key', 'value', 'is_active'], unique=False)
 
 
 def downgrade() -> None:
-    op.drop_index('idx_config_key_value_is_active', table_name='config')
+    op.drop_index('idx_config_key_value_is_active', table_name='configs')

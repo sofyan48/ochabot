@@ -8,7 +8,6 @@ from app.ucase.ingest import (
     router, 
     auth, 
     logger, 
-    chromadb, 
     UPLOAD_MODEL_DIR,
     minio_client,
     ingest_docs_repo

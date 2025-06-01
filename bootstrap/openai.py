@@ -1,4 +1,4 @@
-from pkg.openai import OpenAILLM
+from pkg.openai import OpenAILLM, OpenAIDirect
 from pkg.chain.prompter import DefaultPrompter
 import os
 
@@ -10,10 +10,7 @@ def register_openai() -> OpenAILLM:
         template=template
     )
 
-def register_openai_direct_tracking_function() -> OpenAILLM:
-    template = """"""
-    return OpenAILLM(
-        model=os.getenv("OPENAI_MODEL","gpt-4o-mini"),
+def register_openai_direct() -> OpenAILLM:
+    return OpenAIDirect().configure(
         apikey=os.getenv("OPENAI_APIKEY", "OPENAI_APIKEY"),
-        template="",
     )

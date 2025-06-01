@@ -1,9 +1,7 @@
-from app.presentation import request
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import Depends, HTTPException, status, Query
 from app.appctx import IResponseBase, response
 from app.ucase.client import router, auth, logger, client_repo
-
 from typing import Optional
 
 
@@ -22,12 +20,13 @@ async def list_client(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
     filtered_result = []
-    for user in result:
+    for user in result['data']:
         user_data = user.copy()
         user_data.pop('secret_key', None)
         filtered_result.append(user_data)
     return response(
         message="Client list successfully",
-        data=result
+        data=result['data'],
+        meta=result['pagination'] if 'pagination' in result else None,
     )
     

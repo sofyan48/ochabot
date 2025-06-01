@@ -4,6 +4,7 @@ from typing import Optional
 from app.repositories import alchemy
 from app.entity.user import User  
 from pkg import utils
+from datetime import datetime
   
 class UserRepositories:    
     def __init__(self):    
@@ -14,11 +15,24 @@ class UserRepositories:
         query = select(UserRepositories).where(UserRepositories.id == id)    
         return await self.engine.fetch(query=query)
                 
-    async def upsert(self, data: dict) -> int:   
+    async def upsert(self, data: User) -> int:   
         try:
+            entity = {
+                "username": data.username,
+                "email": data.email,
+                "name": data.name,
+                "password": data.password,
+                "is_active": data.is_active,
+                "created_at": data.created_at,
+            }
+            
+            if data.id is not None:
+                entity["id"] = data.id
+                entity["updated_at"] = datetime.now()
+
             return await self.engine.upsert_without_tx(
                 model=User, 
-                values=data,
+                values=entity,
                 conflict_key=["id"]
             )
         except Exception as e:

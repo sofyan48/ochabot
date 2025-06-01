@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from pkg import utils
 
 @router.post("/grant", tags=["login"], operation_id="grant_client") 
-async def grant_client_with_password(
+async def grant_client(
         payload: request.RequestGrantClient,
     ) -> IResponseBase:
     try:

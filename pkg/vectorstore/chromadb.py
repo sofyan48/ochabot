@@ -1,4 +1,4 @@
-from langchain.text_splitter import RecursiveCharacterTextSplitter  
+from pkg.vectorstore.splitter import TextSplitter
 from langchain_chroma import Chroma  
 from chromadb import HttpClient 
 from chromadb.config import DEFAULT_DATABASE, DEFAULT_TENANT
@@ -16,6 +16,7 @@ class ChromaDB:
     _port = 0  
     _embeddings = None  
     _chroma = None  
+    _text_splitter = TextSplitter()
   
     def __new__(cls, *args, **kwargs):  
         if cls._instance is None:  
@@ -57,17 +58,12 @@ class ChromaDB:
             )  
         except Exception as e:  
             raise e  
-        
-    @classmethod
-    def text_splitter(cls, data, chunk=2000, overlap=500):
-       text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk, chunk_overlap=overlap)
-       return text_splitter.split_documents(data)
     
     @classmethod  
     def build(cls, data, collection, chunk=2000, overlap=500):
-        all_splits = cls.text_splitter(data=data, chunk=chunk, overlap=overlap)
+        docs_split = cls._text_splitter.text_splitter(data=data, chunk=chunk, overlap=overlap)
         return Chroma.from_documents(  
-            documents=all_splits,   
+            documents=docs_split,   
             embedding=cls._embeddings,   
             client=cls._chroma,  
             collection_name=collection  

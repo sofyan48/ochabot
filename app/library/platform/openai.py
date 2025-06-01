@@ -1,6 +1,8 @@
 from pkg.openai import OpenAILLM, ChatOpenAI
 from app import redis
 
+
+
 class OpenAILibrary(object):
     def __init__(self, llm: OpenAILLM, model: str, redis: redis):
         self.openai = llm

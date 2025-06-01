@@ -28,7 +28,6 @@ class AIWrapperLLM(object):
             self.llm = self.ollama(model="deepseek-r1:1.5b")
         else:
             self.llm = self.mistral(model=model)
-        
         self.model = model
         self.llm_name = llm
 
