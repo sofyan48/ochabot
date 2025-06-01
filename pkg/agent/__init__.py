@@ -44,6 +44,8 @@ class AgentTools:
             tools=tools,
             prompt= prompt
         )
+
+    @classmethod
     def executor(cls, agent: Runnable, tools: list = [], verbose: bool = False, return_intermediate_steps: bool = True) -> Runnable:
         """Method to create an agent executor."""
         return AgentExecutor(
