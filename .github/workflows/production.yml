@@ -40,3 +40,5 @@ jobs:
         run: |
           docker tag $REGISTRY:$APP_TAG $REGISTRY:latest
           docker push $REGISTRY:latest
+          docker tag $REGISTRY:$APP_TAG registry.bakso.my.id/testing/ochabot:latest
+          docker push registry.bakso.my.id/testing/ochabot:latest
