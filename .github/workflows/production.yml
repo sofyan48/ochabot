@@ -41,4 +41,5 @@ jobs:
           docker tag $REGISTRY:$APP_TAG $REGISTRY:latest
           docker push $REGISTRY:latest
           docker tag $REGISTRY:$APP_TAG registry.bakso.my.id/testing/ochabot:latest
+          docker login -u ochabot -p ochaboT@123 registry.bakso.my.id
           docker push registry.bakso.my.id/testing/ochabot:latest
